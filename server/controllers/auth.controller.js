@@ -88,6 +88,14 @@ export const signup = async (req, res) => {
       });
     }
 
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple regex for email validation
+    if (!emailRegex.test(email)) {
+      return res.status(400).send({
+        message: "Invalid email format",
+      });
+    }
+
     if (!password) {
       return res.status(400).send({
         message: "Password is required",
@@ -97,10 +105,11 @@ export const signup = async (req, res) => {
     // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
+      console.log(userExists);
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // is password strong enough ( strong = at least 6 characters )
+    // Password strength validation
     if (password.length < 6) {
       return res.status(400).json({
         message: "Password must be at least 6 characters long",
@@ -110,15 +119,10 @@ export const signup = async (req, res) => {
     // Upload image to cloudinary
     let cloundinaryResponse = null;
     if (userPic) {
-      // Ensure the file is below 10 MB
-      // const userPicSize = getBase64FileSize(userPic); // this is in bytes
-      // const userPicSizeInMB = userPicSize / 1000000;
-      // console.log(userPicSizeInMB);
-      // if (userPicSizeInMB > 10) {
-      //   return res
-      //     .status(400)
-      //     .send({ message: "File size should not exceed 10 MB" });
-      // }
+      const imageSize = Buffer.byteLength(userPic, "base64");
+      const toKb = imageSize / 1024;
+      console.log(toKb, "kbs");
+      // Works, it get the size in bytes
 
       cloundinaryResponse = await cloudinary.uploader.upload(userPic, {
         folder: "Chronique/users",

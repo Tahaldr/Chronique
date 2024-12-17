@@ -18,7 +18,7 @@ export const useUserStore = create((set, get) => ({
       set({ loading: false });
       console.log("File upload successful:", res.data);
       console.log("data");
-      
+
       return res.data;
     } catch (error) {
       set({ loading: false });
@@ -45,7 +45,7 @@ export const useUserStore = create((set, get) => ({
     } catch (error) {
       set({ loading: false });
       showToast({
-        message: error.response.data.message,
+        message: error.response?.data.message || "Signup failed",
         type: "error",
       });
     }

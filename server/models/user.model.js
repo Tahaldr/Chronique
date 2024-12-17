@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
       },
       default:
         "https://res.cloudinary.com/dv48ogvly/image/upload/v1731399276/Chronique/users/defaultUserPfp.jpg",
-      // Max : 10MB
+      // Max = 10MB
       // max: [10485760, "User image must be less than 10MB"],
     },
     name: {

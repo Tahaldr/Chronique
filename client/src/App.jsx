@@ -8,7 +8,6 @@ function App() {
 
   return (
     <>
-      <div>THE IMAGE IS ALWAYS THE DEFAULT ( its not adding the file )</div>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
