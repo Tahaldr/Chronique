@@ -2,6 +2,7 @@ import redis from "../lib/redis.js";
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import cloudinary from "../lib/cloudinary.js";
+import bodyParser from "body-parser";
 
 // function getBase64FileSize(base64String) {
 //   let base64 = base64String.split(",")[1] || base64String; // Remove prefix if present
@@ -76,6 +77,15 @@ export const signup = async (req, res) => {
   const { userPic, name, email, password } = req.body;
   try {
     // Required fields validation
+    if (userPic) {
+      const imageSize = Buffer.byteLength(userPic, "base64");
+      const ImageSizeMb = imageSize / 1024 / 1024;
+      // console.log(ImageSizeMb, "Mbs");
+      if (ImageSizeMb > 10) {
+        return res.status(400).json({ message: "Max image size is 10mb" });
+      }
+    }
+
     if (!name) {
       return res.status(400).send({
         message: "Name is required",
@@ -119,11 +129,6 @@ export const signup = async (req, res) => {
     // Upload image to cloudinary
     let cloundinaryResponse = null;
     if (userPic) {
-      const imageSize = Buffer.byteLength(userPic, "base64");
-      const toKb = imageSize / 1024;
-      console.log(toKb, "kbs");
-      // Works, it get the size in bytes
-
       cloundinaryResponse = await cloudinary.uploader.upload(userPic, {
         folder: "Chronique/users",
       });

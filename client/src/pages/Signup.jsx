@@ -18,8 +18,8 @@ const Signup = () => {
     email: "",
     password: "",
   });
+  const [image, setImage] = useState("");
   const { signup, loading } = useUserStore();
-
   const [passwordShow, setPasswordShow] = useState(false);
   const [passwordType, setPasswordType] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -53,6 +53,7 @@ const Signup = () => {
     e.stopPropagation();
     setDragActive(false);
     const fileUploaded = e.dataTransfer.files[0];
+    setImage(fileUploaded.name);
 
     if (fileUploaded) {
       const reader = new FileReader();
@@ -67,6 +68,7 @@ const Signup = () => {
 
   const handleImageChange = (e) => {
     const fileUploaded = e.target.files[0];
+    setImage(fileUploaded.name);
 
     if (fileUploaded) {
       const reader = new FileReader();
@@ -162,9 +164,9 @@ const Signup = () => {
                   <AiOutlineCloudUpload className="text-3xl mb-2" />
                   <p className="text-dark">Drop your image here or browse</p>
                   <p className="text-sm">Max file size : 10MB</p>
-                  {formData.userPic ? (
+                  {image ? (
                     <p className="text-darker w-[90%] text-sm mt-3 text-center">
-                      Image uploaded !
+                      {image}
                     </p>
                   ) : (
                     ""
