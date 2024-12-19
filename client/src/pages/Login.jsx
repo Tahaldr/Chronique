@@ -1,30 +1,24 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { useUserStore } from "../stores/useUserStore";
 // import showToast from "../components/Toast";
 
-import { VscEye } from "react-icons/vsc";
-import { VscEyeClosed } from "react-icons/vsc";
-import { AiOutlineCloudUpload } from "react-icons/ai";
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
+import { VscEye, VscEyeClosed } from "react-icons/vsc";
 // import { TbArrowBackUp } from "react-icons/tb";
 
 import { Toaster } from "react-hot-toast";
 import Loading from "../components/Loading";
 import MarkerCircle from "../components/MarkerCircle";
 
-const Signup = () => {
+const Login = () => {
   const [formData, setFormData] = useState({
-    userPic: "",
-    name: "",
     email: "",
     password: "",
   });
-  const [image, setImage] = useState("");
-  const { signup, loading } = useUserStore();
+  const { login, loading } = useUserStore();
   const [passwordShow, setPasswordShow] = useState(false);
   const [passwordType, setPasswordType] = useState(false);
-  const [dragActive, setDragActive] = useState(false);
   const [hovered, setHovered] = useState(false);
 
   // write this cubic bezier as an array down :
@@ -38,51 +32,6 @@ const Signup = () => {
     setHovered(false);
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    const fileUploaded = e.dataTransfer.files[0];
-    setImage(fileUploaded.name);
-
-    if (fileUploaded) {
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setFormData({ ...formData, userPic: reader.result });
-      };
-
-      reader.readAsDataURL(fileUploaded);
-    }
-  };
-
-  const handleImageChange = (e) => {
-    const fileUploaded = e.target.files[0];
-    setImage(fileUploaded.name);
-
-    if (fileUploaded) {
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setFormData({ ...formData, userPic: reader.result });
-      };
-
-      reader.readAsDataURL(fileUploaded);
-    }
-  };
-
   const handlePassShow = () => {
     setPasswordShow(!passwordShow);
     setPasswordType(!passwordType);
@@ -90,7 +39,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    signup(formData);
+    login(formData);
     // console.log(formData);
   };
 
@@ -105,77 +54,33 @@ const Signup = () => {
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              Sign Up
+              Log In
             </h1>
+
             <MarkerCircle
               hovered={hovered}
               cubicBezierVar={cubicBezierVar}
-              width="150px"
-              height="150px"
+              width="140px"
+              height="140px"
               strokeWidth=".3"
             />
           </div>
 
           <div className="w-full ">
             <form
-              id="formSignup"
+              id="formLogin"
               className="flex flex-col gap-3"
               onSubmit={handleSubmit}
             >
-              <div
-                className={`border-dashed border-2 p-5 text-base font-medium font-smallMedium hover:border-dark ${
-                  dragActive ? "border-darker" : "border-medium"
-                }`}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-              >
-                <label
-                  htmlFor="userPic"
-                  className="flex flex-col justify-center items-center cursor-pointer text-medium"
-                >
-                  <AiOutlineCloudUpload className="text-3xl mb-2" />
-                  <p className="text-dark text-center">
-                    Drop your image here or browse
-                  </p>
-                  <p className="text-sm">Max file size : 10MB</p>
-                  {image ? (
-                    <p className="text-darker w-[90%] text-sm mt-3 text-center">
-                      {image}
-                    </p>
-                  ) : (
-                    ""
-                  )}
-                </label>
-                <input
-                  id="userPic"
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                />
-              </div>
-
-              <input
-                type="text"
-                id="name"
-                placeholder="John Doe"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                className="py-3 px-4 bg-transparent text-dark font-smallMedium font-medium text-base outline-none
-               focus:outline-none focus:border-dark border-2 border-medium placeholder:text-medium hover:border-dark "
-              />
-
               <input
                 type="text"
                 id="email"
                 placeholder="User@example.com"
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, email: e.target.value });
+                  console.log(formData);
+                }}
                 className="py-3 px-4 bg-transparent text-dark font-smallMedium font-medium text-base outline-none
                focus:outline-none focus:border-dark border-2 border-medium placeholder:text-medium hover:border-dark "
               />
@@ -188,9 +93,10 @@ const Signup = () => {
                   type={!passwordType ? "password" : "text"}
                   id="password"
                   value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setFormData({ ...formData, password: e.target.value });
+                    console.log(formData);
+                  }}
                   className="bg-transparent text-dark font-smallMedium font-medium text-base outline-none 
                focus:outline-none focus:border-dark placeholder:text-medium"
                   placeholder="••••••••"
@@ -230,7 +136,7 @@ const Signup = () => {
                         ease: cubicBezierVar,
                       }}
                     >
-                      Sign up
+                      Log in
                     </motion.span>
 
                     <motion.div
@@ -252,15 +158,17 @@ const Signup = () => {
                 )}
               </motion.button>
             </form>
+
             <p className=" text-dark font-mediumPrimary pt-3 flex justify-center items-center gap-2">
-              <span>Already have an account?</span>
+              <span>Don&apos;t have an account?</span>
               <a
-                href="/login"
+                href="/signup"
                 className="text-darkest underline hover:text-darker"
               >
-                Login
+                Sign up
               </a>
             </p>
+
             {/* Go back to home */}
             {/* <p className="m-[-10px] text-dark font-mediumPrimary pt-3 flex justify-center items-center gap-2">
               <a
@@ -278,4 +186,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;

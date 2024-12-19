@@ -3,7 +3,7 @@ import axios from "../lib/axios";
 import showToast from "../components/Toast";
 
 export const useUserStore = create((set, get) => ({
-  user: null,
+  user: JSON.parse(localStorage.getItem("user")) || null,
   loading: false,
   checkingAuth: true,
 
@@ -29,6 +29,7 @@ export const useUserStore = create((set, get) => ({
     }
   },
 
+  // Sign Up
   signup: async ({ userPic, name, email, password }) => {
     set({ loading: true });
     try {
@@ -38,14 +39,34 @@ export const useUserStore = create((set, get) => ({
         email,
         password,
       });
-      set({
-        user: res.data,
-        loading: false,
-      });
+      const user = res.data.user;
+      set({ user, loading: false });
+
+      // Persist user in local storage
+      localStorage.setItem("user", JSON.stringify(user));
     } catch (error) {
       set({ loading: false });
       showToast({
         message: error.response?.data.message || "Signup failed",
+        type: "error",
+      });
+    }
+  },
+
+  // Log In
+  login: async ({ email, password }) => {
+    set({ loading: true });
+    try {
+      const res = await axios.post("/auth/login", { email, password });
+      const user = res.data.user;
+      set({ user, loading: false });
+
+      // Persist user in local storage
+      localStorage.setItem("user", JSON.stringify(user));
+    } catch (error) {
+      set({ loading: false });
+      showToast({
+        message: error.response?.data.message || "Login failed",
         type: "error",
       });
     }
