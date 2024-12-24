@@ -2,38 +2,16 @@ import redis from "../lib/redis.js";
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import cloudinary from "../lib/cloudinary.js";
-import bodyParser from "body-parser";
-
-// function getBase64FileSize(base64String) {
-//   let base64 = base64String.split(",")[1] || base64String; // Remove prefix if present
-//   let paddingBytes = base64.endsWith("==") ? 2 : base64.endsWith("=") ? 1 : 0;
-//   let sizeInBytes = (base64.length * 3) / 4 - paddingBytes;
-//   return sizeInBytes;
-// }
-
-export const checkFileSize = (req, res, next) => {
-  const { userPic } = req.body;
-
-  if (userPic) {
-    // Calculate size in bytes from the Base64 string
-    const base64Size = Buffer.byteLength(userPic, "base64");
-
-    if (base64Size > 10 * 1024 * 1024) {
-      // 10 MB limit
-      return res.status(400).json({ message: "Max image size is 10MB" });
-    }
-  }
-
-  next();
-};
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "15m",
+    // expiresIn: "5s",
   });
 
   const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: "7d",
+    // expiresIn: "5s",
   });
 
   return { accessToken, refreshToken };
@@ -45,6 +23,7 @@ const storedRefreshToken = async (userId, refreshToken) => {
     refreshToken,
     "EX",
     7 * 24 * 60 * 60
+    // 5 // 5 seconds
   ); // 7 days
 };
 
@@ -53,7 +32,8 @@ const setCookies = (res, accessToken, refreshToken) => {
     httpOnly: true, // prevent XSS attacks, cross site scripting attack
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict", // prevents CSRF attack, cross-site request forgery attack
-    maxAge: 15 * 60 * 1000, // 15 minutes
+    // maxAge: 15 * 60 * 1000, // 15 minutes
+    // maxAge: 1000 * 5, // 5 seconds
   });
 
   res.cookie("refreshToken", refreshToken, {
@@ -61,6 +41,7 @@ const setCookies = (res, accessToken, refreshToken) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    // maxAge: 1000 * 5, // 5 seconds
   });
 };
 
@@ -260,6 +241,15 @@ export const refreshToken = async (req, res) => {
   } catch (error) {
     console.log("Error in refresh controller", error.message);
     res.status(500).json({ message: error.message, location: "refresh" });
+  }
+};
+
+export const getprofile = async (req, res) => {
+  try {
+    res.json(req.user);
+  } catch (error) {
+    console.log("Error in getprofile controller", error.message);
+    res.status(500).json({ message: error.message, location: "getprofile" });
   }
 };
 

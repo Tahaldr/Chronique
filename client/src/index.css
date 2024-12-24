@@ -167,6 +167,10 @@ body {
   background-attachment: fixed;
 }
 
+.bg-navBg {
+  background-image: url("/OtherImg/NewsPaper_texture.png");
+}
+
 /* style scroll-bar */
 ::-webkit-scrollbar {
   width: 8px; /* Width for vertical scrollbar */

@@ -7,7 +7,7 @@ import { VscEye } from "react-icons/vsc";
 import { VscEyeClosed } from "react-icons/vsc";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
-// import { TbArrowBackUp } from "react-icons/tb";
+import { TbArrowBackUp } from "react-icons/tb";
 
 import { Toaster } from "react-hot-toast";
 import Loading from "../components/Loading";
@@ -97,6 +97,13 @@ const Signup = () => {
   return (
     <>
       <Toaster />
+      {/* Go back to home */}
+      <p className="w-fit font-mediumPrimary py-1 px-3 rounded-full flex justify-center items-center gap-2 border border-dark hover:border-darkest text-dark hover:text-darkest absolute top-5 left-5">
+        <a href="/" className="text-sm md:text-base flex items-center gap-1">
+          <TbArrowBackUp />
+          Back to home
+        </a>
+      </p>
       <div className="w-screen h-screen  flex justify-center items-center">
         <div className="py-5 px-10 w-[450px] gap-4 h-auto flex flex-col justify-center items-center">
           <div className="w-full h-14 flex justify-center items-center relative">
@@ -138,6 +145,7 @@ const Signup = () => {
                   <p className="text-dark text-center">
                     Drop your image here or browse
                   </p>
+                  <p className="text-sm">Recommended size : 1:1</p>
                   <p className="text-sm">Max file size : 10MB</p>
                   {image ? (
                     <p className="text-darker w-[90%] text-sm mt-3 text-center">
@@ -261,16 +269,6 @@ const Signup = () => {
                 Login
               </a>
             </p>
-            {/* Go back to home */}
-            {/* <p className="m-[-10px] text-dark font-mediumPrimary pt-3 flex justify-center items-center gap-2">
-              <a
-                href="/"
-                className="text-red-700 underline hover:text-darker flex items-center gap-1"
-              >
-                <TbArrowBackUp />
-                Back to home
-              </a>
-            </p> */}
           </div>
         </div>
       </div>

@@ -3,12 +3,15 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      // backgroundImage: {
+      //   navBg: "url('/OtherImg/NewsPaper_texture.png')",
+      // },
       colors: {
         theBase: "#dbdbdb",
         darkest: "#111111",
         darker: "#222222",
         dark: "#333333",
-        medium: "#888888",
+        midGray: "#606060",
         light: "#888888",
         lighter: "#cccccc",
         lightest: "#fafafa",

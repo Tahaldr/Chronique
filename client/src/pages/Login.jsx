@@ -10,6 +10,7 @@ import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { Toaster } from "react-hot-toast";
 import Loading from "../components/Loading";
 import MarkerCircle from "../components/MarkerCircle";
+import { TbArrowBackUp } from "react-icons/tb";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -46,6 +47,13 @@ const Login = () => {
   return (
     <>
       <Toaster />
+      {/* Go back to home */}
+      <p className="w-fit font-mediumPrimary py-1 px-3 rounded-full flex justify-center items-center gap-2 border border-dark hover:border-darkest text-dark hover:text-darkest absolute top-5 left-5">
+        <a href="/" className="text-sm md:text-base flex items-center gap-1">
+          <TbArrowBackUp />
+          Back to home
+        </a>
+      </p>
       <div className="w-screen h-screen  flex justify-center items-center">
         <div className="py-5 px-10 w-[450px] gap-4 h-auto flex flex-col justify-center items-center">
           <div className="w-full h-14 flex justify-center items-center relative">
@@ -168,17 +176,6 @@ const Login = () => {
                 Sign up
               </a>
             </p>
-
-            {/* Go back to home */}
-            {/* <p className="m-[-10px] text-dark font-mediumPrimary pt-3 flex justify-center items-center gap-2">
-              <a
-                href="/"
-                className="text-red-700 underline hover:text-darker flex items-center gap-1"
-              >
-                <TbArrowBackUp />
-                Back to home
-              </a>
-            </p> */}
           </div>
         </div>
       </div>

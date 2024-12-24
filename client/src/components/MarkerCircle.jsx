@@ -14,7 +14,11 @@ const MarkerCircle = ({
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 100 100"
-          className={`absolute w-[${width}] h-[${height}] z-0`}
+          className={`absolute z-0`}
+          style={{
+            width: `${width}`,
+            height: `${height}`,
+          }}
           preserveAspectRatio="xMidYMid meet"
           key="hovered-ellipse"
         >
