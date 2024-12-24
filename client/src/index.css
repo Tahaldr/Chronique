@@ -171,6 +171,30 @@ body {
   background-image: url("/OtherImg/NewsPaper_texture.png");
 }
 
+.text-darkish {
+  color: #666;
+}
+
+.bg-darkish {
+  background-color: #666;
+}
+
+.border-darkish {
+  border-color: #666;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #333 !important;
+}
+
 /* style scroll-bar */
 ::-webkit-scrollbar {
   width: 8px; /* Width for vertical scrollbar */

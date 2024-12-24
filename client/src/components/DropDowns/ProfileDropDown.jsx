@@ -27,7 +27,7 @@ const ProfileDropDown = () => {
       </a>
       <button
         onClick={() => logout()}
-        className="flex place-items-center gap-2 bg-darker hover:bg-darkest tracking-wide py-1 px-4"
+        className="flex place-items-center gap-2 bg-darker hover:bg-red-800 tracking-wide py-1 px-4"
       >
         <span>
           <BiLogOutCircle className="text-lg" />

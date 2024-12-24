@@ -130,23 +130,24 @@ const Signup = () => {
               onSubmit={handleSubmit}
             >
               <div
-                className={`border-dashed border-2 p-5 text-base font-medium font-smallMedium hover:border-dark ${
-                  dragActive ? "border-darker" : "border-medium"
-                }`}
+                className={`border-dashed border p-5 text-base font-medium font-smallMedium hover:border-darkest ${
+                  dragActive || image ? "border-darkest" : "border-darkish"
+                }
+                `}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
               >
                 <label
                   htmlFor="userPic"
-                  className="flex flex-col justify-center items-center cursor-pointer text-medium"
+                  className="flex flex-col justify-center items-center cursor-pointer text-light"
                 >
                   <AiOutlineCloudUpload className="text-3xl mb-2" />
                   <p className="text-dark text-center">
                     Drop your image here or browse
                   </p>
                   <p className="text-sm">Recommended size : 1:1</p>
-                  <p className="text-sm">Max file size : 10MB</p>
+                  <p className="text-sm">Max file size : 10mb</p>
                   {image ? (
                     <p className="text-darker w-[90%] text-sm mt-3 text-center">
                       {image}
@@ -173,7 +174,7 @@ const Signup = () => {
                   setFormData({ ...formData, name: e.target.value })
                 }
                 className="py-3 px-4 bg-transparent text-dark font-smallMedium font-medium text-base outline-none
-               focus:outline-none focus:border-dark border-2 border-medium placeholder:text-medium hover:border-dark "
+               focus:outline-none focus:border-dark border border-darkish placeholder:text-light hover:border-dark "
               />
 
               <input
@@ -185,11 +186,11 @@ const Signup = () => {
                   setFormData({ ...formData, email: e.target.value })
                 }
                 className="py-3 px-4 bg-transparent text-dark font-smallMedium font-medium text-base outline-none
-               focus:outline-none focus:border-dark border-2 border-medium placeholder:text-medium hover:border-dark "
+               focus:outline-none focus:border-dark border border-darkish placeholder:text-light hover:border-dark "
               />
 
               <div
-                className="relative w-full flex justify-between items-center px-4 py-3 border-2 border-medium
+                className="relative w-full flex justify-between items-center px-4 py-3 border border-darkish
              focus-within:border-dark hover:border-dark "
               >
                 <input
@@ -200,24 +201,24 @@ const Signup = () => {
                     setFormData({ ...formData, password: e.target.value })
                   }
                   className="bg-transparent text-dark font-smallMedium font-medium text-base outline-none 
-               focus:outline-none focus:border-dark placeholder:text-medium"
+               focus:outline-none focus:border-dark placeholder:text-light"
                   placeholder="••••••••"
                 />
                 {!passwordShow ? (
                   <VscEye
                     onClick={handlePassShow}
-                    className="eye text-dark hover:text-medium"
+                    className="eye text-dark hover:text-light"
                   />
                 ) : (
                   <VscEyeClosed
                     onClick={handlePassShow}
-                    className="eye text-medium hover:text-dark"
+                    className="eye text-light hover:text-dark"
                   />
                 )}
               </div>
 
               <motion.button
-                className="cursor-pointer overflow-hidden w-full py-6 text-lg flex justify-center items-center relative bg-dark text-lightest font-medium font-smallSemiBold hover:bg-medium hover:text-dark"
+                className="cursor-pointer overflow-hidden w-full py-6 text-lg flex justify-center items-center relative bg-dark text-lightest font-medium font-smallSemiBold hover:bg-light hover:text-dark"
                 type="submit"
                 whileHover="hover"
               >

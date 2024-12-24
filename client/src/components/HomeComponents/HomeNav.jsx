@@ -11,6 +11,7 @@ const HomeNav = ({ hidden, setActive }) => {
   const [hovered, setHovered] = useState(null);
   const [btnHovered, setBtnHovered] = useState(false);
   const [profileClicked, setProfileClicked] = useState(false);
+  const [profileHovered, setProfileHovered] = useState(false);
 
   const dropdownRef = useRef(null); // Ref to track the dropdown container
 
@@ -122,12 +123,19 @@ const HomeNav = ({ hidden, setActive }) => {
               className="relative"
               onClick={() => setProfileClicked((prev) => !prev)}
             >
-              <div className="flex place-items-center gap-2">
+              <div
+                className="flex place-items-center gap-2 relative"
+                onMouseEnter={() => setProfileHovered(true)}
+                onMouseLeave={() => setProfileHovered(false)}
+              >
                 <img
                   src={user.userPic || user.user?.userPic}
                   alt={`{user.name || user.user.name} pic`}
                   className="w-7 h-7 lg:w-8 lg:h-8 rounded-full lg:flex"
                 />
+                {profileHovered && (
+                  <div className=" absolute w-full h-full rounded-full bg-lightest opacity-10 top-0 left-0"></div>
+                )}
               </div>
               {/* Dropdown menu */}
               <AnimatePresence>

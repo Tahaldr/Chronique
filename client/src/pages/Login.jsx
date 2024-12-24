@@ -90,11 +90,11 @@ const Login = () => {
                   console.log(formData);
                 }}
                 className="py-3 px-4 bg-transparent text-dark font-smallMedium font-medium text-base outline-none
-               focus:outline-none focus:border-dark border-2 border-medium placeholder:text-medium hover:border-dark "
+               focus:outline-none focus:border-dark border border-darkish placeholder:text-light hover:border-dark autofill:shadow-[inset_0_0_0px_1000px_rgb(204,204,204)]"
               />
 
               <div
-                className="relative w-full flex justify-between items-center px-4 py-3 border-2 border-medium
+                className="relative w-full flex justify-between items-center px-4 py-3 border border-darkish
              focus-within:border-dark hover:border-dark "
               >
                 <input
@@ -106,24 +106,24 @@ const Login = () => {
                     console.log(formData);
                   }}
                   className="bg-transparent text-dark font-smallMedium font-medium text-base outline-none 
-               focus:outline-none focus:border-dark placeholder:text-medium"
+               focus:outline-none focus:border-dark placeholder:text-light autofill:shadow-[inset_0_0_0px_1000px_rgb(204,204,204)]"
                   placeholder="••••••••"
                 />
                 {!passwordShow ? (
                   <VscEye
                     onClick={handlePassShow}
-                    className="eye text-dark hover:text-medium"
+                    className="eye text-dark hover:text-light"
                   />
                 ) : (
                   <VscEyeClosed
                     onClick={handlePassShow}
-                    className="eye text-medium hover:text-dark"
+                    className="eye text-light hover:text-dark"
                   />
                 )}
               </div>
 
               <motion.button
-                className="cursor-pointer overflow-hidden w-full py-6 text-lg flex justify-center items-center relative bg-dark text-lightest font-medium font-smallSemiBold hover:bg-medium hover:text-dark"
+                className="cursor-pointer overflow-hidden w-full py-6 text-lg flex justify-center items-center relative bg-dark text-lightest font-medium font-smallSemiBold hover:bg-light hover:text-dark"
                 type="submit"
                 whileHover="hover"
               >

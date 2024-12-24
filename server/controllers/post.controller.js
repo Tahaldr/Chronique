@@ -67,29 +67,101 @@ export const createPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find();
+    // Use MongoDB aggregation to count likes and sort by the count
+    const posts = await Post.aggregate([
+      {
+        $addFields: { likeCount: { $size: "$likes" } }, // Add a field with the count of likes
+      },
+      {
+        $sort: { likeCount: -1 }, // Sort by the like count in descending order
+      },
+    ]);
+
     res
       .status(200)
       .json({ message: posts.length + " post(s) fetched successfully", posts });
   } catch (error) {
-    console.log("Error in getallposts controller", error.message);
-    res.status(500).json({ message: error.message, location: "getallposts" });
+    console.log("Error in getAllPosts controller", error.message);
+    res.status(500).json({ message: error.message, location: "getAllPosts" });
+  }
+};
+
+export const getRecentPosts = async (req, res) => {
+  try {
+    // Use MongoDB aggregation to count likes and sort by the count
+    const posts = await Post.aggregate([
+      {
+        $addFields: { likeCount: { $size: "$likes" } }, // Add a field with the count of likes
+      },
+      {
+        $sort: { createdAt: -1 }, // Sort by the like count in descending order
+      },
+    ]);
+
+    res
+      .status(200)
+      .json({ message: posts.length + " post(s) fetched successfully", posts });
+  } catch (error) {
+    console.log("Error in getRecentPosts controller", error.message);
+    res
+      .status(500)
+      .json({ message: error.message, location: "getRecentPosts" });
   }
 };
 
 export const getAuthorPosts = async (req, res) => {
+  // Get author posts with likes count
   try {
     const { author } = req.params;
-    const posts = await Post.find({ author });
+
+    // Find posts by author and sort by `createdAt` in descending order
+    const posts = await Post.find({ author }).sort({ createdAt: -1 });
+
     res.status(200).json({
       message: posts.length + " Author posts fetched successfully",
+      author : author,
+      posts: posts,
+      likesCount: posts.map((post) => {
+        // return ids and likes count
+        return {
+          id: post._id,
+          likesCount: post.likes.length,
+        };
+      }),
+    });
+  } catch (error) {
+    console.log("Error in getAuthorPosts controller", error.message);
+    res
+      .status(500)
+      .json({ message: error.message, location: "getAuthorPosts" });
+  }
+};
+
+export const getCategoryPosts = async (req, res) => {
+  try {
+    const { category } = req.params;
+
+    // Use aggregation to filter by category and sort by the length of the `likes` array
+    const posts = await Post.aggregate([
+      { $match: { category } }, // Filter posts by category
+      {
+        $addFields: {
+          likesCount: { $size: "$likes" }, // Add a field for the length of the `likes` array
+        },
+      },
+      { $sort: { likesCount: -1 } }, // Sort by the new `likesCount` field in descending order
+    ]);
+
+    res.status(200).json({
+      message: posts.length + " Category posts fetched successfully",
+      category: category,
       posts: posts,
     });
   } catch (error) {
-    console.log("Error in getauthorposts controller", error.message);
+    console.log("Error in getCategoryPosts controller", error.message);
     res
       .status(500)
-      .json({ message: error.message, location: "getauthorposts" });
+      .json({ message: error.message, location: "getCategoryPosts" });
   }
 };
 

@@ -2,7 +2,9 @@ import express from "express";
 import {
   createPost,
   getAllPosts,
+  getRecentPosts,
   getAuthorPosts,
+  getCategoryPosts,
   getPost,
   deletePost,
   deleteAuthorPosts,
@@ -23,8 +25,11 @@ router.post(
   createPost
 );
 router.get("/getallposts", protectedRoute, getAllPosts);
+router.get("/getrecentposts", protectedRoute, getRecentPosts);
 router.get("/getauthorposts/:author", protectedRoute, getAuthorPosts);
 router.get("/getpost/:postId", protectedRoute, getPost);
+router.get("/getcategoryposts/:category", protectedRoute, getCategoryPosts);
+
 router.delete("/deletepost/:postId", protectedRoute, deletePost);
 router.delete("/deleteauthorposts/:author", protectedRoute, deleteAuthorPosts);
 

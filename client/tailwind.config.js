@@ -1,17 +1,17 @@
+import tailwindcss from "tailwindcss";
+import autoprefixer from "autoprefixer";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      // backgroundImage: {
-      //   navBg: "url('/OtherImg/NewsPaper_texture.png')",
-      // },
       colors: {
         theBase: "#dbdbdb",
         darkest: "#111111",
         darker: "#222222",
         dark: "#333333",
-        midGray: "#606060",
+        // darkish: "#444444",
         light: "#888888",
         lighter: "#cccccc",
         lightest: "#fafafa",
@@ -45,5 +45,10 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [tailwindcss, autoprefixer],
+  // safelist: [
+  //   {
+  //     pattern: /(bg|text|border|fill|stroke)-semidark/,
+  //   },
+  // ],
 };
