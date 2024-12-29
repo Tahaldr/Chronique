@@ -95,7 +95,7 @@ const CategoriesCarousel = () => {
           {categories.map((item, index) => (
             <div
               key={index}
-              className="py-1 px-2 bg-lightish hover:bg-light text-darkest text-center whitespace-nowrap"
+              className="py-1 px-2 bg-lightish hover:bg-light text-darkest hover:text-black text-center whitespace-nowrap"
             >
               {item}
             </div>
