@@ -12,6 +12,7 @@ export default {
         darker: "#222222",
         dark: "#333333",
         // darkish: "#444444",
+        // lightish: "#c1c1c1",
         light: "#888888",
         lighter: "#cccccc",
         lightest: "#fafafa",

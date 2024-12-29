@@ -8,7 +8,7 @@ const ProfileDropDown = () => {
 
   return (
     <motion.div
-      className="absolute right-0 top-11 flex flex-col gap-2 bg-dark text-lighter p-2 font-bigPrimary text-base origin-top "
+      className="absolute right-0 top-11 flex flex-col gap-2 bg-dark text-lighter p-2 font-bigPrimary text-base origin-top z-50 "
       initial={{ scaleY: 0 }}
       animate={{
         scaleY: 1,

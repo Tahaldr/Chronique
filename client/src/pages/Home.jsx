@@ -31,11 +31,12 @@ const Home = () => {
     <>
       <div className="w-full h-screen">
         <div
-          className="w-full p-4 mb-11 overflow-hidden relative grid place-items-center"
+          className="w-full p-4 mb-[150px] md:mb-[100px] overflow-hidden relative grid place-items-center"
           ref={ref}
         >
           <HomeHeader navY={navY} />
         </div>
+
         <div className="w-full">
           <HomeNav hidden={hidden} setActive={setActive} />
           <HomeBody active={active} />

@@ -5,7 +5,9 @@ import PropTypes from "prop-types";
 import { useUserStore } from "../../stores/useUserStore";
 import MarkerCircle from "../MarkerCircle";
 import { useEffect, useRef, useState } from "react";
-import ProfileDropDown from "../DropDowns/ProfileDropDown";
+import ProfileDropDown from "../Elements/ProfileDropDown";
+import CategoriesCarousel from "./ChronicleComps/CategoriesCarousel";
+import Search from "./ChronicleComps/Search";
 
 const HomeNav = ({ hidden, setActive }) => {
   const [hovered, setHovered] = useState(null);
@@ -35,8 +37,7 @@ const HomeNav = ({ hidden, setActive }) => {
 
   return (
     <motion.div
-      className="sticky top-0 border-y border-darkest bg-navBg flex items-center justify-center h-11"
-      ref={dropdownRef}
+      className="sticky top-0 border-y border-darkest bg-navBg flex flex-col items-center justify-center"
       variants={{
         hidden: { y: 0 },
         visible: { y: "-100%" },
@@ -44,8 +45,11 @@ const HomeNav = ({ hidden, setActive }) => {
       animate={hidden ? "hidden" : "visible"}
       transition={{ duration: 0.35, ease: "easeInOut" }}
     >
-      {/* The Chronicle button */}
-      <div className="flex items-center justify-center list-none gap-6 md:gap-12 w-full text-darkest font-smallBold text-xs lg:text-sm">
+      <div
+        ref={dropdownRef}
+        className="flex items-center justify-center border-b border-darker h-11 list-none gap-6 md:gap-12 w-full text-darkest font-smallBold text-xs lg:text-sm"
+      >
+        {/* The Chronicle button */}
         <li
           className="relative grid place-items-center cursor-pointer hover:text-darker"
           onMouseEnter={() => setHovered(1)}
@@ -148,7 +152,7 @@ const HomeNav = ({ hidden, setActive }) => {
             </div>
           ) : (
             <button
-              className=" text-lightest font-bigSecondaryItalic px-4 flex place-items-center h-6 relative"
+              className="text-lightest font-bigSecondaryItalic flex place-items-center px-4 h-6 relative"
               onMouseEnter={() => setBtnHovered(true)}
               onMouseLeave={() => setBtnHovered(false)}
             >
@@ -170,6 +174,10 @@ const HomeNav = ({ hidden, setActive }) => {
             </button>
           )}
         </li>
+      </div>
+      <div className="flex flex-col md:flex-row h-28 md:h-14 w-full">
+        <CategoriesCarousel />
+        <Search />
       </div>
     </motion.div>
   );

@@ -183,6 +183,31 @@ body {
   border-color: #666;
 }
 
+input,
+button {
+  outline: none;
+}
+
+.slick-slide > div {
+  margin: 0 2px;
+}
+
+.text-lightish {
+  color: #b8b8b8;
+}
+
+.bg-lightish {
+  background-color: #b8b8b8;
+}
+
+.hover:bg-lightish:hover {
+  background-color: #b8b8b8;
+}
+
+.border-lightish {
+  border-color: #b8b8b8;
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,

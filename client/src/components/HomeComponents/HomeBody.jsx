@@ -18,7 +18,7 @@ const HomeBody = ({ active }) => {
     }
   };
 
-  return <div>{renderContent()}</div>;
+  return <div className="mt-[-160px] md:mt-[-103px]">{renderContent()}</div>;
 };
 
 HomeBody.propTypes = {

@@ -10,7 +10,6 @@ import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { Toaster } from "react-hot-toast";
 import Loading from "../components/Loading";
 import MarkerCircle from "../components/MarkerCircle";
-import { TbArrowBackUp } from "react-icons/tb";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -48,13 +47,18 @@ const Login = () => {
     <>
       <Toaster />
       {/* Go back to home */}
-      <p className="w-fit font-mediumPrimary py-1 px-3 rounded-full flex justify-center items-center gap-2 border border-dark hover:border-darkest text-dark hover:text-darkest absolute top-5 left-5">
-        <a href="/" className="text-sm md:text-base flex items-center gap-1">
-          <TbArrowBackUp />
-          Back to home
+      <p className="w-fit font-bigPrimary py-1 px-3 rounded-full flex justify-center items-center gap-2 border border-dark hover:border-darkest text-dark hover:text-darkest absolute top-5 left-5">
+        <a href="/" className="text-sm md:text-base flex items-center gap-2">
+          <HiOutlineArrowLongRight className="text-lg md:text-xl rotate-180" />
+          Back
         </a>
       </p>
-      <div className="w-screen h-screen  flex justify-center items-center">
+      <motion.div
+        className="w-screen h-screen  flex justify-center items-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+      >
         <div className="py-5 px-10 w-[450px] gap-4 h-auto flex flex-col justify-center items-center">
           <div className="w-full h-14 flex justify-center items-center relative">
             <h1
@@ -178,7 +182,7 @@ const Login = () => {
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };
