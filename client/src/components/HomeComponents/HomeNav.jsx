@@ -1,5 +1,4 @@
 import { FaPlus } from "react-icons/fa";
-
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 import { useUserStore } from "../../stores/useUserStore";
@@ -9,7 +8,13 @@ import ProfileDropDown from "../Elements/ProfileDropDown";
 import CategoriesCarousel from "./ChronicleComps/CategoriesCarousel";
 import Search from "./ChronicleComps/Search";
 
-const HomeNav = ({ hidden, setActive }) => {
+const HomeNav = ({
+  hidden,
+  setActive,
+  active,
+  setActiveCategory,
+  activeCategory,
+}) => {
   const [hovered, setHovered] = useState(null);
   const [btnHovered, setBtnHovered] = useState(false);
   const [profileClicked, setProfileClicked] = useState(false);
@@ -47,11 +52,13 @@ const HomeNav = ({ hidden, setActive }) => {
     >
       <div
         ref={dropdownRef}
-        className="flex items-center justify-center border-b border-darker h-11 list-none gap-6 md:gap-12 w-full text-darkest font-smallBold text-xs lg:text-sm"
+        className="flex items-center justify-center border-darker h-11 list-none gap-6 md:gap-12 w-full text-darkest font-smallBold text-xs lg:text-sm"
       >
         {/* The Chronicle button */}
         <li
-          className="relative grid place-items-center cursor-pointer hover:text-darker"
+          className={`${
+            active === "chronicle" ? "text-darkest" : "text-darkish"
+          } relative grid place-items-center cursor-pointer`}
           onMouseEnter={() => setHovered(1)}
           onMouseLeave={() => setHovered(null)}
           onClick={() => setActive("chronicle")}
@@ -65,26 +72,30 @@ const HomeNav = ({ hidden, setActive }) => {
             strokeWidth=".3"
           />
         </li>
-        {/* The Description button */}
+        {/* The About button */}
         <li
-          className="relative grid place-items-center cursor-pointer hover:text-darker"
+          className={`${
+            active === "about" ? "text-darkest" : "text-darkish"
+          } relative grid place-items-center cursor-pointer`}
           onMouseEnter={() => setHovered(2)}
           onMouseLeave={() => setHovered(null)}
-          onClick={() => setActive("description")}
+          onClick={() => setActive("about")}
         >
-          <button>Description</button>
+          <button>About Us</button>
           <MarkerCircle
             hovered={hovered === 2}
             cubicBezierVar={cubicBezierVar}
-            width="100px"
-            height="100px"
+            width="90px"
+            height="90px"
             strokeWidth=".3"
           />
         </li>
         {/* The Admin button */}
         {user && (user.idAdmin || user.user?.idAdmin) && (
           <li
-            className="relative grid place-items-center cursor-pointer hover:text-darker"
+            className={`${
+              active === "admin" ? "text-darkest" : "text-darkish"
+            } relative grid place-items-center cursor-pointer`}
             onMouseEnter={() => setHovered(3)}
             onMouseLeave={() => setHovered(null)}
             onClick={() => setActive("admin")}
@@ -175,10 +186,15 @@ const HomeNav = ({ hidden, setActive }) => {
           )}
         </li>
       </div>
-      <div className="flex flex-col md:flex-row h-28 md:h-14 w-full">
-        <CategoriesCarousel />
-        <Search />
-      </div>
+      {active === "chronicle" && (
+        <div className="flex flex-col md:flex-row h-28 md:h-14 w-full border-t border-darker">
+          <CategoriesCarousel
+            setActiveCategory={setActiveCategory}
+            activeCategory={activeCategory}
+          />
+          <Search />
+        </div>
+      )}
     </motion.div>
   );
 };
@@ -186,6 +202,9 @@ const HomeNav = ({ hidden, setActive }) => {
 HomeNav.propTypes = {
   hidden: PropTypes.bool.isRequired,
   setActive: PropTypes.func.isRequired,
+  active: PropTypes.string.isRequired,
+  setActiveCategory: PropTypes.func.isRequired,
+  activeCategory: PropTypes.string.isRequired,
 };
 
 export default HomeNav;

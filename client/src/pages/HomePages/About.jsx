@@ -1,7 +1,7 @@
-const AdminDashboard = () => {
+const About = () => {
   return (
-    <div className="h-screen w-screen bg-green-300">
-      AdminDashboard
+    <div className="h-screen w-screen bg-orange-300">
+      About
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero, sint
         nihil quaerat sequi commodi magni sunt nemo reprehenderit recusandae
@@ -115,4 +115,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default About;

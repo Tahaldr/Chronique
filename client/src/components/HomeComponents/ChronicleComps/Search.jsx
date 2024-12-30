@@ -48,7 +48,7 @@ const Search = () => {
                 className="absolute right-0"
               >
                 <RxCross2
-                  className="text-xl text-dark cursor-pointer"
+                  className="text-xl text-darkish cursor-pointer"
                   onClick={() => setSearchValue("")}
                 />
               </motion.div>

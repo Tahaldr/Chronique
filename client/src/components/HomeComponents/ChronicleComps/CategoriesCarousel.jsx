@@ -4,8 +4,9 @@ import "slick-carousel/slick/slick-theme.css";
 import { MdArrowBackIos } from "react-icons/md";
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import PropTypes from "prop-types";
 
-const CategoriesCarousel = () => {
+const CategoriesCarousel = ({ setActiveCategory, activeCategory }) => {
   const slider = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -68,7 +69,7 @@ const CategoriesCarousel = () => {
       <AnimatePresence>
         {canScrollLeft && (
           <motion.span
-            className="w-1/12 left-8 h-full z-10 absolute bg-gradient-to-r from-lighter to-transparent"
+            className="w-1/12 left-8 h-full mb-[2px] z-10 absolute bg-gradient-to-r from-lighter to-transparent"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -95,7 +96,12 @@ const CategoriesCarousel = () => {
           {categories.map((item, index) => (
             <div
               key={index}
-              className="py-1 px-2 bg-lightish hover:bg-light text-darkest hover:text-black text-center whitespace-nowrap"
+              onClick={() => setActiveCategory(item)}
+              className={`${
+                item === activeCategory
+                  ? "bg-light text-black"
+                  : "bg-lightish text-darkest"
+              } py-1 px-2  hover:bg-light  hover:text-black text-center whitespace-nowrap`}
             >
               {item}
             </div>
@@ -107,7 +113,7 @@ const CategoriesCarousel = () => {
       <AnimatePresence>
         {canScrollRight && (
           <motion.span
-            className="w-1/12 right-8 h-full z-10 absolute bg-gradient-to-l from-lighter to-transparent"
+            className="w-1/12 right-8 h-full mb-[2px] z-10 absolute bg-gradient-to-l from-lighter to-transparent"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -129,6 +135,11 @@ const CategoriesCarousel = () => {
       </AnimatePresence>
     </div>
   );
+};
+
+CategoriesCarousel.propTypes = {
+  setActiveCategory: PropTypes.func.isRequired,
+  activeCategory: PropTypes.string.isRequired,
 };
 
 export default CategoriesCarousel;

@@ -8,6 +8,7 @@ const Home = () => {
   const ref = useRef(null);
   const [hidden, setHidden] = useState(false);
   const [active, setActive] = useState("chronicle");
+  const [activeCategory, setActiveCategory] = useState("Popular");
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -31,15 +32,23 @@ const Home = () => {
     <>
       <div className="w-full h-screen">
         <div
-          className="w-full p-4 mb-[150px] md:mb-[100px] overflow-hidden relative grid place-items-center"
+          className={`${
+            active === "chronicle" ? "mb-[150px] md:mb-[100px]" : "mb-[38px] md:mb-[44px]"
+          } w-full p-4 overflow-hidden relative grid place-items-centerF`}
           ref={ref}
         >
           <HomeHeader navY={navY} />
         </div>
 
         <div className="w-full">
-          <HomeNav hidden={hidden} setActive={setActive} />
-          <HomeBody active={active} />
+          <HomeNav
+            hidden={hidden}
+            setActive={setActive}
+            active={active}
+            setActiveCategory={setActiveCategory}
+            activeCategory={activeCategory}
+          />
+          <HomeBody active={active} activeCategory={activeCategory} />
         </div>
       </div>
     </>

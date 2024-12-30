@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
-const TheChronicle = () => {
+const TheChronicle = ({ activeCategory }) => {
   const [sidebarTop, setSidebarTop] = useState(null);
   const sidebar = document.getElementById("sidebar");
 
@@ -257,7 +258,7 @@ const TheChronicle = () => {
           id="content_wrapper"
         >
           <div className="h-[300px] w-full bg-red-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati
+            {activeCategory} Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati
             nobis nulla ipsa at corporis maxime, eaque voluptates voluptatibus
             ullam quod? Atque cumque reiciendis doloribus hic repellendus dicta
             explicabo possimus obcaecati.
@@ -270,6 +271,10 @@ const TheChronicle = () => {
       </div>
     </div>
   );
+};
+
+TheChronicle.propTypes = {
+  activeCategory: PropTypes.string.isRequired,
 };
 
 export default TheChronicle;
