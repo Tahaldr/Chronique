@@ -64,24 +64,42 @@ export const createPost = async (req, res) => {
     res.status(500).json({ message: error.message, location: "createpost" });
   }
 };
-
 export const getAllPosts = async (req, res) => {
   try {
-    // Use MongoDB aggregation to count likes and sort by the count
+    const page = parseInt(req.query.page, 10) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 posts per page
+    const skip = (page - 1) * limit;
+
+    // Aggregation pipeline for sorting and pagination
     const posts = await Post.aggregate([
       {
-        $addFields: { likeCount: { $size: "$likes" } }, // Add a field with the count of likes
+        $addFields: { likeCount: { $size: "$likes" } }, // Add a field for the count of likes
       },
       {
-        $sort: { likeCount: -1 }, // Sort by the like count in descending order
+        $sort: { likeCount: -1, createdAt: -1 }, // Sort by likeCount (desc) and createdAt (desc) as a secondary sort
+      },
+      {
+        $skip: skip, // Skip documents for pagination
+      },
+      {
+        $limit: limit, // Limit the number of documents returned
       },
     ]);
 
-    res
-      .status(200)
-      .json({ message: posts.length + " post(s) fetched successfully", posts });
+    // Count total posts for pagination metadata
+    const totalPosts = await Post.countDocuments();
+    const totalPages = Math.ceil(totalPosts / limit); // Calculate total pages
+    const hasMore = page * limit < totalPosts; // Check if there are more pages
+
+    res.status(200).json({
+      message: `${posts.length} post(s) fetched successfully`,
+      posts,
+      nextPage: hasMore ? page + 1 : null, // Include nextPage if there are more posts
+      hasMore,
+      totalPages, // Return total pages
+    });
   } catch (error) {
-    console.log("Error in getAllPosts controller", error.message);
+    console.error("Error in getAllPosts controller:", error.message);
     res.status(500).json({ message: error.message, location: "getAllPosts" });
   }
 };
@@ -119,7 +137,7 @@ export const getAuthorPosts = async (req, res) => {
 
     res.status(200).json({
       message: posts.length + " Author posts fetched successfully",
-      author : author,
+      author: author,
       posts: posts,
       likesCount: posts.map((post) => {
         // return ids and likes count
@@ -140,25 +158,46 @@ export const getAuthorPosts = async (req, res) => {
 export const getCategoryPosts = async (req, res) => {
   try {
     const { category } = req.params;
+    const page = parseInt(req.query.page, 10) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 posts per page
+    const skip = (page - 1) * limit;
 
-    // Use aggregation to filter by category and sort by the length of the `likes` array
+    // Aggregation pipeline for category filtering, sorting, and pagination
     const posts = await Post.aggregate([
-      { $match: { category } }, // Filter posts by category
+      {
+        $match: { category }, // Filter posts by category
+      },
       {
         $addFields: {
           likesCount: { $size: "$likes" }, // Add a field for the length of the `likes` array
         },
       },
-      { $sort: { likesCount: -1 } }, // Sort by the new `likesCount` field in descending order
+      {
+        $sort: { likesCount: -1, createdAt: -1 }, // Sort by likesCount and createdAt
+      },
+      {
+        $skip: skip, // Skip documents for pagination
+      },
+      {
+        $limit: limit, // Limit the number of documents returned
+      },
     ]);
 
+    // Count total posts in the category for pagination metadata
+    const totalPosts = await Post.countDocuments({ category });
+    const totalPages = Math.ceil(totalPosts / limit); // Calculate total pages
+    const hasMore = page * limit < totalPosts; // Check if there are more pages
+
     res.status(200).json({
-      message: posts.length + " Category posts fetched successfully",
-      category: category,
-      posts: posts,
+      message: `${posts.length} Category post(s) fetched successfully`,
+      category,
+      posts,
+      nextPage: hasMore ? page + 1 : null, // Include nextPage if there are more posts
+      hasMore,
+      totalPages, // Return total pages
     });
   } catch (error) {
-    console.log("Error in getCategoryPosts controller", error.message);
+    console.error("Error in getCategoryPosts controller:", error.message);
     res
       .status(500)
       .json({ message: error.message, location: "getCategoryPosts" });

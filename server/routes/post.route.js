@@ -24,11 +24,11 @@ router.post(
   multerUpload.single("postPic"),
   createPost
 );
-router.get("/getallposts", protectedRoute, getAllPosts);
-router.get("/getrecentposts", protectedRoute, getRecentPosts);
-router.get("/getauthorposts/:author", protectedRoute, getAuthorPosts);
-router.get("/getpost/:postId", protectedRoute, getPost);
-router.get("/getcategoryposts/:category", protectedRoute, getCategoryPosts);
+router.get("/getallposts", getAllPosts);
+router.get("/getrecentposts", getRecentPosts);
+router.get("/getauthorposts/:author", getAuthorPosts);
+router.get("/getpost/:postId", getPost);
+router.get("/getcategoryposts/:category", getCategoryPosts);
 
 router.delete("/deletepost/:postId", protectedRoute, deletePost);
 router.delete("/deleteauthorposts/:author", protectedRoute, deleteAuthorPosts);

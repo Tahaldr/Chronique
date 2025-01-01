@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import axios from "../lib/axios";
 import showToast from "../components/Toast";
-import toast from "react-hot-toast";
 
 export const useUserStore = create((set, get) => ({
   // user: JSON.parse(localStorage.getItem("user")) || null,
@@ -81,7 +80,10 @@ export const useUserStore = create((set, get) => ({
       set({ user: null });
     } catch (error) {
       console.log("Error in logout", error.response?.data?.message);
-      toast.error("Logout failed");
+      showToast({
+        message: error.response?.data.message || "Logout failed",
+        type: "error",
+      });
     }
   },
 
