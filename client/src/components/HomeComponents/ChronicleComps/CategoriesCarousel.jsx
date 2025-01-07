@@ -12,19 +12,58 @@ const CategoriesCarousel = ({ setActiveCategory, activeCategory }) => {
   const [canScrollRight, setCanScrollRight] = useState(true);
 
   const categories = [
-    "Popular",
-    "Technology",
-    "Sports",
-    "History",
-    "Science",
-    "Art and Design",
-    "Culture",
-    "Entertainment",
-    "Politics",
-    "Education",
-    "Health",
-    "Business",
-    "Fun and Hobbies",
+    {
+      id: 1,
+      name: "Popular",
+    },
+    {
+      id: 2,
+      name: "Technology",
+    },
+    {
+      id: 3,
+      name: "Sports",
+    },
+    {
+      id: 4,
+      name: "History",
+    },
+    {
+      id: 5,
+      name: "Science",
+    },
+    {
+      id: 6,
+      name: "Art and Design",
+    },
+    {
+      id: 7,
+      name: "Culture",
+    },
+    {
+      id: 8,
+      name: "Entertainment",
+    },
+    {
+      id: 9,
+      name: "Politics",
+    },
+    {
+      id: 10,
+      name: "Education",
+    },
+    {
+      id: 11,
+      name: "Health",
+    },
+    {
+      id: 12,
+      name: "Business",
+    },
+    {
+      id: 13,
+      name: "Fun and Hobbies",
+    },
   ];
 
   const settings = {
@@ -93,17 +132,17 @@ const CategoriesCarousel = ({ setActiveCategory, activeCategory }) => {
       {/* Slider */}
       <div className="w-[85%] lg:w-[90%] z-0 cursor-grab active:cursor-grabbing">
         <Slider ref={slider} {...settings}>
-          {categories.map((item, index) => (
+          {categories.map((category) => (
             <div
-              key={index}
-              onClick={() => setActiveCategory(item)}
+              key={category.id}
+              onClick={() => setActiveCategory(category.name)}
               className={`${
-                item === activeCategory
+                category.name === activeCategory
                   ? "bg-light text-black"
                   : "bg-lightish text-darkest"
               } py-1 px-2  hover:bg-light  hover:text-black text-center whitespace-nowrap`}
             >
-              {item}
+              {category.name}
             </div>
           ))}
         </Slider>

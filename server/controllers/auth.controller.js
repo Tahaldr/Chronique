@@ -5,7 +5,7 @@ import cloudinary from "../lib/cloudinary.js";
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "1d",
     // expiresIn: "5s",
   });
 
@@ -33,6 +33,8 @@ const setCookies = (res, accessToken, refreshToken) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict", // prevents CSRF attack, cross-site request forgery attack
     // maxAge: 15 * 60 * 1000, // 15 minutes
+    // 1d :
+    maxAge: 24 * 60 * 60 * 1000,
     // maxAge: 1000 * 5, // 5 seconds
   });
 
@@ -225,14 +227,16 @@ export const refreshToken = async (req, res) => {
     const accessToken = jwt.sign(
       { userId: decoded.userId },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "15m" }
+      // { expiresIn: "15m" }
+      { expiresIn: "1d" }
     );
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 15 * 60 * 1000, // 15 minutes
+      // maxAge: 15 * 60 * 1000, // 15 minutes
+      maxAge: 24 * 60 * 60 * 1000, // 1 day 
     });
 
     res

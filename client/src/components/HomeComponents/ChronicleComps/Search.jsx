@@ -29,10 +29,10 @@ const Search = () => {
       <div className="flex items-center justify-between bg-lightish w-[90%] h-[67%] px-4 rounded-sm">
         <FiSearch className="text-xl text-dark hover:text-darker flex-shrink-0" />
         <input
-          ref={inputRef} // Attach the ref to the input element
+          ref={inputRef}
           type="text"
           placeholder="Search"
-          className="bg-transparent focus:outline-none w-full h-full mx-3 text-base font-smallMedium text-darkest placeholder:text-dark"
+          className="bg-transparent focus:outline-none w-full h-full ml-3 mr-7 text-base font-smallMedium text-darkest placeholder:text-dark"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
         />

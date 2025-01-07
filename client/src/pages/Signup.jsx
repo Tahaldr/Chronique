@@ -112,7 +112,7 @@ const Signup = () => {
         <div className="py-5 px-10 w-[450px] gap-4 h-auto flex flex-col justify-center items-center">
           <div className="w-full h-14 flex justify-center items-center relative">
             <h1
-              className="font-bigThird text-5xl text-darker cursor-pointer uppercase relative z-10"
+              className="font-bigThird text-4xl text-darker cursor-pointer uppercase relative z-10"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >

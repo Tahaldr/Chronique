@@ -42,7 +42,7 @@ const HomeNav = ({
 
   return (
     <motion.div
-      className="sticky top-0 border-y border-darkest bg-navBg flex flex-col items-center justify-center"
+      className="sticky z-50 top-0 border-y border-darkest bg-navBg flex flex-col items-center justify-center"
       variants={{
         hidden: { y: 0 },
         visible: { y: "-100%" },
@@ -146,7 +146,7 @@ const HomeNav = ({
                 <img
                   src={user.userPic || user.user?.userPic}
                   alt={`{user.name || user.user.name} pic`}
-                  className="w-7 h-7 lg:w-8 lg:h-8 rounded-full lg:flex"
+                  className="w-7 h-7 object-cover lg:w-8 lg:h-8 rounded-full lg:flex"
                 />
                 {profileHovered && (
                   <div className=" absolute w-full h-full rounded-full bg-lightest opacity-10 top-0 left-0"></div>

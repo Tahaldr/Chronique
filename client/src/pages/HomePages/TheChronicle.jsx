@@ -1,31 +1,91 @@
-import { motion } from "framer-motion";
-import { Fragment, useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { usePostStore } from "../../stores/usePostStore";
-import { useInfiniteQuery } from "@tanstack/react-query";
-// import from intersaction observer
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import Loading from "../../components/Loading";
 import showToast from "../../components/Toast";
+import moment from "moment";
+import { MdOutlinePostAdd } from "react-icons/md";
+import { SlOptions } from "react-icons/sl";
+import { TbArrowBigDown, TbArrowBigDownFilled } from "react-icons/tb";
+import { TbMessageCircle, TbMessageCircleFilled } from "react-icons/tb";
+import { HiArrowSmallUp } from "react-icons/hi2";
+import { useUserStore } from "../../stores/useUserStore";
+import OptionsDropdown from "../../components/Elements/OptionsDropdown";
 
 const TheChronicle = ({ activeCategory }) => {
+  const sidebarRef = useRef(null);
   const [sidebarTop, setSidebarTop] = useState(null);
-  const sidebar = document.getElementById("sidebar");
+  const [commentHovered, setCommentHovered] = useState({});
+  const [arrowUpShow, setArrowUpShow] = useState(false);
+  const [optionsShow, setOptionsShow] = useState(null);
+  const [optionsPosition, setOptionsPosition] = useState("up");
+  const { ref, inView } = useInView();
+  const dropdownRef = useRef(null); // Ref to track the dropdown container
 
+  // Stores
+  const { getPopularPosts, getCategoryPosts, likePost, unlikePost } =
+    usePostStore();
+  const { user } = useUserStore();
+  const queryClient = useQueryClient();
+
+  // Handle clicks outside the dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Check if click happens outside the dropdown
+      if (!event.target.closest(".options-dropdown")) {
+        setOptionsShow(null); // Close the dropdown
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+  // console.log("getComments", getComments("676a8e5b970b6b88d66e77aa"));
+  // console.log("getPopularPosts", getPopularPosts());
+  // console.log("getCategoryPosts", getCategoryPosts("Technology"));
+
+  // Format number
+  function formatNumber(num) {
+    if (num >= 1_000_000) {
+      return (num / 1_000_000).toFixed(1).replace(/\.0+$/, "") + "m";
+    } else if (num >= 1_000) {
+      return (num / 1_000).toFixed(1).replace(/\.0+$/, "") + "k";
+    } else {
+      return num.toString();
+    }
+  }
+
+  // Show Arrow up ( if i scrolled more than 100vh show it ) :
   useEffect(() => {
     const handleScroll = () => {
-      if (sidebar) {
-        setSidebarTop(sidebar.getBoundingClientRect().top);
+      if (window.scrollY > window.innerHeight) {
+        setArrowUpShow(true);
+      } else {
+        setArrowUpShow(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Manage sidebar position
+  useEffect(() => {
+    const handleScroll = () => {
+      if (sidebarRef.current) {
+        setSidebarTop(sidebarRef.current.getBoundingClientRect().top);
       }
     };
     document.addEventListener("scroll", handleScroll);
 
     return () => document.removeEventListener("scroll", handleScroll);
-  }, [sidebar]);
+  }, []);
 
-  // Fetch posts data
-  const { getPopularPosts, getCategoryPosts } = usePostStore();
-
+  // Fetch posts data using infinite query
   const {
     data,
     isLoading,
@@ -52,16 +112,67 @@ const TheChronicle = ({ activeCategory }) => {
     },
   });
 
-  const { ref, inView } = useInView();
-
+  // Fetch next page when in view
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
     }
   }, [inView, fetchNextPage, hasNextPage]);
 
-  // console.log("getPopularPosts",getPopularPosts());
-  // console.log("data", data);
+  // Update the cached data after liking a post
+  const handleLikePost = async (postId) => {
+    try {
+      await likePost(postId); // Perform the API call to like the post
+      queryClient.setQueryData(["posts", activeCategory], (oldData) => {
+        if (!oldData) return oldData;
+
+        const newData = {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            posts: page.posts.map((post) =>
+              post._id === postId
+                ? { ...post, likes: [...post.likes, user?._id] }
+                : post
+            ),
+          })),
+        };
+        return newData;
+      });
+    } catch (error) {
+      console.log(error);
+      showToast({ message: "Failed to like the post.", type: "error" });
+    }
+  };
+
+  // Update the cached data after unliking a post
+  const handleUnlikePost = async (postId) => {
+    try {
+      await unlikePost(postId); // Perform the API call to unlike the post
+      queryClient.setQueryData(["posts", activeCategory], (oldData) => {
+        if (!oldData) return oldData;
+
+        const newData = {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            posts: page.posts.map((post) =>
+              post._id === postId
+                ? {
+                    ...post,
+                    likes: post.likes.filter((like) => like !== user?._id),
+                  }
+                : post
+            ),
+          })),
+        };
+        return newData;
+      });
+    } catch (error) {
+      console.log(error);
+      showToast({ message: "Failed to unlike the post.", type: "error" });
+    }
+  };
 
   if (isLoading)
     return (
@@ -77,33 +188,239 @@ const TheChronicle = ({ activeCategory }) => {
   return (
     <div className="flex">
       {/* Posts */}
-      <div className="h-full w-2/3">
-        <div className="w-full h-full">
-          {data?.pages.map((group, i) => {
-            return (
+      <div className="h-full md:w-2/3 relative">
+        {arrowUpShow && (
+          <motion.div
+            className="sticky z-20 flex top-5 justify-center w-full text-3xl"
+            initial={{ y: -50 }}
+            animate={{ y: 0 }}
+            // exit={{ y: -50, transition: { duration: 0.2 } }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          >
+            <HiArrowSmallUp
+              className="bg-lighter text-darker rounded-full border border-opacity-60 border-darker"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            />
+          </motion.div>
+        )}
+        {data.pages ? (
+          <div>
+            {data?.pages.map((group, i) => (
               <div key={i}>
-                {group.posts.map((post, i) => (
-                  <div key={post._id}>
-                    <p>{i + 1}</p>
-                    <p>Title: {post.title}</p>
+                {group.posts.map((post, index) => (
+                  <div key={post._id} className="py-2 px-5 flex flex-col gap-5">
+                    <div className="w-full flex flex-col gap-4">
+                      {/* Top section of post */}
+
+                      {/* DELETE THIS */}
+                      {/* <p className="font-small text-sm">
+                        <span className="text-red-400">
+                          Delete this later :{" "}
+                        </span>
+                        {post._id}
+                      </p> */}
+
+                      <div
+                        className="flex items-center justify-between px-1 relative"
+                        ref={dropdownRef}
+                      >
+                        <p className="font-mediumSecondary text-darker">
+                          by{" "}
+                          <span className="lowercase hover:text-darkest hover:underline">
+                            <a href="">{post.author.name}</a>
+                          </span>
+                        </p>
+                        {user && (
+                          <SlOptions
+                            className="text-3xl text-dark mr-[-8px] hover:text-darkest p-2 rounded-full hover-bg-lightish active:bg-light cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const { top } = e.target.getBoundingClientRect();
+                              if (top < window.innerHeight / 2) {
+                                setOptionsPosition("up");
+                              } else {
+                                setOptionsPosition("down");
+                              }
+                              console.log(top);
+                              console.log(window.innerHeight / 2);
+                              console.log(optionsPosition);
+
+                              setOptionsShow((prev) =>
+                                prev === post._id ? null : post._id
+                              );
+                            }}
+                          />
+                        )}
+                        {/* Options Dropdown */}
+                        <AnimatePresence>
+                          {optionsShow === post._id && (
+                            <OptionsDropdown
+                              user={user}
+                              postId={post._id}
+                              postAuthor={post.author}
+                              optionsPosition={optionsPosition}
+                            />
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      {/* Middle section of post */}
+                      <div
+                        className={`${
+                          index === 0 && i === 0
+                            ? "flex flex-col "
+                            : "flex justify-start "
+                        } gap-6 `}
+                      >
+                        {post.postPic !== "null" && (
+                          <div
+                            className={`${
+                              index === 0 && i === 0
+                                ? "aspect-[16/9]"
+                                : "aspect-[8/5] w-1/3 h-fit"
+                            } overflow-hidden cursor-pointer border-[1px] border-opacity-30 border-dark`}
+                            onClick={() => {
+                              // Get post details
+                            }}
+                          >
+                            <motion.img
+                              src={post.postPic}
+                              alt={post.title + " image"}
+                              className="w-full h-full object-cover"
+                              whileHover={{
+                                scale: 1.03,
+                                transition: {
+                                  duration: 0.3,
+                                  ease: "easeInOut",
+                                },
+                              }}
+                            />
+                          </div>
+                        )}
+
+                        <div
+                          className={`${
+                            index === 0 && i === 0
+                              ? "w-full gap-5"
+                              : `w-2/3 ${
+                                  post.postPic !== "null"
+                                    ? "gap-5 xl:gap-0"
+                                    : "gap-5"
+                                }`
+                          } flex flex-col jutify-between `}
+                        >
+                          <div className="h-full  flex flex-col lg:gap-2">
+                            <h3
+                              className={`${
+                                index === 0 && i === 0 ? "text-3xl" : "text-2xl"
+                              } font-bigThird text-darker text-justify hover:text-light cursor-pointer`}
+                            >
+                              <a href="">{post.title}</a>
+                            </h3>
+                            <p
+                              className={`${
+                                index === 0 && i === 0
+                                  ? "line-clamp-6"
+                                  : "line-clamp-3"
+                              } text-darker font-smallMedium text-sm lg:text-base text-justify text-ellipsis`}
+                            >
+                              {post.description}
+                            </p>
+                          </div>
+                          <p className="text-darker bg-lightish font-mediumPrimary text-xs w-fit py-1 px-4">
+                            {post.category}
+                          </p>
+                        </div>
+                      </div>
+                      {/* Bottom section of post */}
+                      <div className="flex items-center justify-between text-dark font-smallMediumItalic">
+                        <div className="flex items-center gap-6">
+                          <div className="flex items-center gap-3 cursor-pointer">
+                            <div className="flex items-center gap-1">
+                              {post.likes.find((like) => like === user?._id) ? (
+                                <TbArrowBigDownFilled className="text-lg rotate-180" />
+                              ) : (
+                                <TbArrowBigDown
+                                  className="text-lg rotate-180 hover:text-darker"
+                                  onClick={() => handleLikePost(post._id)}
+                                />
+                              )}
+                              <p className="text-sm">
+                                {formatNumber(post.likes.length)}
+                              </p>
+                            </div>
+                            <TbArrowBigDown
+                              className="text-lg hover:text-darker"
+                              onClick={() => handleUnlikePost(post._id)}
+                            />
+                          </div>
+                          <div
+                            className="flex items-center gap-1 hover:text-darker cursor-pointer"
+                            onMouseEnter={() =>
+                              setCommentHovered((prev) => ({
+                                ...prev,
+                                [post._id]: true,
+                              }))
+                            }
+                            onMouseLeave={() =>
+                              setCommentHovered((prev) => ({
+                                ...prev,
+                                [post._id]: false,
+                              }))
+                            }
+                            onClick={() => {
+                              // Get comments
+                            }}
+                          >
+                            {commentHovered[post._id] ? (
+                              <TbMessageCircleFilled className="text-lg" />
+                            ) : (
+                              <TbMessageCircle className="text-lg" />
+                            )}
+
+                            <p className="text-sm">
+                              {formatNumber(post.comments)}
+                            </p>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-sm">
+                            {moment(post.createdAt).format("MMM DD, YYYY")}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <hr className="border-light" />
                   </div>
                 ))}
               </div>
-            );
-          })}
+            ))}
+          </div>
+        ) : (
+          <div className="w-screen md:w-full h-full flex flex-col items-center justify-center p-28 font-mediumPrimary text-lg md:text-xl">
+            <p className="text-dark">No posts yet ...</p>
+            <p className="text-darkest flex items-center gap-1">
+              be the first to write
+              <MdOutlinePostAdd className="text-darkest" />
+            </p>
+          </div>
+        )}
 
-          {isFetching && isFetchingNextPage && (
-            <div className="flex items-center justify-center h-10">
-              <Loading size="3xl" color="dark" />
-            </div>
-          )}
+        {isFetching && isFetchingNextPage && (
+          <div className="flex items-center justify-center h-10">
+            <Loading size="3xl" color="dark" />
+          </div>
+        )}
 
-          <div ref={ref}></div>
-        </div>
+        <div ref={ref} className="h-20"></div>
       </div>
 
       {/* Sidebar */}
-      <div className="h-screen w-1/3 z-[-1]" id="sidebar">
+      <div
+        className="h-screen w-1/3 z-[-1] hidden md:block"
+        id="sidebar"
+        ref={sidebarRef}
+      >
         <motion.div
           className="bg-orange-400 z-10 h-full"
           style={

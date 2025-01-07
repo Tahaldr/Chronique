@@ -57,47 +57,61 @@ export const createComment = async (req, res) => {
     res.status(500).json({ message: error.message, location: "createcomment" });
   }
 };
+
 export const getComments = async (req, res) => {
   try {
     const { postId } = req.params;
 
-    // Check if post exists
+    // Check if the post exists
     const post = await Post.findById(postId);
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    // Get user ID from cookies in refresh token
+    // Initialize variables
+    let userId = null;
+    let userComments = [];
+    let otherComments = [];
+
+    // Check for a valid refresh token
     const refreshToken = req.cookies.refreshToken;
-    let userId;
-
     if (refreshToken) {
-      const decoded = jwt.verify(
-        refreshToken,
-        process.env.REFRESH_TOKEN_SECRET
-      );
-      const storedToken = await Redis.get("refreshToken:" + decoded.userId);
+      try {
+        const decoded = jwt.verify(
+          refreshToken,
+          process.env.REFRESH_TOKEN_SECRET
+        );
+        const storedToken = await Redis.get("refreshToken:" + decoded.userId);
 
-      if (storedToken !== refreshToken) {
-        return res.status(401).json({ message: "Invalid refresh token" });
+        if (storedToken === refreshToken) {
+          userId = decoded.userId;
+
+          // Fetch user's comments sorted by `createdAt` descending
+          userComments = await Comment.find({
+            post: postId,
+            author: userId,
+          }).sort({ createdAt: -1 });
+        }
+      } catch (error) {
+        console.log("Error verifying token:", error.message);
+        return res
+          .status(401)
+          .json({ message: "Invalid or expired refresh token" });
       }
-      userId = decoded.userId;
     }
 
-    // Fetch user's comments on the post
-    const userComments = userId
-      ? await Comment.find({ post: postId, author: userId }).sort({
-          createdAt: -1,
-        })
-      : [];
+    // Fetch other comments
+    if (userId) {
+      otherComments = await Comment.find({
+        post: postId,
+        author: { $ne: userId },
+      }).sort({ votes: -1 });
+    } else {
+      // If no user logged in, fetch all comments sorted by `votes` descending
+      otherComments = await Comment.find({ post: postId }).sort({ votes: -1 });
+    }
 
-    // Fetch other comments on the post
-    const otherComments = await Comment.find({
-      post: postId,
-      author: { $ne: userId },
-    }).sort({ createdAt: -1 });
-
-    // Combine comments with user's comments first, then other comments
+    // Combine comments: user's comments first (if any), then other comments
     const comments = [...userComments, ...otherComments];
 
     res.status(200).json({

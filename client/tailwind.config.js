@@ -1,5 +1,6 @@
 import tailwindcss from "tailwindcss";
 import autoprefixer from "autoprefixer";
+import aspect from "@tailwindcss/aspect-ratio";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -24,7 +25,7 @@ export default {
         bigPrimary: ["canopee", "sans-serif"],
         bigSecondary: ["DomaineDisplay", "sans-serif"],
         bigSecondaryItalic: ["DomaineDisplayItalic", "sans-serif"],
-        bigThird: ["Satisfactory", "sans-serif"],
+        bigThird: ["Cheltenham", "sans-serif"],
 
         // Medium fonts variants
         mediumPrimary: ["cormorantBold", "serif"],
@@ -46,7 +47,7 @@ export default {
       },
     },
   },
-  plugins: [tailwindcss, autoprefixer],
+  plugins: [tailwindcss, autoprefixer, aspect],
   // safelist: [
   //   {
   //     pattern: /(bg|text|border|fill|stroke)-semidark/,

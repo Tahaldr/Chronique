@@ -21,11 +21,11 @@ const router = express.Router();
 // router.post("/upload", multerUpload.single("userPic"), upload);
 router.post("/signup", signup);
 router.post("/login", login);
-router.post("/logout", logout);
+router.post("/logout", protectedRoute, logout);
 router.post("/refreshtoken", refreshToken);
 router.get("/profile", protectedRoute, getprofile);
 router.get("/getallusers", protectedRoute, adminRoute, getallusers);
-router.get("/getuser/:id", protectedRoute, adminRoute, getUser);
+router.get("/getuser/:id", getUser);
 router.post("/deleteuser/:id", protectedRoute, adminRoute, deleteUser);
 
 // Delete all users - just for development purposes

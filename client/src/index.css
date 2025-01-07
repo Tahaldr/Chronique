@@ -39,8 +39,9 @@
 }
 
 @font-face {
-  font-family: "Satisfactory";
-  src: url("FontFaces/Satisfactory/Satisfactory-VGxll.ttf") format("truetype");
+  font-family: "Cheltenham";
+  src: url("FontFaces/cheltenham/cheltenham-cond-normal-700.ttf")
+    format("truetype");
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
@@ -183,6 +184,10 @@ body {
   border-color: #666;
 }
 
+/* img.filter-grayscale {
+  filter: grayscale(1) !important;
+} */
+
 input,
 button {
   outline: none;
@@ -197,6 +202,10 @@ button {
 }
 
 .bg-lightish {
+  background-color: #b8b8b8;
+}
+
+.hover-bg-lightish:hover {
   background-color: #b8b8b8;
 }
 
