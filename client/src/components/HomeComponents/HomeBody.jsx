@@ -4,11 +4,32 @@ import AdminDashboard from "../../pages/HomePages/AdminDashboard";
 import TheChronicle from "../../pages/HomePages/TheChronicle";
 import About from "../../pages/HomePages/About";
 
-const HomeBody = ({ active, activeCategory }) => {
+const HomeBody = ({
+  active,
+  activeCategory,
+  setActiveCategory,
+  searchSubmitted,
+  setSearchSubmitted,
+  setSearchTerm,
+  searchTerm,
+  setSearchFinalTerm,
+  searchFinalTerm,
+}) => {
   const renderContent = () => {
     switch (active) {
       case "chronicle":
-        return <TheChronicle activeCategory={activeCategory} />;
+        return (
+          <TheChronicle
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
+            searchSubmitted={searchSubmitted}
+            setSearchSubmitted={setSearchSubmitted}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            setSearchFinalTerm={setSearchFinalTerm}
+            searchFinalTerm={searchFinalTerm}
+          />
+        );
       case "about":
         return <About />;
       case "admin":
@@ -35,6 +56,13 @@ const HomeBody = ({ active, activeCategory }) => {
 HomeBody.propTypes = {
   active: PropTypes.string.isRequired,
   activeCategory: PropTypes.string.isRequired,
+  setActiveCategory: PropTypes.func.isRequired,
+  searchSubmitted: PropTypes.bool.isRequired,
+  setSearchSubmitted: PropTypes.func.isRequired,
+  searchTerm: PropTypes.string.isRequired,
+  setSearchTerm: PropTypes.func.isRequired,
+  setSearchFinalTerm: PropTypes.func.isRequired,
+  searchFinalTerm: PropTypes.string.isRequired,
 };
 
 export default HomeBody;

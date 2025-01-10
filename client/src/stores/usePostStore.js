@@ -3,6 +3,8 @@ import axios from "../lib/axios";
 import showToast from "../components/Toast";
 
 export const usePostStore = create((set, get) => ({
+  loading: false,
+
   getAuthorPost: async (authorId) => {
     try {
       const res = await axios.get(`/auth/getuser/${authorId}`);
@@ -70,10 +72,85 @@ export const usePostStore = create((set, get) => ({
     }
   },
 
+  getTopWriters: async (limit = 3) => {
+    set({ loading: true });
+    try {
+      const res = await axios.get(`/post/topwriters?limit=${limit}`);
+      set({ loading: false });
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  },
+
   getCategoryPosts: async (category, page = 1, limit = 10) => {
     try {
       const res = await axios.get(
         `/post/getcategoryposts/${category}?page=${page}&limit=${limit}`
+      );
+      const posts = res.data.posts;
+
+      // Fetch author data and comments length for each post
+      const postsWithAuthorsComments = await Promise.all(
+        posts.map(async (post) => {
+          try {
+            const author = await get().getAuthorPost(post.author);
+            const comments = await get().getComments(post._id);
+            return { ...post, author, comments: comments.comments.length };
+          } catch (error) {
+            console.log(error);
+            return { ...post, author: null, comments: 0 };
+          }
+        })
+      );
+
+      return {
+        ...res.data,
+        posts: postsWithAuthorsComments,
+      };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  },
+
+  getRecentPosts: async (limit = 5) => {
+    set({ loading: true });
+    try {
+      const res = await axios.get(`/post/getrecentposts?limit=${limit}`);
+
+      const posts = res.data.posts;
+
+      const postsWithAuthorsComments = await Promise.all(
+        posts.map(async (post) => {
+          try {
+            const author = await get().getAuthorPost(post.author);
+            const comments = await get().getComments(post._id);
+            return { ...post, author, comments: comments.comments.length };
+          } catch (error) {
+            console.log(error);
+            return { ...post, author: null, comments: 0 };
+          }
+        })
+      );
+      set({ loading: false });
+
+      return {
+        ...res.data,
+        posts: postsWithAuthorsComments,
+      };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  },
+
+  searchPosts: async (term, page = 1, limit = 10) => {
+    if (!term) return;
+    try {
+      const res = await axios.get(
+        `/post/searchposts?term=${term}&page=${page}&limit=${limit}`
       );
       const posts = res.data.posts;
 
@@ -107,6 +184,10 @@ export const usePostStore = create((set, get) => ({
       return res.data;
     } catch (error) {
       console.log(error);
+      showToast({
+        message: error.response?.data?.message || "Failed to upvote the post",
+        type: "error",
+      });
       throw error;
     }
   },
@@ -117,6 +198,11 @@ export const usePostStore = create((set, get) => ({
       return res.data;
     } catch (error) {
       console.log(error);
+      // if no refrech token so the message says to login
+      showToast({
+        message: error.response?.data?.message || "Failed to downvote the post",
+        type: "error",
+      });
       throw error;
     }
   },

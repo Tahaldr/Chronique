@@ -14,6 +14,12 @@ const HomeNav = ({
   active,
   setActiveCategory,
   activeCategory,
+  setSearchSubmitted,
+  setSearchTerm,
+  searchTerm,
+  setSearchFinalTerm,
+  // searchSubmitted,
+  // searchFinalTerm,
 }) => {
   const [hovered, setHovered] = useState(null);
   const [btnHovered, setBtnHovered] = useState(false);
@@ -191,8 +197,17 @@ const HomeNav = ({
           <CategoriesCarousel
             setActiveCategory={setActiveCategory}
             activeCategory={activeCategory}
+            setSearchSubmitted={setSearchSubmitted}
+            setSearchFinalTerm={setSearchFinalTerm}
           />
-          <Search />
+          <Search
+            setSearchSubmitted={setSearchSubmitted}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            setSearchFinalTerm={setSearchFinalTerm}
+            // searchSubmitted={searchSubmitted}
+            // searchFinalTerm={searchFinalTerm}
+          />
         </div>
       )}
     </motion.div>
@@ -205,6 +220,12 @@ HomeNav.propTypes = {
   active: PropTypes.string.isRequired,
   setActiveCategory: PropTypes.func.isRequired,
   activeCategory: PropTypes.string.isRequired,
+  setSearchSubmitted: PropTypes.func.isRequired,
+  searchTerm: PropTypes.string.isRequired,
+  setSearchTerm: PropTypes.func.isRequired,
+  setSearchFinalTerm: PropTypes.func.isRequired,
+  // searchSubmitted: PropTypes.bool.isRequired,
+  // searchFinalTerm: PropTypes.string.isRequired,
 };
 
 export default HomeNav;

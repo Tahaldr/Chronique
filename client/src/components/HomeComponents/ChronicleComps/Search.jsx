@@ -1,11 +1,18 @@
 import { FiSearch } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
 import { MdKeyboardCommandKey } from "react-icons/md";
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import PropTypes from "prop-types";
 
-const Search = () => {
-  const [searchValue, setSearchValue] = useState("");
+const Search = ({
+  searchTerm,
+  setSearchTerm,
+  setSearchSubmitted,
+  // searchSubmitted,
+  // searchFinalTerm,
+  setSearchFinalTerm,
+}) => {
   const inputRef = useRef(null); // Reference to the input element
 
   useEffect(() => {
@@ -24,21 +31,40 @@ const Search = () => {
     };
   }, []);
 
+  // Search posts implementation
+  const handleSearch = async (e) => {
+    try {
+      e.preventDefault();
+      setSearchFinalTerm(searchTerm.trim());
+      setSearchSubmitted(true);
+      setSearchTerm("");
+    } catch (error) {
+      console.error("Error searching posts:", error);
+    }
+  };
+
   return (
     <div className="order-1 md:order-2 w-full md:w-1/3 h-1/2 md:h-14 flex justify-center items-center">
       <div className="flex items-center justify-between bg-lightish w-[90%] h-[67%] px-4 rounded-sm">
-        <FiSearch className="text-xl text-dark hover:text-darker flex-shrink-0" />
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Search"
-          className="bg-transparent focus:outline-none w-full h-full ml-3 mr-7 text-base font-smallMedium text-darkest placeholder:text-dark"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
+        <form
+          className="flex items-center h-full w-full"
+          onSubmit={handleSearch}
+        >
+          <button type="submit">
+            <FiSearch className="text-xl text-dark hover:text-darker flex-shrink-0" />
+          </button>
+          <input
+            ref={inputRef}
+            type="text"
+            placeholder="Search"
+            className="bg-transparent focus:outline-none w-full h-full ml-3 mr-7 text-base font-smallMedium text-darkest placeholder:text-dark"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </form>
         <div className="flex items-center relative">
           <AnimatePresence mode="wait">
-            {searchValue.length > 0 ? (
+            {searchTerm.length > 0 ? (
               <motion.div
                 key="clear-icon"
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -49,7 +75,7 @@ const Search = () => {
               >
                 <RxCross2
                   className="text-xl text-darkish cursor-pointer"
-                  onClick={() => setSearchValue("")}
+                  onClick={() => setSearchTerm("")}
                 />
               </motion.div>
             ) : (
@@ -70,6 +96,15 @@ const Search = () => {
       </div>
     </div>
   );
+};
+
+Search.propTypes = {
+  searchTerm: PropTypes.string.isRequired,
+  setSearchTerm: PropTypes.func.isRequired,
+  setSearchSubmitted: PropTypes.func.isRequired,
+  // searchSubmitted: PropTypes.bool.isRequired,
+  // searchFinalTerm: PropTypes.string.isRequired,
+  setSearchFinalTerm: PropTypes.func.isRequired,
 };
 
 export default Search;

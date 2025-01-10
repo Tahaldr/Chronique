@@ -236,7 +236,7 @@ export const refreshToken = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       // maxAge: 15 * 60 * 1000, // 15 minutes
-      maxAge: 24 * 60 * 60 * 1000, // 1 day 
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
     res

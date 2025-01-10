@@ -9,6 +9,9 @@ const Home = () => {
   const [hidden, setHidden] = useState(false);
   const [active, setActive] = useState("chronicle");
   const [activeCategory, setActiveCategory] = useState("Popular");
+  const [searchSubmitted, setSearchSubmitted] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchFinalTerm, setSearchFinalTerm] = useState("");
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -49,8 +52,24 @@ const Home = () => {
             active={active}
             setActiveCategory={setActiveCategory}
             activeCategory={activeCategory}
+            setSearchSubmitted={setSearchSubmitted}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            setSearchFinalTerm={setSearchFinalTerm}
+            // searchSubmitted={searchSubmitted}
+            // searchFinalTerm={searchFinalTerm}
           />
-          <HomeBody active={active} activeCategory={activeCategory} />
+          <HomeBody
+            active={active}
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
+            searchSubmitted={searchSubmitted}
+            setSearchSubmitted={setSearchSubmitted}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            setSearchFinalTerm={setSearchFinalTerm}
+            searchFinalTerm={searchFinalTerm}
+          />
         </div>
       </div>
     </>

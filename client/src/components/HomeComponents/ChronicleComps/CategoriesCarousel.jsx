@@ -6,7 +6,12 @@ import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import PropTypes from "prop-types";
 
-const CategoriesCarousel = ({ setActiveCategory, activeCategory }) => {
+const CategoriesCarousel = ({
+  setActiveCategory,
+  activeCategory,
+  setSearchSubmitted,
+  setSearchFinalTerm,
+}) => {
   const slider = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -135,7 +140,11 @@ const CategoriesCarousel = ({ setActiveCategory, activeCategory }) => {
           {categories.map((category) => (
             <div
               key={category.id}
-              onClick={() => setActiveCategory(category.name)}
+              onClick={() => {
+                setActiveCategory(category.name);
+                setSearchSubmitted(false);
+                setSearchFinalTerm("");
+              }}
               className={`${
                 category.name === activeCategory
                   ? "bg-light text-black"
@@ -179,6 +188,8 @@ const CategoriesCarousel = ({ setActiveCategory, activeCategory }) => {
 CategoriesCarousel.propTypes = {
   setActiveCategory: PropTypes.func.isRequired,
   activeCategory: PropTypes.string.isRequired,
+  setSearchSubmitted: PropTypes.func.isRequired,
+  setSearchFinalTerm: PropTypes.func.isRequired,
 };
 
 export default CategoriesCarousel;

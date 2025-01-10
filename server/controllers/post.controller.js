@@ -64,6 +64,7 @@ export const createPost = async (req, res) => {
     res.status(500).json({ message: error.message, location: "createpost" });
   }
 };
+
 export const getAllPosts = async (req, res) => {
   try {
     const page = parseInt(req.query.page, 10) || 1; // Default to page 1
@@ -104,23 +105,89 @@ export const getAllPosts = async (req, res) => {
   }
 };
 
+// Get top writers with limit that i can change
+export const getTopWriters = async (req, res) => {
+  try {
+    const limit = req.query.limit ? parseInt(req.query.limit) : 3;
+
+    const topWriters = await Post.aggregate([
+      // Unwind likes array to count individual likes
+      {
+        $unwind: "$likes",
+      },
+      // Group by author to sum all their likes
+      {
+        $group: {
+          _id: "$author", // Group by author ID
+          totalLikes: { $sum: 1 }, // Count likes
+        },
+      },
+      // Sort authors by total likes in descending order
+      {
+        $sort: { totalLikes: -1 },
+      },
+      // Limit the result to top 'n' authors
+      {
+        $limit: limit,
+      },
+      // Optionally lookup author details (if needed)
+      {
+        $lookup: {
+          from: "users", // Replace with your actual user collection name
+          localField: "_id",
+          foreignField: "_id",
+          as: "authorDetails",
+        },
+      },
+      // Optionally clean up authorDetails (if needed)
+      {
+        $project: {
+          _id: 0,
+          authorId: "$_id",
+          totalLikes: 1,
+          authorDetails: { $arrayElemAt: ["$authorDetails", 0] },
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      message: `${topWriters.length} writer(s) fetched successfully`,
+      topWriters,
+    });
+  } catch (error) {
+    console.error("Error in getTopWriters controller:", error.message);
+    res.status(500).json({ message: error.message, location: "getTopWriters" });
+  }
+};
+
 export const getRecentPosts = async (req, res) => {
   try {
-    // Use MongoDB aggregation to count likes and sort by the count
-    const posts = await Post.aggregate([
+    // Extract limit from query parameters, if provided
+    const limit = req.query.limit ? parseInt(req.query.limit) : null;
+
+    // Build the aggregation pipeline
+    const pipeline = [
       {
         $addFields: { likeCount: { $size: "$likes" } }, // Add a field with the count of likes
       },
       {
-        $sort: { createdAt: -1 }, // Sort by the like count in descending order
+        $sort: { createdAt: -1 }, // Sort by creation date in descending order
       },
-    ]);
+    ];
+
+    // Apply limit only if it's provided
+    if (limit) {
+      pipeline.push({ $limit: limit });
+    }
+
+    // Execute the aggregation pipeline
+    const posts = await Post.aggregate(pipeline);
 
     res
       .status(200)
-      .json({ message: posts.length + " post(s) fetched successfully", posts });
+      .json({ message: `${posts.length} post(s) fetched successfully`, posts });
   } catch (error) {
-    console.log("Error in getRecentPosts controller", error.message);
+    console.error("Error in getRecentPosts controller:", error.message);
     res
       .status(500)
       .json({ message: error.message, location: "getRecentPosts" });
@@ -169,11 +236,11 @@ export const getCategoryPosts = async (req, res) => {
       },
       {
         $addFields: {
-          likesCount: { $size: "$likes" }, // Add a field for the length of the `likes` array
+          likeCount: { $size: "$likes" }, // Add a field for the length of the `likes` array
         },
       },
       {
-        $sort: { likesCount: -1, createdAt: -1 }, // Sort by likesCount and createdAt
+        $sort: { likeCount: -1, createdAt: -1 }, // Sort by likeCount and createdAt
       },
       {
         $skip: skip, // Skip documents for pagination
@@ -212,6 +279,51 @@ export const getPost = async (req, res) => {
   } catch (error) {
     console.log("Error in getpost controller", error.message);
     res.status(500).json({ message: error.message, location: "getpost" });
+  }
+};
+
+export const searchPosts = async (req, res) => {
+  try {
+    const term = req.query.term || ""; // Default to an empty term
+    const page = parseInt(req.query.page, 10) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 posts per page
+    const skip = (page - 1) * limit;
+
+    // Build the match stage for searching
+    const matchStage = term
+      ? {
+          $or: [
+            { title: { $regex: term, $options: "i" } },
+            { description: { $regex: term, $options: "i" } },
+            { tags: { $regex: term, $options: "i" } },
+          ],
+        }
+      : {};
+
+    // Aggregation pipeline
+    const posts = await Post.aggregate([
+      { $match: matchStage }, // Match posts by the search term
+      { $addFields: { likeCount: { $size: "$likes" } } }, // Add a field for the count of likes
+      { $sort: { likeCount: -1, createdAt: -1 } }, // Sort by likes (desc) and creation date (desc)
+      { $skip: skip }, // Skip documents for pagination
+      { $limit: limit }, // Limit the number of documents
+    ]);
+
+    // Count total posts matching the search term
+    const totalPosts = await Post.countDocuments(matchStage);
+    const totalPages = Math.ceil(totalPosts / limit); // Calculate total pages
+    const hasMore = page * limit < totalPosts; // Check if there are more pages
+
+    res.status(200).json({
+      message: `${posts.length} post(s) fetched successfully`,
+      posts,
+      nextPage: hasMore ? page + 1 : null, // Include nextPage if there are more posts
+      hasMore,
+      totalPages, // Return total pages
+    });
+  } catch (error) {
+    console.error("Error in searchPosts controller:", error.message);
+    res.status(500).json({ message: error.message, location: "searchPosts" });
   }
 };
 

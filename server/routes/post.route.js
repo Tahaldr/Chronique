@@ -2,10 +2,12 @@ import express from "express";
 import {
   createPost,
   getAllPosts,
+  getTopWriters,
   getRecentPosts,
   getAuthorPosts,
   getCategoryPosts,
   getPost,
+  searchPosts,
   deletePost,
   deleteAuthorPosts,
   deleteAllPosts,
@@ -25,10 +27,12 @@ router.post(
   createPost
 );
 router.get("/getallposts", getAllPosts);
+router.get("/topwriters", getTopWriters);
 router.get("/getrecentposts", getRecentPosts);
 router.get("/getauthorposts/:author", getAuthorPosts);
 router.get("/getpost/:postId", getPost);
 router.get("/getcategoryposts/:category", getCategoryPosts);
+router.get("/searchposts", searchPosts);
 
 router.delete("/deletepost/:postId", protectedRoute, deletePost);
 router.delete("/deleteauthorposts/:author", protectedRoute, deleteAuthorPosts);
