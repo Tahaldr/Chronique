@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { act, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { usePostStore } from "../../stores/usePostStore";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
@@ -149,6 +149,7 @@ const TheChronicle = ({
     queryKey: ["posts", activeCategory, searchFinalTerm],
     queryFn: ({ pageParam = 1 }) => {
       if (searchSubmitted && searchFinalTerm) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
         return searchPosts(searchFinalTerm, pageParam);
       } else if (activeCategory === "Popular") {
         return getPopularPosts(pageParam);
