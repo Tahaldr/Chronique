@@ -1,5 +1,5 @@
-import { GoPerson } from "react-icons/go";
-import { BiLogOutCircle } from "react-icons/bi";
+import { MdOutlinePerson } from "react-icons/md";
+import { MdOutlineLogout } from "react-icons/md";
 import { useUserStore } from "../../stores/useUserStore";
 import { motion } from "framer-motion";
 
@@ -18,21 +18,21 @@ const ProfileDropDown = () => {
     >
       <a
         href="/profile"
-        className="flex place-items-center gap-2 bg-darker hover:bg-darkest tracking-widest py-1 px-4"
+        className="flex justify-center items-center gap-3 bg-darker hover:bg-darkest tracking-widest py-1 px-4"
       >
         <span>
-          <GoPerson className="text-lg" />
+          <MdOutlinePerson className="text-lg" />
         </span>
-        <p>Profile</p>
+        <p>PROFILE</p>
       </a>
       <button
         onClick={() => logout()}
-        className="flex place-items-center gap-2 bg-darker hover:bg-red-800 tracking-wide py-1 px-4"
+        className="flex justify-center items-center gap-3 bg-darker hover:bg-red-800 tracking-wide py-1 px-4"
       >
         <span>
-          <BiLogOutCircle className="text-lg" />
+          <MdOutlineLogout className="" />
         </span>
-        <p>Logout</p>
+        <p>LOGOUT</p>
       </button>
     </motion.div>
   );

@@ -16,7 +16,7 @@ const RecentPost = ({ post }) => {
   }
 
   return (
-    <div className="flex flex-col gap-1 text-sm h-full">
+    <div className="flex flex-col gap-1 text-sm">
       {/* Top section */}
       <div className="flex items-center justify-between font-mediumSecondary text-dark">
         <p>

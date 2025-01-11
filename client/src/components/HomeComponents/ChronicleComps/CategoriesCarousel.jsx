@@ -1,8 +1,8 @@
+import { useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { MdArrowBackIos } from "react-icons/md";
-import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import PropTypes from "prop-types";
 
@@ -15,60 +15,22 @@ const CategoriesCarousel = ({
   const slider = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
 
   const categories = [
-    {
-      id: 1,
-      name: "Popular",
-    },
-    {
-      id: 2,
-      name: "Technology",
-    },
-    {
-      id: 3,
-      name: "Sports",
-    },
-    {
-      id: 4,
-      name: "History",
-    },
-    {
-      id: 5,
-      name: "Science",
-    },
-    {
-      id: 6,
-      name: "Art and Design",
-    },
-    {
-      id: 7,
-      name: "Culture",
-    },
-    {
-      id: 8,
-      name: "Entertainment",
-    },
-    {
-      id: 9,
-      name: "Politics",
-    },
-    {
-      id: 10,
-      name: "Education",
-    },
-    {
-      id: 11,
-      name: "Health",
-    },
-    {
-      id: 12,
-      name: "Business",
-    },
-    {
-      id: 13,
-      name: "Fun and Hobbies",
-    },
+    { id: 1, name: "Popular" },
+    { id: 2, name: "Technology" },
+    { id: 3, name: "Sports" },
+    { id: 4, name: "History" },
+    { id: 5, name: "Science" },
+    { id: 6, name: "Art and Design" },
+    { id: 7, name: "Culture" },
+    { id: 8, name: "Entertainment" },
+    { id: 9, name: "Politics" },
+    { id: 10, name: "Education" },
+    { id: 11, name: "Health" },
+    { id: 12, name: "Business" },
+    { id: 13, name: "Fun and Hobbies" },
   ];
 
   const settings = {
@@ -107,6 +69,29 @@ const CategoriesCarousel = ({
     },
   };
 
+  // Mouse event handlers for detecting drag
+  let startX = 0;
+  const dragThreshold = 10;
+
+  const handleMouseDown = (e) => {
+    setIsDragging(false);
+    startX = e.clientX;
+  };
+
+  const handleMouseMove = (e) => {
+    if (Math.abs(e.clientX - startX) > dragThreshold) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleMouseUp = (category) => {
+    if (!isDragging) {
+      setActiveCategory(category.name);
+      setSearchSubmitted(false);
+      setSearchFinalTerm("");
+    }
+  };
+
   return (
     <div className="order-2 md:order-1 w-full md:w-2/3 h-1/2 md:h-14 flex items-center justify-center relative overflow-hidden font-smallMedium text-sm">
       {/* Left Arrow */}
@@ -135,21 +120,24 @@ const CategoriesCarousel = ({
       </AnimatePresence>
 
       {/* Slider */}
-      <div className="w-[85%] lg:w-[90%] z-0 cursor-grab active:cursor-grabbing">
+      <div
+        className="w-[85%] lg:w-[90%] z-0 cursor-grab active:cursor-grabbing"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={() => setIsDragging(false)}
+      >
         <Slider ref={slider} {...settings}>
           {categories.map((category) => (
             <div
               key={category.id}
-              onClick={() => {
-                setActiveCategory(category.name);
-                setSearchSubmitted(false);
-                setSearchFinalTerm("");
-              }}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={() => handleMouseUp(category)}
               className={`${
                 category.name === activeCategory
                   ? "bg-light text-black"
                   : "bg-lightish text-darkest"
-              } py-1 px-2  hover:bg-light  hover:text-black text-center whitespace-nowrap`}
+              } py-1 px-2 hover:bg-light hover:text-black text-center whitespace-nowrap`}
             >
               {category.name}
             </div>

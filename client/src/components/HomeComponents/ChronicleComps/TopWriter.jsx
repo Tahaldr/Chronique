@@ -14,7 +14,7 @@ const TopWriter = ({ author }) => {
   }
 
   return (
-    <div className="h-full flex justify-between items-center relative">
+    <div className="flex justify-between items-center py-1 relative">
       {/* Author details */}
       <div className="flex items-center">
         <img
@@ -26,7 +26,7 @@ const TopWriter = ({ author }) => {
           <p className="font-mediumPrimary text-darkest text-base">
             {author.authorDetails.name}
           </p>
-          <p className="text-sm font-smallItalic text-dark mt-[-5px]">
+          <p className="text-sm font-small text-dark mt-[-5px]">
             {formatNumber(author.totalLikes)} votes
           </p>
         </div>

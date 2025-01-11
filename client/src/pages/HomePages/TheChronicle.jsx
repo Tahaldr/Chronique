@@ -550,7 +550,7 @@ const TheChronicle = ({
           ref={sidebarRef}
         >
           <motion.div
-            className="w-full h-full border-l border-light p-5 flex flex-col gap-1"
+            className="w-full h-full border-l border-light p-5 flex flex-col gap-7"
             style={
               sidebarTop <= 0 && sidebarTop != null && sidebarTop != undefined
                 ? { position: "fixed", top: 0, width: "33.333333%" }
@@ -559,11 +559,11 @@ const TheChronicle = ({
             id="content_wrapper"
           >
             {/* Recent Posts */}
-            <div className="flex flex-col w-full gap-3 h-2/3">
-              <p className="text-darkest font-mediumPrimary border-b border-light pb-1">
+            <div className="flex flex-col w-full gap-3 h-3/5">
+              <p className="text-darkest font-mediumPrimary border-b border-light pb-2">
                 Latest Headlines
               </p>
-              <div className="flex flex-col h-full">
+              <div className="flex flex-col justify-start gap-4 h-full">
                 {loading ? (
                   <div className="flex items-center justify-center h-full">
                     <Loading size="3xl" color="dark" />
@@ -576,12 +576,12 @@ const TheChronicle = ({
               </div>
             </div>
             {/* Best Authors */}
-            <div className="flex flex-col gap-3 h-1/3">
-              <p className="text-darkest font-mediumPrimary border-b border-light pb-1">
+            <div className="flex flex-col w-full gap-3 h-2/5">
+              <p className="text-darkest font-mediumPrimary border-b border-light pb-2">
                 Top Writers
               </p>
 
-              <div className="flex flex-col gap-2 h-full">
+              <div className="flex flex-col justify-start gap-3 h-full">
                 {loading ? (
                   <div className="flex items-center justify-center h-full">
                     <Loading size="3xl" color="dark" />
