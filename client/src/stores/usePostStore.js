@@ -178,6 +178,17 @@ export const usePostStore = create((set, get) => ({
     }
   },
 
+  deletePost: async (postId) => {
+    try {
+      const res = await axios.delete(`/post/deletepost/${postId}`);
+      console.log(res.data);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  },
+
   likePost: async (postId) => {
     try {
       const res = await axios.post(`/post/likepost/${postId}`);

@@ -1,5 +1,6 @@
 import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
+import Comment from "../models/comment.model.js";
 import cloudinary from "../lib/cloudinary.js";
 import redis from "../lib/redis.js";
 import jwt from "jsonwebtoken";
@@ -330,11 +331,25 @@ export const searchPosts = async (req, res) => {
 export const deletePost = async (req, res) => {
   try {
     const { postId } = req.params;
+
+    // Find and delete the post
     const post = await Post.findByIdAndDelete(postId);
-    res.status(200).json({ message: "Post deleted successfully", post });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Delete all comments related to the post and get the count
+    const deletedCount = await Comment.deleteMany({ post: postId });
+
+    res.status(200).json({
+      message: "Post and related comments deleted successfully",
+      post,
+      deletedComments: deletedCount,
+    });
   } catch (error) {
-    console.log("Error in deletepost controller", error.message);
-    res.status(500).json({ message: error.message, location: "deletepost" });
+    console.log("Error in deletePost controller", error.message);
+    res.status(500).json({ message: error.message, location: "deletePost" });
   }
 };
 

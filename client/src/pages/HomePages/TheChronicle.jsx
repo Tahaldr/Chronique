@@ -17,16 +17,17 @@ import { useUserStore } from "../../stores/useUserStore";
 import OptionsDropdown from "../../components/Elements/OptionsDropdown";
 import { Toaster } from "react-hot-toast";
 import TopWriter from "../../components/HomeComponents/ChronicleComps/TopWriter";
+import ConfirmWindow from "../../components/Elements/ConfirmWindow";
 
 const TheChronicle = ({
   activeCategory,
   searchSubmitted,
   searchFinalTerm,
-  setActiveCategory,
-  setSearchSubmitted,
-  searchTerm,
-  setSearchFinalTerm,
-  setSearchTerm,
+  // setActiveCategory,
+  // setSearchSubmitted,
+  // searchTerm,
+  // setSearchFinalTerm,
+  // setSearchTerm,
 }) => {
   const sidebarRef = useRef(null);
   const [sidebarTop, setSidebarTop] = useState(null);
@@ -36,6 +37,10 @@ const TheChronicle = ({
   const [optionsPosition, setOptionsPosition] = useState("up");
   const [recentPosts, setRecentPosts] = useState([]);
   const [topWriters, setTopWriters] = useState([]);
+  const [deleteConfirm, setDeleteConfirm] = useState({
+    postId: null,
+    confirming: false,
+  });
   const { ref, inView } = useInView();
   const dropdownRef = useRef(null); // Ref to track the dropdown container
 
@@ -47,6 +52,7 @@ const TheChronicle = ({
     getCategoryPosts,
     getRecentPosts,
     searchPosts,
+    deletePost,
     likePost,
     unlikePost,
   } = usePostStore();
@@ -149,7 +155,9 @@ const TheChronicle = ({
     queryKey: ["posts", activeCategory, searchFinalTerm],
     queryFn: ({ pageParam = 1 }) => {
       if (searchSubmitted && searchFinalTerm) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (pageParam === 1) {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
         return searchPosts(searchFinalTerm, pageParam);
       } else if (activeCategory === "Popular") {
         return getPopularPosts(pageParam);
@@ -234,6 +242,31 @@ const TheChronicle = ({
     }
   };
 
+  // Update the cached data after deleting a post
+  const handleDeletePost = async (postId) => {
+    try {
+      await deletePost(postId); // API call to delete the post
+
+      queryClient.setQueryData(
+        ["posts", activeCategory, searchFinalTerm],
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          const newData = {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              posts: page.posts.filter((post) => post._id !== postId),
+            })),
+          };
+          return newData;
+        }
+      );
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+    }
+  };
+
   if (isLoading)
     return (
       <div className="flex items-center justify-center h-screen">
@@ -248,6 +281,12 @@ const TheChronicle = ({
   return (
     <>
       <Toaster />
+      {deleteConfirm.postId && deleteConfirm.confirming && (
+        <ConfirmWindow
+          confirming={setDeleteConfirm}
+          handleFunc={() => handleDeletePost(deleteConfirm.postId)}
+        />
+      )}
       <div className="flex">
         {/* Main Posts */}
         <div className="h-full md:w-2/3 relative">
@@ -325,9 +364,9 @@ const TheChronicle = ({
                                 } else {
                                   setOptionsPosition("down");
                                 }
-                                console.log(top);
-                                console.log(window.innerHeight / 2);
-                                console.log(optionsPosition);
+                                // console.log(top);
+                                // console.log(window.innerHeight / 2);
+                                // console.log(optionsPosition);
 
                                 setOptionsShow((prev) =>
                                   prev === post._id ? null : post._id
@@ -343,6 +382,7 @@ const TheChronicle = ({
                                 postId={post._id}
                                 postAuthor={post.author}
                                 optionsPosition={optionsPosition}
+                                setDeleteConfirm={setDeleteConfirm}
                               />
                             )}
                           </AnimatePresence>

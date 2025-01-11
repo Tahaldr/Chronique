@@ -7,6 +7,10 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      backgroundImage: {
+        // paper: "url('/OtherImg/NewsPaper_texture.png')",
+      },
+
       colors: {
         theBase: "#dbdbdb",
         darkest: "#111111",
