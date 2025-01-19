@@ -2,18 +2,9 @@ import PropTypes from "prop-types";
 import { motion } from "framer-motion";
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import { Link } from "react-router-dom";
+import formatNumber from "../../../lib/formatNumber";
 
 const TopWriter = ({ author }) => {
-  function formatNumber(num) {
-    if (num >= 1_000_000) {
-      return (num / 1_000_000).toFixed(1).replace(/\.0+$/, "") + "m";
-    } else if (num >= 1_000) {
-      return (num / 1_000).toFixed(1).replace(/\.0+$/, "") + "k";
-    } else {
-      return num.toString();
-    }
-  }
-
   return (
     <div className="flex justify-between items-center py-1 relative">
       {/* Author details */}

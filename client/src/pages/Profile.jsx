@@ -6,25 +6,13 @@ import { useUserStore } from "../stores/useUserStore";
 import { usePostStore } from "../stores/usePostStore";
 import { MdOutlineLogout } from "react-icons/md";
 import { useEffect, useState } from "react";
+import formatNumber from "../lib/formatNumber";
 
 const Profile = () => {
   const { id } = useParams();
   const [author, setAuthor] = useState(null);
   const { logout, user } = useUserStore();
   const { getAuthorPost } = usePostStore();
-
-  // Format number
-  function formatNumber(num) {
-    if (num == null || isNaN(num)) return "0";
-
-    if (num >= 1_000_000) {
-      return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "m";
-    } else if (num >= 1_000) {
-      return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "k";
-    } else {
-      return num.toString();
-    }
-  }
 
   // Fetch author data
   useEffect(() => {

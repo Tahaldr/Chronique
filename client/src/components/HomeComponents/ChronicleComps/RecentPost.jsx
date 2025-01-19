@@ -2,19 +2,10 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { useUserStore } from "../../../stores/useUserStore";
 import { Link } from "react-router-dom";
+import formatNumber from "../../../lib/formatNumber";
 
 const RecentPost = ({ post }) => {
   const { user } = useUserStore();
-
-  function formatNumber(num) {
-    if (num >= 1_000_000) {
-      return (num / 1_000_000).toFixed(1).replace(/\.0+$/, "") + "m";
-    } else if (num >= 1_000) {
-      return (num / 1_000).toFixed(1).replace(/\.0+$/, "") + "k";
-    } else {
-      return num.toString();
-    }
-  }
 
   return (
     <div className="flex flex-col gap-1 text-sm">
