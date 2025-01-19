@@ -12,6 +12,10 @@ import { Toaster } from "react-hot-toast";
 import Loading from "../components/Loading";
 import MarkerCircle from "../components/MarkerCircle";
 
+import Transition from "../components/Transition";
+import { Link } from "react-router-dom";
+import BackBtn from "../components/Elements/BackBtn";
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     userPic: "",
@@ -97,12 +101,7 @@ const Signup = () => {
     <>
       <Toaster />
       {/* Go back to home */}
-      <p className="w-fit font-bigPrimary py-1 px-3 rounded-full flex justify-center items-center gap-2 border border-dark hover:border-darkest text-dark hover:text-darkest absolute top-5 left-5">
-        <a href="/" className="text-sm md:text-base flex items-center gap-2">
-          <HiOutlineArrowLongRight className="text-lg md:text-xl rotate-180" />
-          Back
-        </a>
-      </p>
+      <BackBtn />
       <motion.div
         className="w-screen h-screen  flex justify-center items-center"
         initial={{ opacity: 0 }}
@@ -267,12 +266,11 @@ const Signup = () => {
             </form>
             <p className=" text-dark font-mediumPrimary pt-3 flex justify-center items-center gap-2">
               <span>Already have an account?</span>
-              <a
-                href="/login"
-                className="text-darkest underline hover:text-darker"
-              >
-                Login
-              </a>
+              <Link to="/login">
+                <span className="text-darkest underline hover:text-darker">
+                  Login
+                </span>
+              </Link>
             </p>
           </div>
         </div>
@@ -281,4 +279,10 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+const SignupTransition = (props) => (
+  <Transition OgComponent={Signup} {...props} />
+);
+
+export default SignupTransition;
+
+// export default Signup;

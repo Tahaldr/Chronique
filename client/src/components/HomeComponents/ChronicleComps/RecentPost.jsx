@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import moment from "moment";
 import { useUserStore } from "../../../stores/useUserStore";
+import { Link } from "react-router-dom";
 
 const RecentPost = ({ post }) => {
   const { user } = useUserStore();
@@ -20,7 +21,7 @@ const RecentPost = ({ post }) => {
       {/* Top section */}
       <div className="flex items-center justify-between font-mediumSecondary text-dark">
         <p>
-          <span className="cursor-pointer">
+          <Link className="cursor-pointer" to={`/profile/${post.author._id}`}>
             {user && post.author._id === user._id ? (
               <p className="font-mediumSecondary text-xs text-darker bg-lightish hover:bg-light hover:text-lightest px-5">
                 You
@@ -33,7 +34,7 @@ const RecentPost = ({ post }) => {
                 </span>
               </p>
             )}
-          </span>
+          </Link>
         </p>
         <p>{moment(post.createdAt).fromNow()}</p>
       </div>

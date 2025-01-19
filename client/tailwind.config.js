@@ -27,7 +27,7 @@ export default {
         // Big fonts variants
         biggest: ["canterbury", "sans-serif"],
         bigPrimary: ["canopee", "sans-serif"],
-        bigSecondary: ["DomaineDisplay", "sans-serif"],
+        bigSecondary: ["DomaineDisplay", "canopee", "sans-serif"],
         bigSecondaryItalic: ["DomaineDisplayItalic", "sans-serif"],
         bigThird: ["Cheltenham", "sans-serif"],
 

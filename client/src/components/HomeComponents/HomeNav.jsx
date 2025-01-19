@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import ProfileDropDown from "../Elements/ProfileDropDown";
 import CategoriesCarousel from "./ChronicleComps/CategoriesCarousel";
 import Search from "./ChronicleComps/Search";
+import { Link } from "react-router-dom";
 
 const HomeNav = ({
   hidden,
@@ -181,13 +182,13 @@ const HomeNav = ({
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               ></motion.span>
 
-              <a href="/signup" className="pr-4">
+              <Link to="/signup" className="pr-4">
                 Sign in
-              </a>
+              </Link>
               <div className="w-[1px] h-full bg-darker"></div>
-              <a href="/login" className="pl-4">
+              <Link to="/login" className="pl-4">
                 Log in
-              </a>
+              </Link>
             </button>
           )}
         </li>

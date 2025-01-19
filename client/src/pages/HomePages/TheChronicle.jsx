@@ -18,6 +18,7 @@ import OptionsDropdown from "../../components/Elements/OptionsDropdown";
 import { Toaster } from "react-hot-toast";
 import TopWriter from "../../components/HomeComponents/ChronicleComps/TopWriter";
 import ConfirmWindow from "../../components/Elements/ConfirmWindow";
+import { Link } from "react-router-dom";
 
 const TheChronicle = ({
   activeCategory,
@@ -339,18 +340,20 @@ const TheChronicle = ({
                           ref={dropdownRef}
                         >
                           <div>
-                            {user && post.author._id === user._id ? (
-                              <p className="cursor-pointer font-mediumSecondary text-darker bg-lightish hover:bg-light hover:text-lightest px-5">
-                                You
-                              </p>
-                            ) : (
-                              <p className="cursor-pointer font-mediumSecondary text-darker">
-                                by{" "}
-                                <span className="lowercase hover:text-darkest hover:underline">
-                                  {post.author.name}
-                                </span>
-                              </p>
-                            )}
+                            <Link to={`/profile/${post.author._id}`}>
+                              {user && post.author._id === user._id ? (
+                                <p className="cursor-pointer font-mediumSecondary text-darker bg-lightish hover:bg-light hover:text-lightest px-5">
+                                  You
+                                </p>
+                              ) : (
+                                <p className="cursor-pointer font-mediumSecondary text-darker">
+                                  by{" "}
+                                  <span className="lowercase hover:text-darkest hover:underline">
+                                    {post.author.name}
+                                  </span>
+                                </p>
+                              )}
+                            </Link>
                           </div>
                           {user && (
                             <SlOptions
@@ -550,20 +553,19 @@ const TheChronicle = ({
           ref={sidebarRef}
         >
           <motion.div
-            className="w-full h-full border-l border-light p-5 flex flex-col gap-7"
+            className="w-full h-full border-l border-light p-3 lg:p-5 flex flex-col gap-7"
             style={
               sidebarTop <= 0 && sidebarTop != null && sidebarTop != undefined
                 ? { position: "fixed", top: 0, width: "33.333333%" }
                 : {}
             }
-            id="content_wrapper"
           >
             {/* Recent Posts */}
             <div className="flex flex-col w-full gap-3 h-3/5">
               <p className="text-darkest font-mediumPrimary border-b border-light pb-2">
                 Latest Headlines
               </p>
-              <div className="flex flex-col justify-start gap-4 h-full">
+              <div className="flex flex-col justify-start gap-2 lg:gap-4 h-full">
                 {loading ? (
                   <div className="flex items-center justify-center h-full">
                     <Loading size="3xl" color="dark" />

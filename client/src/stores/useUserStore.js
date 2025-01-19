@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axios from "../lib/axios";
 import showToast from "../components/Toast";
+import { Navigate } from "react-router-dom";
 
 export const useUserStore = create((set, get) => ({
   // user: JSON.parse(localStorage.getItem("user")) || null,
@@ -77,13 +78,10 @@ export const useUserStore = create((set, get) => ({
   logout: async () => {
     try {
       await axios.post("auth/logout");
+      Navigate("/");
       set({ user: null });
     } catch (error) {
-      console.log("Error in logout", error.response?.data?.message);
-      showToast({
-        message: error.response?.data.message || "Logout failed",
-        type: "error",
-      });
+      console.log("Error in logout", error?.response?.data?.message);
     }
   },
 

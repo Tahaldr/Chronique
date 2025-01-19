@@ -2,6 +2,7 @@ import redis from "../lib/redis.js";
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import cloudinary from "../lib/cloudinary.js";
+import mongoose from "mongoose";
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
@@ -272,11 +273,52 @@ export const getallusers = async (req, res) => {
 export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id);
-    res.status(200).json({ user });
+
+    // Find the user and calculate totalLikes using aggregation
+    const userWithLikes = await User.aggregate([
+      // Match the user by their ID
+      {
+        $match: { _id: new mongoose.Types.ObjectId(id) },
+      },
+      // Lookup posts to calculate total likes
+      {
+        $lookup: {
+          from: "posts", // Replace with your actual posts collection name
+          localField: "_id", // User's _id
+          foreignField: "author", // Post's author field
+          as: "userPosts",
+        },
+      },
+      // Add a field to calculate total likes
+      {
+        $addFields: {
+          totalLikes: {
+            $sum: {
+              $map: {
+                input: "$userPosts",
+                as: "post",
+                in: { $size: "$$post.likes" },
+              },
+            },
+          },
+        },
+      },
+      // Optionally clean up the result
+      {
+        $project: {
+          userPosts: 0, // Remove posts from the response
+        },
+      },
+    ]);
+
+    if (userWithLikes.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ user: userWithLikes[0] });
   } catch (error) {
-    console.log("Error in getuser controller", error.message);
-    res.status(500).json({ message: error.message, location: "getuser" });
+    console.error("Error in getUser controller:", error.message);
+    res.status(500).json({ message: error.message, location: "getUser" });
   }
 };
 

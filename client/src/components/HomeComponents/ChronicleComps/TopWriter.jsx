@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { motion } from "framer-motion";
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
+import { Link } from "react-router-dom";
 
 const TopWriter = ({ author }) => {
   function formatNumber(num) {
@@ -23,8 +24,10 @@ const TopWriter = ({ author }) => {
           className="size-8 rounded-full absolute"
         />
         <div className="flex flex-col ml-12">
-          <p className="font-mediumPrimary text-darkest text-base">
-            {author.authorDetails.name}
+          <p className="font-mediumPrimary text-darkest hover:text-darker cursor-pointer text-base">
+            <Link to={`/profile/${author.authorDetails._id}`}>
+              {author.authorDetails.name}
+            </Link>
           </p>
           <p className="text-sm font-small text-dark mt-[-5px]">
             {formatNumber(author.totalLikes)} votes
@@ -33,16 +36,18 @@ const TopWriter = ({ author }) => {
       </div>
       {/* Profile button */}
       <div>
-        <motion.button
-          className="text-sm font-smallSemiBold text-darkish border-darkish hover:border-darker hover:text-darker flex items-center border rounded-[100%] px-4"
-          whileHover={{
-            padding: "0 18px",
-            transition: { duration: 0.2, ease: "easeInOut" },
-          }}
-        >
-          {/* View Profile */}
-          <HiOutlineArrowLongRight className="text-xl" />
-        </motion.button>
+        <Link to={`/profile/${author.authorDetails._id}`}>
+          <motion.button
+            className="text-sm font-smallSemiBold text-darkish border-darkish hover:border-darker hover:text-darker flex items-center border rounded-[100%] px-4"
+            whileHover={{
+              padding: "0 18px",
+              transition: { duration: 0.2, ease: "easeInOut" },
+            }}
+          >
+            {/* View Profile */}
+            <HiOutlineArrowLongRight className="text-xl" />
+          </motion.button>
+        </Link>
       </div>
     </div>
   );

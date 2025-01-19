@@ -4,6 +4,8 @@ import HomeHeader from "../components/HomeComponents/HomeHeader";
 import HomeNav from "../components/HomeComponents/HomeNav";
 import { useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 
+import Transition from "../components/Transition";
+
 const Home = () => {
   const ref = useRef(null);
   const [hidden, setHidden] = useState(false);
@@ -76,4 +78,8 @@ const Home = () => {
   );
 };
 
-export default Home;
+const HomeTransition = (props) => <Transition OgComponent={Home} {...props} />;
+
+export default HomeTransition;
+
+// export default Home;
