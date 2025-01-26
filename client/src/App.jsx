@@ -3,12 +3,14 @@ import { useUserStore } from "./stores/useUserStore.js";
 import Signup from "./pages/Signup.jsx";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
-import { useEffect } from "react";
+import { createContext, useEffect } from "react";
 import LoadingPage from "./pages/LoadingPage.jsx";
 import TheChronicle from "./pages/HomePages/TheChronicle.jsx";
 import Profile from "./pages/Profile.jsx";
 import { AnimatePresence } from "framer-motion";
 import ScrollToTop from "./components/ScrollToTop.jsx";
+
+export const PostContext = createContext(null);
 
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();

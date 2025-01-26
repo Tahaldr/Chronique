@@ -146,6 +146,37 @@ export const usePostStore = create((set, get) => ({
     }
   },
 
+  getAuthorPosts: async (authorId, page = 1, limit = 10) => {
+    try {
+      const res = await axios.get(
+        `/post/getauthorposts/${authorId}?page=${page}&limit=${limit}`
+      );
+      const posts = res.data.posts;
+
+      // Fetch author data and comments length for each post
+      const postsWithAuthorsComments = await Promise.all(
+        posts.map(async (post) => {
+          try {
+            const author = await get().getAuthorPost(post.author);
+            const comments = await get().getComments(post._id);
+            return { ...post, author, comments: comments.comments.length };
+          } catch (error) {
+            console.log(error);
+            return { ...post, author: null, comments: 0 };
+          }
+        })
+      );
+
+      return {
+        ...res.data,
+        posts: postsWithAuthorsComments,
+      };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  },
+
   searchPosts: async (term, page = 1, limit = 10) => {
     if (!term) return;
     try {

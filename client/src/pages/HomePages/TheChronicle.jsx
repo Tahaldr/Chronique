@@ -8,20 +8,12 @@ import Loading from "../../components/Loading";
 import showToast from "../../components/Toast";
 import RecentPost from "../../components/HomeComponents/ChronicleComps/RecentPost";
 import { MdOutlinePostAdd } from "react-icons/md";
-import { HiArrowSmallUp } from "react-icons/hi2";
 import { useUserStore } from "../../stores/useUserStore";
 import { Toaster } from "react-hot-toast";
 import TopWriter from "../../components/HomeComponents/ChronicleComps/TopWriter";
 import ConfirmWindow from "../../components/Elements/ConfirmWindow";
 import Post from "../../components/HomeComponents/ChronicleComps/Post";
-// import { AnimatePresence } from "framer-motion";
-// import moment from "moment";
-// import { SlOptions } from "react-icons/sl";
-// import { TbArrowBigDown, TbArrowBigDownFilled } from "react-icons/tb";
-// import { TbMessageCircle, TbMessageCircleFilled } from "react-icons/tb";
-// import OptionsDropdown from "../../components/Elements/OptionsDropdown";
-// import { Link } from "react-router-dom";
-// import formatNumber from "../../lib/formatNumber";
+import ArrowScrollUp from "../../components/Elements/ArrowScrollUp";
 
 const TheChronicle = ({
   activeCategory,
@@ -36,7 +28,7 @@ const TheChronicle = ({
   const sidebarRef = useRef(null);
   const [sidebarTop, setSidebarTop] = useState(null);
   const [commentHovered, setCommentHovered] = useState({});
-  const [arrowUpShow, setArrowUpShow] = useState(false);
+  // const [arrowUpShow, setArrowUpShow] = useState(false);
   const [optionsShow, setOptionsShow] = useState(null);
   const [optionsPosition, setOptionsPosition] = useState("up");
   const [recentPosts, setRecentPosts] = useState([]);
@@ -46,7 +38,7 @@ const TheChronicle = ({
     confirming: false,
   });
   const { ref, inView } = useInView();
-  const dropdownRef = useRef(null); // Ref to track the dropdown container
+  const dropdownRef = useRef(null); // Ref to track the dropdown container of the post
 
   // Stores
   const {
@@ -108,19 +100,6 @@ const TheChronicle = ({
     };
     fetchTopWriters();
   }, [getTopWriters]);
-
-  // Show Arrow up ( if i scrolled more than 100vh show it ) :
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > window.innerHeight) {
-        setArrowUpShow(true);
-      } else {
-        setArrowUpShow(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Manage sidebar position
   useEffect(() => {
@@ -283,20 +262,7 @@ const TheChronicle = ({
       <div className="flex">
         {/* Main Posts */}
         <div className="h-full md:w-2/3 relative">
-          {arrowUpShow && (
-            <motion.div
-              className="sticky z-20 flex top-5 justify-center w-full text-3xl"
-              initial={{ y: -50 }}
-              animate={{ y: 0 }}
-              // exit={{ y: -50, transition: { duration: 0.2 } }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-            >
-              <HiArrowSmallUp
-                className="bg-lighter text-darker rounded-full border border-opacity-50 border-darker"
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              />
-            </motion.div>
-          )}
+          <ArrowScrollUp />
 
           {searchSubmitted &&
             data &&
@@ -327,6 +293,7 @@ const TheChronicle = ({
                     >
                       {/* Post Component */}
                       <Post
+                        type="home"
                         post={post}
                         user={user}
                         dropdownRef={dropdownRef}

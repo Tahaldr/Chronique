@@ -4,6 +4,7 @@ import Comment from "../models/comment.model.js";
 import cloudinary from "../lib/cloudinary.js";
 import redis from "../lib/redis.js";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 export const createPost = async (req, res) => {
   try {
@@ -196,27 +197,51 @@ export const getRecentPosts = async (req, res) => {
 };
 
 export const getAuthorPosts = async (req, res) => {
-  // Get author posts with likes count
   try {
     const { author } = req.params;
 
-    // Find posts by author and sort by `createdAt` in descending order
-    const posts = await Post.find({ author }).sort({ createdAt: -1 });
+    const page = parseInt(req.query.page, 10) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 posts per page
+    const skip = (page - 1) * limit;
+
+    // Convert `author` to ObjectId if necessary
+    const authorId = mongoose.Types.ObjectId.isValid(author)
+      ? new mongoose.Types.ObjectId(author)
+      : author;
+
+    // Aggregation pipeline
+    const posts = await Post.aggregate([
+      {
+        $match: { author: authorId }, // Ensure proper matching
+      },
+      {
+        $addFields: { likeCount: { $size: "$likes" } }, // Add a field for the count of likes
+      },
+      {
+        $sort: { createdAt: -1 }, // Sort by `createdAt` in descending order
+      },
+      {
+        $skip: skip, // Skip documents for pagination
+      },
+      {
+        $limit: limit, // Limit the number of documents returned
+      },
+    ]);
+
+    // Count total posts for the author
+    const totalPosts = await Post.countDocuments({ author: authorId });
+    const totalPages = Math.ceil(totalPosts / limit);
+    const hasMore = page * limit < totalPosts;
 
     res.status(200).json({
-      message: posts.length + " Author posts fetched successfully",
-      author: author,
-      posts: posts,
-      likesCount: posts.map((post) => {
-        // return ids and likes count
-        return {
-          id: post._id,
-          likesCount: post.likes.length,
-        };
-      }),
+      message: `${posts.length} post(s) fetched successfully`,
+      posts,
+      nextPage: hasMore ? page + 1 : null,
+      hasMore,
+      totalPages,
     });
   } catch (error) {
-    console.log("Error in getAuthorPosts controller", error.message);
+    console.error("Error in getAuthorPosts controller:", error.message);
     res
       .status(500)
       .json({ message: error.message, location: "getAuthorPosts" });

@@ -13,6 +13,7 @@ import OptionsDropdown from "../../Elements/OptionsDropdown";
 import PropTypes from "prop-types";
 
 const Post = ({
+  type,
   post,
   user,
   dropdownRef,
@@ -88,7 +89,7 @@ const Post = ({
       {/* Middle section of post */}
       <div
         className={`${
-          index === 0 && i === 0 && !searchSubmitted
+          index === 0 && i === 0 && type === "home" && !searchSubmitted
             ? "flex flex-col "
             : "flex justify-start "
         } gap-6 `}
@@ -96,7 +97,7 @@ const Post = ({
         {post.postPic !== "null" && (
           <div
             className={`${
-              index === 0 && i === 0 && !searchSubmitted
+              index === 0 && i === 0 && type === "home" && !searchSubmitted
                 ? "aspect-[16/9]"
                 : "aspect-[8/5] w-1/3 h-fit"
             } overflow-hidden cursor-pointer border-[1px] border-opacity-30 border-dark`}
@@ -121,7 +122,7 @@ const Post = ({
 
         <div
           className={`${
-            index === 0 && i === 0 && !searchSubmitted
+            index === 0 && i === 0 && type === "home" && !searchSubmitted
               ? "w-full gap-5"
               : `w-2/3 ${post.postPic !== "null" ? "gap-5 xl:gap-0" : "gap-5"}`
           } flex flex-col jutify-between `}
@@ -129,7 +130,7 @@ const Post = ({
           <div className="h-full  flex flex-col lg:gap-2">
             <h3
               className={`${
-                index === 0 && i === 0 && !searchSubmitted
+                index === 0 && i === 0 && type === "home" && !searchSubmitted
                   ? "text-3xl"
                   : "text-2xl"
               } font-bigThird text-darker text-justify hover:text-light cursor-pointer`}
@@ -138,7 +139,7 @@ const Post = ({
             </h3>
             <p
               className={`${
-                index === 0 && i === 0 && !searchSubmitted
+                index === 0 && i === 0 && type === "home" && !searchSubmitted
                   ? "line-clamp-6"
                   : "line-clamp-3"
               } text-darker font-smallMedium text-sm lg:text-base text-justify text-ellipsis`}
@@ -209,6 +210,7 @@ const Post = ({
 };
 
 Post.propTypes = {
+  type: PropTypes.string.isRequired,
   post: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   dropdownRef: PropTypes.object.isRequired,
