@@ -1,35 +1,52 @@
+import PropTypes from "prop-types";
+import formatNumber from "../../../lib/formatNumber";
 import {
   TbArrowBigDown,
   TbArrowBigDownFilled,
   TbMessageCircle,
   TbMessageCircleFilled,
 } from "react-icons/tb";
+import OptionsDropdown from "../../Elements/OptionsDropdown";
+import moment from "moment";
 import { SlOptions } from "react-icons/sl";
 import { motion, AnimatePresence } from "framer-motion";
-import moment from "moment";
-import formatNumber from "../../../lib/formatNumber";
 import { Link } from "react-router-dom";
-import OptionsDropdown from "../../Elements/OptionsDropdown";
-import PropTypes from "prop-types";
+import { useContext } from "react";
+import { PostContext } from "../../../App";
+import { handleLikePost, handleUnlikePost } from "../../../lib/InteractPost";
 
 const Post = ({
-  type,
+  // dropdownRef,
+  // setOptionsPosition,
+  // optionsPosition,
+  // setOptionsShow,
+  // optionsShow,
+  // setCommentHovered,
+  // commentHovered,
+  // setDeleteConfirm,
+  // searchSubmitted,
+  // handleLikePost,
+  // handleUnlikePost,
+  queryClient,
+  keys,
   post,
   user,
-  dropdownRef,
+  type,
   index,
   i,
-  handleLikePost,
-  handleUnlikePost,
-  setOptionsPosition,
-  setOptionsShow,
-  optionsPosition,
-  setDeleteConfirm,
-  commentHovered,
-  setCommentHovered,
-  optionsShow,
-  searchSubmitted,
 }) => {
+  const {
+    dropdownRef,
+    setOptionsPosition,
+    optionsPosition,
+    setOptionsShow,
+    optionsShow,
+    setDeleteConfirm,
+    setCommentHovered,
+    commentHovered,
+    searchSubmitted,
+  } = useContext(PostContext);
+
   return (
     <div className="w-full flex flex-col gap-4">
       {/* Top section of post */}
@@ -162,14 +179,14 @@ const Post = ({
               ) : (
                 <TbArrowBigDown
                   className="text-lg rotate-180 hover:text-darker"
-                  onClick={() => handleLikePost(post._id)}
+                  onClick={() => handleLikePost(post._id, queryClient, keys)}
                 />
               )}
               <p className="text-sm">{formatNumber(post.likes.length)}</p>
             </div>
             <TbArrowBigDown
               className="text-lg hover:text-darker"
-              onClick={() => handleUnlikePost(post._id)}
+              onClick={() => handleUnlikePost(post._id, queryClient, keys)}
             />
           </div>
           <div
@@ -211,6 +228,8 @@ const Post = ({
 
 Post.propTypes = {
   type: PropTypes.string.isRequired,
+  queryClient: PropTypes.object.isRequired,
+  keys: PropTypes.array.isRequired,
   post: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   dropdownRef: PropTypes.object.isRequired,

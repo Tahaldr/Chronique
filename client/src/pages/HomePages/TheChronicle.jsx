@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { usePostStore } from "../../stores/usePostStore";
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
@@ -14,31 +14,27 @@ import TopWriter from "../../components/HomeComponents/ChronicleComps/TopWriter"
 import ConfirmWindow from "../../components/Elements/ConfirmWindow";
 import Post from "../../components/HomeComponents/ChronicleComps/Post";
 import ArrowScrollUp from "../../components/Elements/ArrowScrollUp";
+import { PostContext } from "../../App";
 
 const TheChronicle = ({
   activeCategory,
-  searchSubmitted,
   searchFinalTerm,
   // setActiveCategory,
-  // setSearchSubmitted,
   // searchTerm,
   // setSearchFinalTerm,
   // setSearchTerm,
 }) => {
   const sidebarRef = useRef(null);
   const [sidebarTop, setSidebarTop] = useState(null);
-  const [commentHovered, setCommentHovered] = useState({});
   // const [arrowUpShow, setArrowUpShow] = useState(false);
-  const [optionsShow, setOptionsShow] = useState(null);
-  const [optionsPosition, setOptionsPosition] = useState("up");
   const [recentPosts, setRecentPosts] = useState([]);
   const [topWriters, setTopWriters] = useState([]);
-  const [deleteConfirm, setDeleteConfirm] = useState({
-    postId: null,
-    confirming: false,
-  });
+
   const { ref, inView } = useInView();
-  const dropdownRef = useRef(null); // Ref to track the dropdown container of the post
+
+  // Post Context
+  const { setOptionsShow, setDeleteConfirm, deleteConfirm, searchSubmitted } =
+    useContext(PostContext);
 
   // Stores
   const {
@@ -49,8 +45,6 @@ const TheChronicle = ({
     getRecentPosts,
     searchPosts,
     deletePost,
-    likePost,
-    unlikePost,
   } = usePostStore();
   const { user } = useUserStore();
   const queryClient = useQueryClient();
@@ -67,7 +61,7 @@ const TheChronicle = ({
     document.addEventListener("click", handleClickOutside);
 
     return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
+  }, [setOptionsShow]);
 
   // console.log("getComments", getComments("676a8e5b970b6b88d66e77aa"));
   // console.log("getPopularPosts", getPopularPosts());
@@ -153,67 +147,6 @@ const TheChronicle = ({
     }
   }, [inView, fetchNextPage, hasNextPage]);
 
-  // Update the cached data after liking a post
-  const handleLikePost = async (postId) => {
-    try {
-      await likePost(postId); // Perform the API call to like the post
-      queryClient.setQueryData(
-        ["posts", activeCategory, searchFinalTerm],
-        (oldData) => {
-          if (!oldData) return oldData;
-
-          const newData = {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              posts: page.posts.map((post) =>
-                post._id === postId
-                  ? { ...post, likes: [...post.likes, user?._id] }
-                  : post
-              ),
-            })),
-          };
-          return newData;
-        }
-      );
-    } catch (error) {
-      console.log(error);
-      showToast({ message: "Failed to like the post.", type: "error" });
-    }
-  };
-
-  // Update the cached data after unliking a post
-  const handleUnlikePost = async (postId) => {
-    try {
-      await unlikePost(postId); // Perform the API call to unlike the post
-      queryClient.setQueryData(
-        ["posts", activeCategory, searchFinalTerm],
-        (oldData) => {
-          if (!oldData) return oldData;
-
-          const newData = {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              posts: page.posts.map((post) =>
-                post._id === postId
-                  ? {
-                      ...post,
-                      likes: post.likes.filter((like) => like !== user?._id),
-                    }
-                  : post
-              ),
-            })),
-          };
-          return newData;
-        }
-      );
-    } catch (error) {
-      console.log(error);
-      showToast({ message: "Failed to unlike the post.", type: "error" });
-    }
-  };
-
   // Update the cached data after deleting a post
   const handleDeletePost = async (postId) => {
     try {
@@ -296,19 +229,20 @@ const TheChronicle = ({
                         type="home"
                         post={post}
                         user={user}
-                        dropdownRef={dropdownRef}
                         index={index}
                         i={i}
-                        handleLikePost={handleLikePost}
-                        handleUnlikePost={handleUnlikePost}
-                        setOptionsPosition={setOptionsPosition}
-                        setOptionsShow={setOptionsShow}
-                        optionsPosition={optionsPosition}
-                        setDeleteConfirm={setDeleteConfirm}
-                        commentHovered={commentHovered}
-                        setCommentHovered={setCommentHovered}
-                        optionsShow={optionsShow}
-                        searchSubmitted={searchSubmitted}
+                        // dropdownRef={dropdownRef}
+                        // setOptionsPosition={setOptionsPosition}
+                        // optionsPosition={optionsPosition}
+                        // setOptionsShow={setOptionsShow}
+                        // optionsShow={optionsShow}
+                        // setDeleteConfirm={setDeleteConfirm}
+                        // setCommentHovered={setCommentHovered}
+                        // commentHovered={commentHovered}
+                        // searchSubmitted={searchSubmitted}
+
+                        queryClient={queryClient}
+                        keys={[activeCategory, searchFinalTerm]}
                       />
                       <hr className="border-light" />
                     </div>
@@ -396,7 +330,6 @@ TheChronicle.propTypes = {
   searchSubmitted: PropTypes.bool.isRequired,
   searchFinalTerm: PropTypes.string.isRequired,
   setActiveCategory: PropTypes.func.isRequired,
-  setSearchSubmitted: PropTypes.func.isRequired,
   searchTerm: PropTypes.string.isRequired,
   setSearchTerm: PropTypes.func.isRequired,
   setSearchFinalTerm: PropTypes.func.isRequired,

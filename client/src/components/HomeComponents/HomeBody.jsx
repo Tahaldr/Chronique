@@ -8,8 +8,6 @@ const HomeBody = ({
   active,
   activeCategory,
   setActiveCategory,
-  searchSubmitted,
-  setSearchSubmitted,
   setSearchTerm,
   searchTerm,
   setSearchFinalTerm,
@@ -22,8 +20,6 @@ const HomeBody = ({
           <TheChronicle
             activeCategory={activeCategory}
             setActiveCategory={setActiveCategory}
-            searchSubmitted={searchSubmitted}
-            setSearchSubmitted={setSearchSubmitted}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             setSearchFinalTerm={setSearchFinalTerm}
@@ -57,8 +53,6 @@ HomeBody.propTypes = {
   active: PropTypes.string.isRequired,
   activeCategory: PropTypes.string.isRequired,
   setActiveCategory: PropTypes.func.isRequired,
-  searchSubmitted: PropTypes.bool.isRequired,
-  setSearchSubmitted: PropTypes.func.isRequired,
   searchTerm: PropTypes.string.isRequired,
   setSearchTerm: PropTypes.func.isRequired,
   setSearchFinalTerm: PropTypes.func.isRequired,

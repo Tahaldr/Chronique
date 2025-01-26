@@ -3,7 +3,7 @@ import { useUserStore } from "./stores/useUserStore.js";
 import Signup from "./pages/Signup.jsx";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
-import { createContext, useEffect } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import LoadingPage from "./pages/LoadingPage.jsx";
 import TheChronicle from "./pages/HomePages/TheChronicle.jsx";
 import Profile from "./pages/Profile.jsx";
@@ -15,6 +15,32 @@ export const PostContext = createContext(null);
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
   const location = useLocation();
+
+  // Post context variables and functions
+  const dropdownRef = useRef(null);
+  const [optionsPosition, setOptionsPosition] = useState("up");
+  const [optionsShow, setOptionsShow] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState({
+    postId: null,
+    confirming: false,
+  });
+  const [commentHovered, setCommentHovered] = useState({});
+  const [searchSubmitted, setSearchSubmitted] = useState(false);
+
+  // Post context value
+  const contextValue = {
+    dropdownRef,
+    setOptionsPosition,
+    optionsPosition,
+    setOptionsShow,
+    optionsShow,
+    setDeleteConfirm,
+    deleteConfirm,
+    setCommentHovered,
+    commentHovered,
+    setSearchSubmitted,
+    searchSubmitted,
+  };
 
   useEffect(() => {
     checkAuth();
@@ -32,24 +58,26 @@ function App() {
     <>
       <ScrollToTop /> {/* Add this component here */}
       <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          {/* Authentication routes */}
-          <Route
-            path="/signup"
-            element={!user ? <Signup /> : <Navigate to="/" />}
-          />
-          <Route
-            path="/login"
-            element={!user ? <Login /> : <Navigate to="/" />}
-          />
+        <PostContext.Provider value={contextValue}>
+          <Routes location={location} key={location.pathname}>
+            {/* Authentication routes */}
+            <Route
+              path="/signup"
+              element={!user ? <Signup /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/login"
+              element={!user ? <Login /> : <Navigate to="/" />}
+            />
 
-          {/* Home routes */}
-          <Route path="/" element={<Home />} />
+            {/* Home routes */}
+            <Route path="/" element={<Home />} />
 
-          <Route path="/chronicle" element={<TheChronicle />} />
+            <Route path="/chronicle" element={<TheChronicle />} />
 
-          <Route path="/profile/:id" element={<Profile />} />
-        </Routes>
+            <Route path="/profile/:id" element={<Profile />} />
+          </Routes>
+        </PostContext.Provider>
       </AnimatePresence>
     </>
   );

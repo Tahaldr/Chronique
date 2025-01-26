@@ -1,21 +1,23 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { MdArrowBackIos } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import PropTypes from "prop-types";
+import { PostContext } from "../../../App";
 
 const CategoriesCarousel = ({
   setActiveCategory,
   activeCategory,
-  setSearchSubmitted,
   setSearchFinalTerm,
 }) => {
   const slider = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
+
+  const { setSearchSubmitted } = useContext(PostContext);
 
   const categories = [
     { id: 1, name: "Popular" },

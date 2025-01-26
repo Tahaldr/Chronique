@@ -15,7 +15,6 @@ const HomeNav = ({
   active,
   setActiveCategory,
   activeCategory,
-  setSearchSubmitted,
   setSearchTerm,
   searchTerm,
   setSearchFinalTerm,
@@ -198,11 +197,9 @@ const HomeNav = ({
           <CategoriesCarousel
             setActiveCategory={setActiveCategory}
             activeCategory={activeCategory}
-            setSearchSubmitted={setSearchSubmitted}
             setSearchFinalTerm={setSearchFinalTerm}
           />
           <Search
-            setSearchSubmitted={setSearchSubmitted}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             setSearchFinalTerm={setSearchFinalTerm}
@@ -221,11 +218,9 @@ HomeNav.propTypes = {
   active: PropTypes.string.isRequired,
   setActiveCategory: PropTypes.func.isRequired,
   activeCategory: PropTypes.string.isRequired,
-  setSearchSubmitted: PropTypes.func.isRequired,
   searchTerm: PropTypes.string.isRequired,
   setSearchTerm: PropTypes.func.isRequired,
   setSearchFinalTerm: PropTypes.func.isRequired,
-  // searchSubmitted: PropTypes.bool.isRequired,
   // searchFinalTerm: PropTypes.string.isRequired,
 };
 

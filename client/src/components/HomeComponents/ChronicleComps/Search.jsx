@@ -1,19 +1,19 @@
 import { FiSearch } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
 import { MdKeyboardCommandKey } from "react-icons/md";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import PropTypes from "prop-types";
+import { PostContext } from "../../../App";
 
 const Search = ({
   searchTerm,
   setSearchTerm,
-  setSearchSubmitted,
-  // searchSubmitted,
   // searchFinalTerm,
   setSearchFinalTerm,
 }) => {
   const inputRef = useRef(null); // Reference to the input element
+  const { setSearchSubmitted } = useContext(PostContext);
 
   useEffect(() => {
     const handleShortcut = (event) => {
