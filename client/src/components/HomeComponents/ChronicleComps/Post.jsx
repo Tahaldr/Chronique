@@ -11,24 +11,12 @@ import moment from "moment";
 import { SlOptions } from "react-icons/sl";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { PostContext } from "../../../App";
-import { handleLikePost, handleUnlikePost } from "../../../lib/InteractPost";
 
 const Post = ({
-  // dropdownRef,
-  // setOptionsPosition,
-  // optionsPosition,
-  // setOptionsShow,
-  // optionsShow,
-  // setCommentHovered,
-  // commentHovered,
-  // setDeleteConfirm,
-  // searchSubmitted,
-  // handleLikePost,
-  // handleUnlikePost,
-  queryClient,
-  keys,
+  handleLikePost,
+  handleUnlikePost,
   post,
   user,
   type,
@@ -46,6 +34,20 @@ const Post = ({
     commentHovered,
     searchSubmitted,
   } = useContext(PostContext);
+
+  // Handle clicks outside the dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Check if click happens outside the dropdown
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOptionsShow(null); // Close the dropdown
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [setOptionsShow, dropdownRef]);
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -179,14 +181,14 @@ const Post = ({
               ) : (
                 <TbArrowBigDown
                   className="text-lg rotate-180 hover:text-darker"
-                  onClick={() => handleLikePost(post._id, queryClient, keys)}
+                  onClick={() => handleLikePost(post._id)}
                 />
               )}
               <p className="text-sm">{formatNumber(post.likes.length)}</p>
             </div>
             <TbArrowBigDown
               className="text-lg hover:text-darker"
-              onClick={() => handleUnlikePost(post._id, queryClient, keys)}
+              onClick={() => handleUnlikePost(post._id)}
             />
           </div>
           <div
@@ -228,8 +230,6 @@ const Post = ({
 
 Post.propTypes = {
   type: PropTypes.string.isRequired,
-  queryClient: PropTypes.object.isRequired,
-  keys: PropTypes.array.isRequired,
   post: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   dropdownRef: PropTypes.object.isRequired,
@@ -244,7 +244,7 @@ Post.propTypes = {
   commentHovered: PropTypes.object.isRequired,
   setCommentHovered: PropTypes.func.isRequired,
   optionsShow: PropTypes.bool.isRequired,
-  searchSubmitted: PropTypes.bool.isRequired,
+  searchSubmitted: PropTypes.bool, // not required
 };
 
 export default Post;

@@ -32,8 +32,7 @@ const TheChronicle = ({
 
   const { ref, inView } = useInView();
 
-  // Post Context
-  const { setOptionsShow, setDeleteConfirm, deleteConfirm, searchSubmitted } =
+  const { setDeleteConfirm, deleteConfirm, searchSubmitted } =
     useContext(PostContext);
 
   // Stores
@@ -45,23 +44,11 @@ const TheChronicle = ({
     getRecentPosts,
     searchPosts,
     deletePost,
+    likePost,
+    unlikePost,
   } = usePostStore();
   const { user } = useUserStore();
   const queryClient = useQueryClient();
-
-  // Handle clicks outside the dropdown
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      // Check if click happens outside the dropdown
-      if (!event.target.closest(".options-dropdown")) {
-        setOptionsShow(null); // Close the dropdown
-      }
-    };
-
-    document.addEventListener("click", handleClickOutside);
-
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, [setOptionsShow]);
 
   // console.log("getComments", getComments("676a8e5b970b6b88d66e77aa"));
   // console.log("getPopularPosts", getPopularPosts());
@@ -147,6 +134,67 @@ const TheChronicle = ({
     }
   }, [inView, fetchNextPage, hasNextPage]);
 
+  // Update the cached data after liking a post
+  const handleLikePost = async (postId) => {
+    try {
+      await likePost(postId); // Perform the API call to like the post
+      queryClient.setQueryData(
+        ["posts", activeCategory, searchFinalTerm],
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          const newData = {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              posts: page.posts.map((post) =>
+                post._id === postId
+                  ? { ...post, likes: [...post.likes, user?._id] }
+                  : post
+              ),
+            })),
+          };
+          return newData;
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      showToast({ message: "Failed to like the post.", type: "error" });
+    }
+  };
+
+  // Update the cached data after unliking a post
+  const handleUnlikePost = async (postId) => {
+    try {
+      await unlikePost(postId); // Perform the API call to unlike the post
+      queryClient.setQueryData(
+        ["posts", activeCategory, searchFinalTerm],
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          const newData = {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              posts: page.posts.map((post) =>
+                post._id === postId
+                  ? {
+                      ...post,
+                      likes: post.likes.filter((like) => like !== user?._id),
+                    }
+                  : post
+              ),
+            })),
+          };
+          return newData;
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      showToast({ message: "Failed to unlike the post.", type: "error" });
+    }
+  };
+
   // Update the cached data after deleting a post
   const handleDeletePost = async (postId) => {
     try {
@@ -195,7 +243,7 @@ const TheChronicle = ({
       <div className="flex">
         {/* Main Posts */}
         <div className="h-full md:w-2/3 relative">
-          <ArrowScrollUp />
+          <ArrowScrollUp type="sticky" />
 
           {searchSubmitted &&
             data &&
@@ -231,18 +279,8 @@ const TheChronicle = ({
                         user={user}
                         index={index}
                         i={i}
-                        // dropdownRef={dropdownRef}
-                        // setOptionsPosition={setOptionsPosition}
-                        // optionsPosition={optionsPosition}
-                        // setOptionsShow={setOptionsShow}
-                        // optionsShow={optionsShow}
-                        // setDeleteConfirm={setDeleteConfirm}
-                        // setCommentHovered={setCommentHovered}
-                        // commentHovered={commentHovered}
-                        // searchSubmitted={searchSubmitted}
-
-                        queryClient={queryClient}
-                        keys={[activeCategory, searchFinalTerm]}
+                        handleLikePost={handleLikePost}
+                        handleUnlikePost={handleUnlikePost}
                       />
                       <hr className="border-light" />
                     </div>

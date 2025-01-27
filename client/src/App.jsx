@@ -57,8 +57,8 @@ function App() {
   return (
     <>
       <ScrollToTop /> {/* Add this component here */}
-      <AnimatePresence mode="wait">
-        <PostContext.Provider value={contextValue}>
+      <PostContext.Provider value={contextValue}>
+        <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             {/* Authentication routes */}
             <Route
@@ -77,8 +77,8 @@ function App() {
 
             <Route path="/profile/:id" element={<Profile />} />
           </Routes>
-        </PostContext.Provider>
-      </AnimatePresence>
+        </AnimatePresence>
+      </PostContext.Provider>
     </>
   );
 }

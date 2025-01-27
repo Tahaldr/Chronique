@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { HiArrowSmallUp } from "react-icons/hi2";
+import PropTypes from "prop-types";
 
-const ArrowScrollUp = () => {
+const ArrowScrollUp = ({ type = "sticky" }) => {
   const [arrowUpShow, setArrowUpShow] = useState(false);
 
   // Show Arrow up ( if i scrolled more than 100vh show it ) :
@@ -25,7 +26,9 @@ const ArrowScrollUp = () => {
     <>
       {arrowUpShow && (
         <motion.div
-          className="sticky z-20 flex top-5 justify-center w-full text-3xl"
+          className={`
+            ${type === "fixed" ? "fixed" : "sticky"}
+            z-20 flex top-5 items-center justify-center w-full text-3xl`}
           initial={{ y: -50 }}
           animate={{ y: 0 }}
           // exit={{ y: -50, transition: { duration: 0.2 } }}
@@ -39,6 +42,10 @@ const ArrowScrollUp = () => {
       )}
     </>
   );
+};
+
+ArrowScrollUp.propTypes = {
+  type: PropTypes.string.isRequired,
 };
 
 export default ArrowScrollUp;
