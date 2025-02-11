@@ -8,7 +8,7 @@ const HomeHeader = ({ navY }) => {
 
   return (
     <motion.div
-      className="w-full h-full flex place-items-center"
+      className="w-full h-fit flex place-items-center"
       style={{ y: navY }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -23,10 +23,10 @@ const HomeHeader = ({ navY }) => {
           </p>
         </div>
       </div>
-      <div className="w-full md:w-2/4 text-center text-darkest flex justify-center">
+      <div className="w-full md:w-2/4 text-center text-darkest flex items-center justify-center">
         <AnimatePresence>
           <motion.h1
-            className="text-7xl lg:text-8xl font-bigPrimary cursor-default relative text-center"
+            className="text-7xl lg:text-8xl font-bigPrimary leading-none cursor-default relative text-center"
             onMouseEnter={() => setTitleHovered(true)}
             onMouseLeave={() => setTitleHovered(false)}
             animate={

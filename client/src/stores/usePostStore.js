@@ -209,6 +209,33 @@ export const usePostStore = create((set, get) => ({
     }
   },
 
+  getOnePost: async (postId) => {
+    set({ loading: true });
+    try {
+      const res = await axios.get(`/post/getpost/${postId}`);
+      const post = res.data.post;
+
+      // Fetch author data and comments length
+      try {
+        const author = await get().getAuthorPost(post.author);
+        const comments = await get().getComments(post._id);
+
+        set({ loading: false });
+        return {
+          ...post,
+          author,
+          comments: comments.comments.length,
+        };
+      } catch (error) {
+        console.log(error);
+        return { ...post, author: null, comments: 0 };
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  },
+
   deletePost: async (postId) => {
     try {
       const res = await axios.delete(`/post/deletepost/${postId}`);

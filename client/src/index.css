@@ -254,3 +254,45 @@ select:-webkit-autofill:focus {
 ::-webkit-scrollbar-corner {
   display: none;
 }
+
+.container.home {
+  display: flex;
+  flex-direction: column;
+}
+
+.divA,
+.divB {
+  display: flex;
+  flex-direction: column;
+}
+
+.container.post {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Move div5 to divB */
+.container.post .divB {
+  display: flex;
+  flex-direction: column;
+}
+
+.container.post .div5 {
+  order: -1; /* Moves div5 to the top inside divB */
+}
+
+/* Move div1 inside div4 */
+.container.post .div4 {
+  display: flex;
+  flex-direction: column;
+}
+
+.container.post .div1 {
+  order: 1; /* Moves div1 inside div4 */
+}
+
+/* Move div3 outside */
+.container.post .div3 {
+  position: relative;
+  order: -2; /* Moves div3 outside */
+}

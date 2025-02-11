@@ -275,6 +275,7 @@ const TheChronicle = ({
                       {/* Post Component */}
                       <Post
                         type="home"
+                        page="home"
                         post={post}
                         user={user}
                         index={index}

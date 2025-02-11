@@ -31,9 +31,12 @@ const RecentPost = ({ post }) => {
       </div>
       {/* Middle section */}
       <div className="w-full">
-        <p className="text-lg font-bigThird cursor-pointer text-ellipsis line-clamp-2 hover:text-light">
+        <Link
+          to={`/post/${post._id}`}
+          className="text-lg font-bigThird cursor-pointer text-ellipsis line-clamp-2 hover:text-light"
+        >
           {post.title}
-        </p>
+        </Link>
       </div>
       {/* Bottom section */}
       <div className="flex justify-start gap-3 font-smallMedium text-dark">

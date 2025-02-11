@@ -1,13 +1,13 @@
 import { FaPlus } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import PropTypes from "prop-types";
 import { useUserStore } from "../../stores/useUserStore";
 import MarkerCircle from "../MarkerCircle";
-import { useEffect, useRef, useState } from "react";
-import ProfileDropDown from "../Elements/ProfileDropDown";
+import { useState } from "react";
 import CategoriesCarousel from "./ChronicleComps/CategoriesCarousel";
 import Search from "./ChronicleComps/Search";
 import { Link } from "react-router-dom";
+import ProfileImg from "../Elements/ProfileImg";
 
 const HomeNav = ({
   hidden,
@@ -23,25 +23,6 @@ const HomeNav = ({
 }) => {
   const [hovered, setHovered] = useState(null);
   const [btnHovered, setBtnHovered] = useState(false);
-  const [profileClicked, setProfileClicked] = useState(false);
-  const [profileHovered, setProfileHovered] = useState(false);
-
-  const dropdownRef = useRef(null); // Ref to track the dropdown container
-
-  // Handle clicks outside the dropdown
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setProfileClicked(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
 
   const { user } = useUserStore();
   const cubicBezierVar = [1, -0.01, 0.7, 1.04];
@@ -56,10 +37,7 @@ const HomeNav = ({
       animate={hidden ? "hidden" : "visible"}
       transition={{ duration: 0.35, ease: "easeInOut" }}
     >
-      <div
-        ref={dropdownRef}
-        className="flex items-center justify-center border-darker h-11 list-none gap-6 md:gap-12 w-full text-darkest font-smallBold text-xs lg:text-sm"
-      >
+      <div className="flex items-center justify-center border-darker h-11 list-none gap-6 md:gap-12 w-full text-darkest font-smallBold text-xs lg:text-sm">
         {/* The Chronicle button */}
         <li
           className={`${
@@ -140,34 +118,9 @@ const HomeNav = ({
         {/* The User dropdown */}
         <li className="cursor-pointer">
           {user ? (
-            <div
-              className="relative"
-              onClick={() => setProfileClicked((prev) => !prev)}
-            >
-              <div
-                className="flex place-items-center gap-2 relative"
-                onMouseEnter={() => setProfileHovered(true)}
-                onMouseLeave={() => setProfileHovered(false)}
-              >
-                <img
-                  src={user.userPic || user.user?.userPic}
-                  alt={`{user.name || user.user.name} pic`}
-                  className="w-7 h-7 object-cover lg:w-8 lg:h-8 rounded-full lg:flex"
-                />
-                {profileHovered && (
-                  <div className=" absolute w-full h-full rounded-full bg-lightest opacity-10 top-0 left-0"></div>
-                )}
-              </div>
-              {/* Dropdown menu */}
-              <AnimatePresence>
-                {profileClicked && (
-                  <div>
-                    <ProfileDropDown id={user.id || user.user?.id} />
-                  </div>
-                )}
-              </AnimatePresence>
-            </div>
+            <ProfileImg type="home" />
           ) : (
+            // Sign in and log in buttons
             <button
               className="text-lightest font-bigSecondaryItalic flex place-items-center px-4 h-6 relative"
               onMouseEnter={() => setBtnHovered(true)}

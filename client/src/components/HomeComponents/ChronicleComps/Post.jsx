@@ -1,18 +1,10 @@
+import { MdArrowBackIos } from "react-icons/md";
 import PropTypes from "prop-types";
-import formatNumber from "../../../lib/formatNumber";
-import {
-  TbArrowBigDown,
-  TbArrowBigDownFilled,
-  TbMessageCircle,
-  TbMessageCircleFilled,
-} from "react-icons/tb";
-import OptionsDropdown from "../../Elements/OptionsDropdown";
-import moment from "moment";
-import { SlOptions } from "react-icons/sl";
-import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { PostContext } from "../../../App";
+import PostTop from "../../PostComp/PostTop";
+import PostPic from "../../PostComp/PostPic";
 
 const Post = ({
   handleLikePost,
@@ -22,18 +14,20 @@ const Post = ({
   type,
   index,
   i,
+  page,
 }) => {
-  const {
-    dropdownRef,
-    setOptionsPosition,
-    optionsPosition,
-    setOptionsShow,
-    optionsShow,
-    setDeleteConfirm,
-    setCommentHovered,
-    commentHovered,
-    searchSubmitted,
-  } = useContext(PostContext);
+  const [textExpanded, setTextExpanded] = useState(false);
+  const ContentRef = useRef(null);
+  const [ContentHeight, setContentHeight] = useState(0);
+
+  useEffect(() => {
+    if (ContentRef.current) {
+      setContentHeight(ContentRef.current.scrollHeight);
+    }
+  }, [textExpanded]);
+
+  const { dropdownRef, setOptionsShow, searchSubmitted } =
+    useContext(PostContext);
 
   // Handle clicks outside the dropdown
   useEffect(() => {
@@ -50,180 +44,184 @@ const Post = ({
   }, [setOptionsShow, dropdownRef]);
 
   return (
-    <div className="w-full flex flex-col gap-4">
-      {/* Top section of post */}
-      <div
-        className="flex items-center justify-between px-1 relative"
-        ref={dropdownRef}
-      >
-        <div>
-          <Link to={`/profile/${post.author._id}`}>
-            {user && post.author._id === user._id ? (
-              <p className="cursor-pointer font-mediumSecondary text-darker bg-lightish hover:bg-light hover:text-lightest px-5">
-                You
-              </p>
-            ) : (
-              <p className="cursor-pointer font-mediumSecondary text-darker">
-                by{" "}
-                <span className="lowercase hover:text-darkest hover:underline">
-                  {post.author.name}
-                </span>
-              </p>
-            )}
-          </Link>
-        </div>
-        {user && (
-          <SlOptions
-            className="text-3xl text-dark mr-[-8px] hover:text-darkest p-2 rounded-full hover-bg-lightish active:bg-light cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              const { top } = e.target.getBoundingClientRect();
-              if (top < window.innerHeight / 2) {
-                setOptionsPosition("up");
-              } else {
-                setOptionsPosition("down");
-              }
-              // console.log(top);
-              // console.log(window.innerHeight / 2);
-              // console.log(optionsPosition);
-
-              setOptionsShow((prev) => (prev === post._id ? null : post._id));
-            }}
-          />
-        )}
-        {/* Options Dropdown */}
-        <AnimatePresence>
-          {optionsShow === post._id && (
-            <OptionsDropdown
-              user={user}
-              postId={post._id}
-              postAuthor={post.author}
-              optionsPosition={optionsPosition}
-              setDeleteConfirm={setDeleteConfirm}
-            />
-          )}
-        </AnimatePresence>
-      </div>
+    <div className="w-full gap-4">
+      {/* Post top */}
+      {page !== "details" && (
+        <PostTop
+          post={post}
+          user={user}
+          left="author"
+          right="options"
+          handleLikePost={handleLikePost}
+          handleUnlikePost={handleUnlikePost}
+        />
+      )}
 
       {/* Middle section of post */}
       <div
         className={`${
-          index === 0 && i === 0 && type === "home" && !searchSubmitted
-            ? "flex flex-col "
-            : "flex justify-start "
+          (index === 0 && i === 0 && type === "home" && !searchSubmitted) ||
+          page === "details"
+            ? "flex flex-col"
+            : "flex justify-start"
         } gap-6 `}
       >
-        {post.postPic !== "null" && (
-          <div
-            className={`${
-              index === 0 && i === 0 && type === "home" && !searchSubmitted
-                ? "aspect-[16/9]"
-                : "aspect-[8/5] w-1/3 h-fit"
-            } overflow-hidden cursor-pointer border-[1px] border-opacity-30 border-dark`}
-            onClick={() => {
-              // Get post details
-            }}
-          >
-            <motion.img
-              src={post.postPic}
-              alt={post.title + " image"}
-              className="w-full h-full object-cover"
-              whileHover={{
-                scale: 1.03,
-                transition: {
-                  duration: 0.3,
-                  ease: "easeInOut",
-                },
-              }}
+        {/* Post image */}
+        <PostPic type={type} post={post} index={index} i={i} page={page} />
+
+        {/* Post tops for Post details page */}
+        {page === "details" && (
+          <div className="order-2 flex flex-col gap-10">
+            {/* first top post */}
+            <PostTop
+              post={post}
+              user={user}
+              left="author"
+              right="date"
+              handleLikePost={handleLikePost}
+              handleUnlikePost={handleUnlikePost}
+            />
+
+            {/* second top post */}
+            <PostTop
+              post={post}
+              user={user}
+              left="interact"
+              right="options"
+              handleLikePost={handleLikePost}
+              handleUnlikePost={handleUnlikePost}
             />
           </div>
         )}
 
+        {/* Post details */}
         <div
-          className={`${
-            index === 0 && i === 0 && type === "home" && !searchSubmitted
-              ? "w-full gap-5"
-              : `w-2/3 ${post.postPic !== "null" ? "gap-5 xl:gap-0" : "gap-5"}`
-          } flex flex-col jutify-between `}
+          className={`
+            ${
+              index === 0 && i === 0 && type === "home" && !searchSubmitted
+                ? `w-full ${page === "details" ? "gap-2" : "gap-5"}`
+                : `w-full
+                  ${
+                    post.postPic !== "null"
+                      ? page === "details"
+                        ? "gap-2 xl:gap-0"
+                        : "gap-5 xl:gap-0"
+                      : page === "details"
+                      ? "gap-2"
+                      : "gap-5"
+                  }`
+            }
+          flex flex-col jutify-between
+            ${page === "details" && "order-1"}
+          `}
         >
-          <div className="h-full  flex flex-col lg:gap-2">
+          <div className="h-full flex flex-col gap-2">
+            {/* Post title */}
             <h3
               className={`${
                 index === 0 && i === 0 && type === "home" && !searchSubmitted
                   ? "text-3xl"
                   : "text-2xl"
-              } font-bigThird text-darker text-justify hover:text-light cursor-pointer`}
+              } font-bigThird text-darker text-justify
+                ${page === "details" ? "" : "hover:text-light"}
+              `}
             >
-              <a href="">{post.title}</a>
+              {page === "details" ? (
+                <>{post.title}</>
+              ) : (
+                <Link to={`/post/${post._id}`}>{post.title}</Link>
+              )}
             </h3>
-            <p
-              className={`${
-                index === 0 && i === 0 && type === "home" && !searchSubmitted
-                  ? "line-clamp-6"
-                  : "line-clamp-3"
-              } text-darker font-smallMedium text-sm lg:text-base text-justify text-ellipsis`}
-            >
-              {post.description}
-            </p>
+            {/* Post description */}
+            {page !== "details" && (
+              <p
+                className={`${
+                  index === 0 && i === 0 && type === "home" && !searchSubmitted
+                    ? "line-clamp-6"
+                    : "line-clamp-3"
+                } text-darker font-smallMedium text-sm lg:text-base text-justify text-ellipsis`}
+              >
+                {post.description}
+              </p>
+            )}
           </div>
-          <p className="text-darker bg-lightish font-mediumPrimary text-xs w-fit py-1 px-4">
+          {/* Post category */}
+          <p
+            className={`font-mediumPrimary w-fit
+                        ${
+                          page !== "details"
+                            ? "bg-lightish py-1 px-4 text-xs text-darker"
+                            : "text-dark"
+                        }
+              `}
+          >
             {post.category}
           </p>
         </div>
       </div>
-      {/* Bottom section of post */}
-      <div className="flex items-center justify-between text-dark font-smallMediumItalic">
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3 cursor-pointer">
-            <div className="flex items-center gap-1">
-              {post.likes.find((like) => like === user?._id) ? (
-                <TbArrowBigDownFilled className="text-lg rotate-180" />
-              ) : (
-                <TbArrowBigDown
-                  className="text-lg rotate-180 hover:text-darker"
-                  onClick={() => handleLikePost(post._id)}
-                />
-              )}
-              <p className="text-sm">{formatNumber(post.likes.length)}</p>
-            </div>
-            <TbArrowBigDown
-              className="text-lg hover:text-darker"
-              onClick={() => handleUnlikePost(post._id)}
-            />
-          </div>
-          <div
-            className="flex items-center gap-1 hover:text-darker cursor-pointer"
-            onMouseEnter={() =>
-              setCommentHovered((prev) => ({
-                ...prev,
-                [post._id]: true,
-              }))
-            }
-            onMouseLeave={() =>
-              setCommentHovered((prev) => ({
-                ...prev,
-                [post._id]: false,
-              }))
-            }
-            onClick={() => {
-              // Get comments
-            }}
-          >
-            {commentHovered[post._id] ? (
-              <TbMessageCircleFilled className="text-lg" />
-            ) : (
-              <TbMessageCircle className="text-lg" />
-            )}
 
-            <p className="text-sm">{formatNumber(post.comments)}</p>
+      {/* Post Content and tags */}
+      {page === "details" && (
+        <div>
+          {/* Post content */}
+          <div className="pb-20">
+            <div className="pt-5 relative">
+              {/* Content */}
+              <div
+                ref={ContentRef}
+                className={`${
+                  textExpanded ? "h-fit" : "max-h-[800px] overflow-hidden"
+                }`}
+              >
+                <pre className="whitespace-pre-wrap text-justify">
+                  {post.content}
+                </pre>
+              </div>
+
+              {/* Content fade */}
+              {!textExpanded && ContentHeight > 800 && (
+                <div className="absolute bottom-0 w-full h-24 bg-gradient-to-t from-lighter to-transparent"></div>
+              )}
+            </div>
+
+            {/* Arrow */}
+            {ContentHeight > 800 && (
+              <div className="flex justify-center items-center h-14">
+                <MdArrowBackIos
+                  className={`text-darkish text-xl ${
+                    textExpanded ? "rotate-90" : "-rotate-90"
+                  } hover:text-darker cursor-pointer`}
+                  onClick={() => setTextExpanded(!textExpanded)}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Post Tags */}
+          <div>
+            <div className="flex flex-wrap gap-2 pb-5">
+              {post.tags.map((tag, index) => (
+                <p
+                  key={index}
+                  className="font-smallMedium text-sm text-darkish bg-lightish px-5 cursor-pointer"
+                >
+                  {tag}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
-        <div>
-          <p className="text-sm">
-            {moment(post.createdAt).format("MMM DD, YYYY")}
-          </p>
-        </div>
-      </div>
+      )}
+
+      {/* Bottom section of post */}
+      <PostTop
+        post={post}
+        user={user}
+        left="interact"
+        right={page === "details" ? "none" : "date"}
+        handleLikePost={handleLikePost}
+        handleUnlikePost={handleUnlikePost}
+      />
     </div>
   );
 };
@@ -233,8 +231,8 @@ Post.propTypes = {
   post: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   dropdownRef: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
-  i: PropTypes.number.isRequired,
+  index: PropTypes.number,
+  i: PropTypes.number,
   handleLikePost: PropTypes.func.isRequired,
   handleUnlikePost: PropTypes.func.isRequired,
   setOptionsPosition: PropTypes.func.isRequired,
@@ -245,6 +243,7 @@ Post.propTypes = {
   setCommentHovered: PropTypes.func.isRequired,
   optionsShow: PropTypes.bool.isRequired,
   searchSubmitted: PropTypes.bool, // not required
+  page: PropTypes.string.isRequired,
 };
 
 export default Post;

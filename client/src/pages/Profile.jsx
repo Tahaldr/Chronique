@@ -250,7 +250,7 @@ const Profile = () => {
                 )}
               </div>
               {/* User Posts */}
-              <div className="mt-14 mx-10">
+              <div className="mt-14 mx-5 md:mx-10">
                 {/* Posts title */}
                 <div className="flex justify-center items-center py-4 border-y border-light">
                   <p className="font-bigPrimary text-2xl text-darker">
@@ -258,7 +258,7 @@ const Profile = () => {
                   </p>
                 </div>
                 {/* Posts */}
-                <div className="h-screen relative">
+                <div className="h-screen w-full relative">
                   {data?.pages ? (
                     <div>
                       {data?.pages.map((group, i) => (
@@ -271,6 +271,7 @@ const Profile = () => {
                               {/* Post Component */}
                               <Post
                                 type="profile"
+                                page="profile"
                                 post={post}
                                 user={user}
                                 index={index}

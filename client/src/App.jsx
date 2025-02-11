@@ -9,6 +9,7 @@ import TheChronicle from "./pages/HomePages/TheChronicle.jsx";
 import Profile from "./pages/Profile.jsx";
 import { AnimatePresence } from "framer-motion";
 import ScrollToTop from "./components/ScrollToTop.jsx";
+import PostDetails from "./pages/PostDetails.jsx";
 
 export const PostContext = createContext(null);
 
@@ -76,6 +77,7 @@ function App() {
             <Route path="/chronicle" element={<TheChronicle />} />
 
             <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/post/:postId" element={<PostDetails />} />
           </Routes>
         </AnimatePresence>
       </PostContext.Provider>

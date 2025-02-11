@@ -147,7 +147,8 @@ const Signup = () => {
                 >
                   <AiOutlineCloudUpload className="text-3xl mb-2" />
                   <p className="text-dark text-center">
-                    Drop your image here or browse
+                    <span className="hover:text-darkest">Upload a file </span>
+                    or Drag and drop
                   </p>
                   <p className="text-sm">Recommended size : 1:1</p>
                   <p className="text-sm">Max file size : 10mb</p>

@@ -21,7 +21,7 @@ const OptionsDropdown = ({
 
   return (
     <motion.div
-      className={`options-dropdown absolute right-0 flex flex-col gap-2 bg-dark text-lighter p-2 font-bigPrimary text-base z-20 ${
+      className={`options-dropdown absolute right-0 flex flex-col gap-2 bg-dark text-lighter p-2 font-bigPrimary text-base z-50 ${
         optionsPosition === "up" ? "origin-top top-9" : "origin-bottom bottom-9"
       }`}
       initial={{ scaleY: 0 }}
@@ -30,6 +30,7 @@ const OptionsDropdown = ({
         transition: { duration: 0.2, ease: "easeInOut" },
       }}
       exit={{ scaleY: 0, transition: { duration: 0.2, ease: "easeInOut" } }}
+      onClick={(e) => e.stopPropagation()} // Prevent event from bubbling up
     >
       {/* Show Edit and Delete buttons if the user is the post author or an admin || button is clicked */}
       {isAuthor && !buttonClicked && (
