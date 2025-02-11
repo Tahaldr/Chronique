@@ -8,7 +8,7 @@ const HomeHeader = ({ navY }) => {
 
   return (
     <motion.div
-      className="w-full h-fit flex place-items-center"
+      className="w-full h-auto flex place-items-center "
       style={{ y: navY }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -26,7 +26,10 @@ const HomeHeader = ({ navY }) => {
       <div className="w-full md:w-2/4 text-center text-darkest flex items-center justify-center">
         <AnimatePresence>
           <motion.h1
-            className="text-7xl lg:text-8xl font-bigPrimary leading-none cursor-default relative text-center"
+            className="text-7xl lg:text-8xl font-bigPrimary cursor-default relative text-center"
+            style={{
+              lineHeight: 0,
+            }}
             onMouseEnter={() => setTitleHovered(true)}
             onMouseLeave={() => setTitleHovered(false)}
             animate={
@@ -35,7 +38,7 @@ const HomeHeader = ({ navY }) => {
           >
             Chronique
             {/* Line under Title  */}
-            <span className="w-full h-[1px] bg-light absolute right-0 bottom-6 lg:bottom-8 z-[-1]"></span>
+            <span className="w-full h-[1px] bg-light absolute right-0 top-3 lg:top-4 z-[-1]"></span>
           </motion.h1>
         </AnimatePresence>
       </div>

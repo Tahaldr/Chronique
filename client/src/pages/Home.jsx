@@ -36,11 +36,13 @@ const Home = () => {
     <>
       <div className="w-full h-screen">
         <div
-          className={`${
-            active === "chronicle"
-              ? "mb-[150px] md:mb-[100px]"
-              : "mb-[38px] md:mb-[44px]"
-          } w-full p-4 overflow-hidden relative grid place-items-centerF`}
+          className={`
+            ${
+              active === "chronicle"
+                ? "mb-[150px] md:mb-[100px]"
+                : "mb-[38px] md:mb-[44px]"
+            } 
+            w-full p-4 overflow-hidden relative grid`}
           ref={ref}
         >
           <HomeHeader navY={navY} />
