@@ -12,6 +12,8 @@ import ConfirmWindow from "../components/Elements/ConfirmWindow";
 import { PostContext } from "../App";
 import showToast from "../components/Toast";
 import ArrowScrollUp from "../components/Elements/ArrowScrollUp";
+import PostComments from "../components/PostComp/PostComments";
+import formatNumber from "../lib/formatNumber";
 
 const PostDetails = () => {
   const [post, setPost] = useState(null);
@@ -142,7 +144,17 @@ const PostDetails = () => {
             </div>
 
             {/* Comments & comment form */}
-            <div className="w-full h-screen bg-red-200"></div>
+            <div className="w-full flex flex-col gap-5">
+              <h4 className="font-smallSemiBold text-darker">
+                Comments ({formatNumber(post?.comments)})
+              </h4>
+              <PostComments PostId={post?._id} type="mini" />
+            </div>
+
+            {/* Author Other Posts */}
+            <div className="w-full h-screen bg-red-300">
+              {/* <AuthorOtherPosts /> */}
+            </div>
           </div>
         </div>
       </div>

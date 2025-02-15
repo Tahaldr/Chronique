@@ -61,6 +61,9 @@ export const createComment = async (req, res) => {
 export const getComments = async (req, res) => {
   try {
     const { postId } = req.params;
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const skip = (page - 1) * limit;
 
     // Check if the post exists
     const post = await Post.findById(postId);
@@ -68,12 +71,10 @@ export const getComments = async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    // Initialize variables
     let userId = null;
     let userComments = [];
     let otherComments = [];
 
-    // Check for a valid refresh token
     const refreshToken = req.cookies.refreshToken;
     if (refreshToken) {
       try {
@@ -86,11 +87,10 @@ export const getComments = async (req, res) => {
         if (storedToken === refreshToken) {
           userId = decoded.userId;
 
-          // Fetch user's comments sorted by `createdAt` descending
-          userComments = await Comment.find({
-            post: postId,
-            author: userId,
-          }).sort({ createdAt: -1 });
+          userComments = await Comment.find({ post: postId, author: userId })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
         }
       } catch (error) {
         console.log("Error verifying token:", error.message);
@@ -100,23 +100,33 @@ export const getComments = async (req, res) => {
       }
     }
 
-    // Fetch other comments
     if (userId) {
       otherComments = await Comment.find({
         post: postId,
         author: { $ne: userId },
-      }).sort({ votes: -1 });
+      })
+        .sort({ votes: -1 })
+        .skip(skip)
+        .limit(limit);
     } else {
-      // If no user logged in, fetch all comments sorted by `votes` descending
-      otherComments = await Comment.find({ post: postId }).sort({ votes: -1 });
+      otherComments = await Comment.find({ post: postId })
+        .sort({ votes: -1 })
+        .skip(skip)
+        .limit(limit);
     }
 
-    // Combine comments: user's comments first (if any), then other comments
+    const totalComments = await Comment.countDocuments({ post: postId });
+    const totalPages = Math.ceil(totalComments / limit);
+    const hasMore = page * limit < totalComments;
+
     const comments = [...userComments, ...otherComments];
 
     res.status(200).json({
       message: `${comments.length} comment(s) fetched successfully`,
       comments,
+      nextPage: hasMore ? page + 1 : null,
+      hasMore,
+      totalPages,
     });
   } catch (error) {
     console.log("Error in getComments controller", error.message);

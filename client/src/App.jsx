@@ -10,6 +10,7 @@ import Profile from "./pages/Profile.jsx";
 import { AnimatePresence } from "framer-motion";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import PostDetails from "./pages/PostDetails.jsx";
+import ScrollRestoration from "./lib/ScrollRestoration.js";
 
 export const PostContext = createContext(null);
 
@@ -60,6 +61,7 @@ function App() {
       <ScrollToTop /> {/* Add this component here */}
       <PostContext.Provider value={contextValue}>
         <AnimatePresence mode="wait">
+          <ScrollRestoration />
           <Routes location={location} key={location.pathname}>
             {/* Authentication routes */}
             <Route

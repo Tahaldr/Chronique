@@ -56,6 +56,7 @@ const Post = ({
           handleUnlikePost={handleUnlikePost}
         />
       )}
+      <br />
 
       {/* Middle section of post */}
       <div
@@ -213,6 +214,7 @@ const Post = ({
         </div>
       )}
 
+      <br />
       {/* Bottom section of post */}
       <PostTop
         post={post}

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axios from "../lib/axios";
 import showToast from "../components/Toast";
+import { useCommentStore } from "./useCommentStore";
 
 export const usePostStore = create((set, get) => ({
   loading: false,
@@ -16,30 +17,30 @@ export const usePostStore = create((set, get) => ({
     }
   },
 
-  getComments: async (postId) => {
-    // Fetch author data for each comment
-    try {
-      const res = await axios.get(`/comment/getcomments/${postId}`);
-      const comments = res.data.comments;
+  // getComments: async (postId) => {
+  //   // Fetch author data for each comment
+  //   try {
+  //     const res = await axios.get(`/comment/getcomments/${postId}`);
+  //     const comments = res.data.comments;
 
-      const commentsWithAuthors = await Promise.all(
-        comments.map(async (comment) => {
-          try {
-            const author = await get().getAuthorPost(comment.author);
-            return { ...comment, author };
-          } catch (error) {
-            console.log(error);
-            return { ...comment, author: null };
-          }
-        })
-      );
+  //     const commentsWithAuthors = await Promise.all(
+  //       comments.map(async (comment) => {
+  //         try {
+  //           const author = await get().getAuthorPost(comment.author);
+  //           return { ...comment, author };
+  //         } catch (error) {
+  //           console.log(error);
+  //           return { ...comment, author: null };
+  //         }
+  //       })
+  //     );
 
-      return { ...res.data, comments: commentsWithAuthors };
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  },
+  //     return { ...res.data, comments: commentsWithAuthors };
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw error;
+  //   }
+  // },
 
   getPopularPosts: async (page = 1, limit = 10) => {
     try {
@@ -53,7 +54,9 @@ export const usePostStore = create((set, get) => ({
         posts.map(async (post) => {
           try {
             const author = await get().getAuthorPost(post.author);
-            const comments = await get().getComments(post._id);
+            const comments = await useCommentStore
+              .getState()
+              .getComments(post._id);
             return { ...post, author, comments: comments.comments.length };
           } catch (error) {
             console.log(error);
@@ -96,7 +99,9 @@ export const usePostStore = create((set, get) => ({
         posts.map(async (post) => {
           try {
             const author = await get().getAuthorPost(post.author);
-            const comments = await get().getComments(post._id);
+            const comments = await useCommentStore
+              .getState()
+              .getComments(post._id);
             return { ...post, author, comments: comments.comments.length };
           } catch (error) {
             console.log(error);
@@ -126,7 +131,9 @@ export const usePostStore = create((set, get) => ({
         posts.map(async (post) => {
           try {
             const author = await get().getAuthorPost(post.author);
-            const comments = await get().getComments(post._id);
+            const comments = await useCommentStore
+              .getState()
+              .getComments(post._id);
             return { ...post, author, comments: comments.comments.length };
           } catch (error) {
             console.log(error);
@@ -158,7 +165,9 @@ export const usePostStore = create((set, get) => ({
         posts.map(async (post) => {
           try {
             const author = await get().getAuthorPost(post.author);
-            const comments = await get().getComments(post._id);
+            const comments = await useCommentStore
+              .getState()
+              .getComments(post._id);
             return { ...post, author, comments: comments.comments.length };
           } catch (error) {
             console.log(error);
@@ -190,7 +199,9 @@ export const usePostStore = create((set, get) => ({
         posts.map(async (post) => {
           try {
             const author = await get().getAuthorPost(post.author);
-            const comments = await get().getComments(post._id);
+            const comments = await useCommentStore
+              .getState()
+              .getComments(post._id);
             return { ...post, author, comments: comments.comments.length };
           } catch (error) {
             console.log(error);
@@ -218,7 +229,7 @@ export const usePostStore = create((set, get) => ({
       // Fetch author data and comments length
       try {
         const author = await get().getAuthorPost(post.author);
-        const comments = await get().getComments(post._id);
+        const comments = await useCommentStore.getState().getComments(post._id);
 
         set({ loading: false });
         return {

@@ -226,7 +226,7 @@ const TheChronicle = ({
         <Loading size="3xl" color="dark" />
       </div>
     );
-  // if error showToast :
+
   if (isError) {
     showToast({ message: error.message, type: "error" });
   }
