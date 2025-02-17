@@ -80,17 +80,5 @@ export const useCommentStore = create((set, get) => ({
     }
   },
 
-  deleteComment: async (commentId) => {
-    try {
-      const res = await axios.delete(`/comment/deletecomment/${commentId}`);
-      return res.data;
-    } catch (error) {
-      console.log(error);
-      showToast({
-        message: error.response?.data.message || "Failed to delete the comment",
-        type: "error",
-      });
-      throw error;
-    }
-  },
+  deleteComment
 }));

@@ -229,6 +229,8 @@ const Post = ({
 };
 
 Post.propTypes = {
+
+
   handleLikePost: PropTypes.func.isRequired,
   handleUnlikePost: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired,
@@ -237,6 +239,7 @@ Post.propTypes = {
   index: PropTypes.number,
   i: PropTypes.number,
   page: PropTypes.string.isRequired,
+
 };
 
 export default Post;

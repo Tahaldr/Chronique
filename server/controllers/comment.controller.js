@@ -2,7 +2,7 @@ import Post from "../models/post.model.js";
 import Comment from "../models/comment.model.js";
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-import Redis from "../lib/redis.js";
+import redis from "../lib/redis.js";
 
 export const createComment = async (req, res) => {
   try {
@@ -18,7 +18,7 @@ export const createComment = async (req, res) => {
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET
       );
-      const storedToken = await Redis.get("refreshToken:" + decoded.userId);
+      const storedToken = await redis.get("refreshToken:" + decoded.userId);
 
       if (storedToken !== refreshToken) {
         return res.status(401).json({ message: "Invalid refresh token" });
@@ -82,7 +82,7 @@ export const getComments = async (req, res) => {
           refreshToken,
           process.env.REFRESH_TOKEN_SECRET
         );
-        const storedToken = await Redis.get("refreshToken:" + decoded.userId);
+        const storedToken = await redis.get("refreshToken:" + decoded.userId);
 
         if (storedToken === refreshToken) {
           userId = decoded.userId;
@@ -182,21 +182,35 @@ export const deleteAllComments = async (req, res) => {
 export const PlusVoteComment = async (req, res) => {
   try {
     const { commentId } = req.params;
+    const refreshToken = req.cookies.refreshToken;
 
-    // Check if comment exists
-    const comment = await Comment.findById(commentId);
-    if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
+    if (refreshToken) {
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET
+      );
+      const storedToken = await redis.get(`refreshToken:${decoded.userId}`);
+      if (storedToken !== refreshToken) {
+        return res.status(401).json({ message: "Invalid refresh token" });
+      }
+
+      const comment = await Comment.findById(commentId);
+      if (!comment) {
+        return res.status(404).json({ message: "Comment not found" });
+      }
+
+      // Check if the user has already voted for the comment
+      if (comment.votes.includes(decoded.userId)) {
+        return res
+          .status(400)
+          .json({ message: "You have already voted for this comment" });
+      }
+
+      comment.votes.push(decoded.userId);
+      await comment.save();
+
+      res.status(200).json({ message: "Comment voted successfully", comment });
     }
-
-    // Update comment
-    await Comment.findByIdAndUpdate(commentId, { votes: comment.votes + 1 });
-
-    res.status(200).json({
-      message: `Comment updated successfully, its now ${
-        comment.votes + 1
-      } votes`,
-    });
   } catch (error) {
     console.log("Error in plusvotecomment controller", error.message);
     res
@@ -208,21 +222,37 @@ export const PlusVoteComment = async (req, res) => {
 export const MinusVoteComment = async (req, res) => {
   try {
     const { commentId } = req.params;
+    const refreshToken = req.cookies.refreshToken;
 
-    // Check if comment exists
-    const comment = await Comment.findById(commentId);
-    if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
+    if (refreshToken) {
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET
+      );
+      const storedToken = await redis.get(`refreshToken:${decoded.userId}`);
+      if (storedToken !== refreshToken) {
+        return res.status(401).json({ message: "Invalid refresh token" });
+      }
+
+      const comment = await Comment.findById(commentId);
+      if (!comment) {
+        return res.status(404).json({ message: "Comment not found" });
+      }
+
+      // Check if the user has not voted yet
+      if (!comment.votes.includes(decoded.userId)) {
+        return res
+          .status(400)
+          .json({ message: "You have not voted for this comment yet" });
+      }
+
+      comment.votes = comment.votes.filter(
+        (vote) => vote.toString() !== decoded.userId.toString()
+      );
+      await comment.save();
+
+      res.status(200).json({ message: "Vote removed successfully", comment });
     }
-
-    // Update comment
-    await Comment.findByIdAndUpdate(commentId, { votes: comment.votes - 1 });
-
-    res.status(200).json({
-      message: `Comment updated successfully, its now ${
-        comment.votes - 1
-      } votes`,
-    });
   } catch (error) {
     console.log("Error in minusvotecomment controller", error.message);
     res

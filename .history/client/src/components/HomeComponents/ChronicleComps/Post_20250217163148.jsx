@@ -229,13 +229,22 @@ const Post = ({
 };
 
 Post.propTypes = {
-  handleLikePost: PropTypes.func.isRequired,
-  handleUnlikePost: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
   post: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  type: PropTypes.string.isRequired,
+  dropdownRef: PropTypes.object.isRequired,
   index: PropTypes.number,
   i: PropTypes.number,
+  handleLikePost: PropTypes.func.isRequired,
+  handleUnlikePost: PropTypes.func.isRequired,
+  setOptionsPosition: PropTypes.func.isRequired,
+  setOptionsShow: PropTypes.func.isRequired,
+  optionsPosition: PropTypes.object.isRequired,
+  setDeleteConfirm: PropTypes.func.isRequired,
+  commentHovered: PropTypes.object.isRequired,
+  setCommentHovered: PropTypes.func.isRequired,
+  optionsShow: PropTypes.bool.isRequired,
+  searchSubmitted: PropTypes.bool, // not required
   page: PropTypes.string.isRequired,
 };
 

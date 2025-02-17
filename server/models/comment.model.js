@@ -5,7 +5,7 @@ const commentSchema = new mongoose.Schema(
     content: {
       type: String,
       required: [true, "Content is required"],
-      maxlength: [500, "Content must be less than 500 characters"],
+      maxlength: [1000, "Content must be less than 1000 characters"],
     },
     author: {
       // reference to user model
@@ -20,8 +20,9 @@ const commentSchema = new mongoose.Schema(
       required: [true, "Post is required"],
     },
     votes: {
-      type: Number,
-      default: 0,
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+      default: [],
     },
   },
   { timestamps: true }
