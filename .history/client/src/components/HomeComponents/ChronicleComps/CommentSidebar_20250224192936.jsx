@@ -69,9 +69,8 @@ const CommentSidebar = ({ postId }) => {
             className="pointer-events-none bg-repeat-y w-[583px] h-full absolute top-0 right-0"
             draggable="false"
           />
-          <div
-            className="w-[450px] min-[570px]:w-[500px]  h-full px-5 py-5 absolute top-0 right-0 overflow-scroll flex flex-col gap-5"
-            ref={CommentSidebarRef}
+          <div className="w-[450px] min-[570px]:w-[500px]  h-full px-5 py-5 absolute top-0 right-0 overflow-scroll flex flex-col gap-5"
+            
           >
             <div>
               <HiArrowSmallUp

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
 import { motion } from "framer-motion";
 import PostComments from "../../PostComp/PostComments";
 import { HiArrowSmallUp } from "react-icons/hi2";
@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 
 const CommentSidebar = ({ postId }) => {
   const { setCommentSidebarOpen } = useContext(CommentContext);
-  const CommentSidebarRef = useRef(null);
 
   useEffect(() => {
     // Disable scrolling but keep the scrollbar visible
@@ -23,25 +22,6 @@ const CommentSidebar = ({ postId }) => {
     };
   }, []);
 
-  // Function to close the sidebar when clicked outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        CommentSidebarRef.current &&
-        !CommentSidebarRef.current.contains(event.target)
-      ) {
-        setCommentSidebarOpen(false);
-      }
-    };
-
-    // Add the event listener only when the modal is active
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setCommentSidebarOpen]);
-
   return (
     <>
       <motion.div
@@ -49,30 +29,18 @@ const CommentSidebar = ({ postId }) => {
         initial={{ opacity: 0 }}
         animate={{
           opacity: 1,
+          transition: { duration: 0.3, ease: "easeInOut" },
         }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
         exit={{ opacity: 0, transition: { duration: 0.3, ease: "easeInOut" } }}
       >
-        <motion.div
-          className="w-full h-full relative"
-          initial={{ x: "100%" }}
-          animate={{ x: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          exit={{
-            x: "100%",
-            transition: { duration: 0.5, ease: "easeInOut" },
-          }}
-        >
-          <img
+        <div className="w-full h-full relative">
+          <motion.img
             src="/OtherImg/CommentPaperCutHalf.png"
             alt="Paper bg"
             className="pointer-events-none bg-repeat-y w-[583px] h-full absolute top-0 right-0"
             draggable="false"
           />
-          <div
-            className="w-[450px] min-[570px]:w-[500px]  h-full px-5 py-5 absolute top-0 right-0 overflow-scroll flex flex-col gap-5"
-            ref={CommentSidebarRef}
-          >
+          <div className="w-[450px] min-[570px]:w-[500px]  h-full px-5 py-5 absolute top-0 right-0 overflow-scroll flex flex-col gap-5">
             <div>
               <HiArrowSmallUp
                 className="text-3xl text-darkish cursor-pointer rotate-90 p-1 rounded-full border border-darkish
@@ -82,7 +50,7 @@ const CommentSidebar = ({ postId }) => {
             </div>
             <PostComments PostId={postId} type="full" />
           </div>
-        </motion.div>
+        </div>
       </motion.div>
     </>
   );

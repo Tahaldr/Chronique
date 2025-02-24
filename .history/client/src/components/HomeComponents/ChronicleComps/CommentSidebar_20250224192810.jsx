@@ -54,7 +54,7 @@ const CommentSidebar = ({ postId }) => {
         exit={{ opacity: 0, transition: { duration: 0.3, ease: "easeInOut" } }}
       >
         <motion.div
-          className="w-full h-full relative"
+          className="relative"
           initial={{ x: "100%" }}
           animate={{ x: 0 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
@@ -69,10 +69,7 @@ const CommentSidebar = ({ postId }) => {
             className="pointer-events-none bg-repeat-y w-[583px] h-full absolute top-0 right-0"
             draggable="false"
           />
-          <div
-            className="w-[450px] min-[570px]:w-[500px]  h-full px-5 py-5 absolute top-0 right-0 overflow-scroll flex flex-col gap-5"
-            ref={CommentSidebarRef}
-          >
+          <div className="w-[450px] min-[570px]:w-[500px]  h-full px-5 py-5 absolute top-0 right-0 overflow-scroll flex flex-col gap-5">
             <div>
               <HiArrowSmallUp
                 className="text-3xl text-darkish cursor-pointer rotate-90 p-1 rounded-full border border-darkish

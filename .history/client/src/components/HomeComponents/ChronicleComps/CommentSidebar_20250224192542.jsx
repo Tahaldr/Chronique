@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
 import { motion } from "framer-motion";
 import PostComments from "../../PostComp/PostComments";
 import { HiArrowSmallUp } from "react-icons/hi2";
@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 
 const CommentSidebar = ({ postId }) => {
   const { setCommentSidebarOpen } = useContext(CommentContext);
-  const CommentSidebarRef = useRef(null);
 
   useEffect(() => {
     // Disable scrolling but keep the scrollbar visible
@@ -23,14 +22,14 @@ const CommentSidebar = ({ postId }) => {
     };
   }, []);
 
-  // Function to close the sidebar when clicked outside
+  // 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        CommentSidebarRef.current &&
-        !CommentSidebarRef.current.contains(event.target)
+        confirmBoxRef.current &&
+        !confirmBoxRef.current.contains(event.target)
       ) {
-        setCommentSidebarOpen(false);
+        confirming({ postId: null, confirming: false });
       }
     };
 
@@ -40,7 +39,7 @@ const CommentSidebar = ({ postId }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [setCommentSidebarOpen]);
+  }, [confirming]);F
 
   return (
     <>
@@ -69,10 +68,7 @@ const CommentSidebar = ({ postId }) => {
             className="pointer-events-none bg-repeat-y w-[583px] h-full absolute top-0 right-0"
             draggable="false"
           />
-          <div
-            className="w-[450px] min-[570px]:w-[500px]  h-full px-5 py-5 absolute top-0 right-0 overflow-scroll flex flex-col gap-5"
-            ref={CommentSidebarRef}
-          >
+          <div className="w-[450px] min-[570px]:w-[500px]  h-full px-5 py-5 absolute top-0 right-0 overflow-scroll flex flex-col gap-5">
             <div>
               <HiArrowSmallUp
                 className="text-3xl text-darkish cursor-pointer rotate-90 p-1 rounded-full border border-darkish
