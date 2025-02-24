@@ -90,7 +90,7 @@ function App() {
         {commentSidebarOpen && (
           <PostContext.Provider value={contextValue}>
             <CommentContext.Provider value={commentContextValue}>
-              <CommentSidebar postId={commentSidebarOpen} />
+              <CommentSidebar commentSidebarOpen={commentSidebarOpen?} />
             </CommentContext.Provider>
           </PostContext.Provider>
         )}

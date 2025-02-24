@@ -1,12 +1,10 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import PostComments from "../../PostComp/PostComments";
 import { HiArrowSmallUp } from "react-icons/hi2";
-import { CommentContext } from "../../../App";
-import PropTypes from "prop-types";
 
-const CommentSidebar = ({ postId }) => {
-  const { setCommentSidebarOpen } = useContext(CommentContext);
+const CommentSidebar = () => {
+  const {setCommentSidebarOpen}
 
   useEffect(() => {
     // Disable scrolling but keep the scrollbar visible
@@ -39,15 +37,11 @@ const CommentSidebar = ({ postId }) => {
               onClick={() => setCommentSidebarOpen(null)}
             />
           </div>
-          <PostComments PostId={postId} type="full" />
+          <PostComments PostId="676a8e5b970b6b88d66e77aa" type="full" />
         </div>
       </div>
     </>
   );
-};
-
-CommentSidebar.propTypes = {
-  postId: PropTypes.string.isRequired,
 };
 
 export default CommentSidebar;

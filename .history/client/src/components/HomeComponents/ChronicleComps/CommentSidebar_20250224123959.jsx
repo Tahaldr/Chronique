@@ -39,7 +39,7 @@ const CommentSidebar = ({ postId }) => {
               onClick={() => setCommentSidebarOpen(null)}
             />
           </div>
-          <PostComments PostId={postId} type="full" />
+          <PostComments PostId= type="full" />
         </div>
       </div>
     </>

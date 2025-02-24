@@ -12,7 +12,7 @@ import {
   TbMessageCircleFilled,
 } from "react-icons/tb";
 import { useContext } from "react";
-import { CommentContext, PostContext } from "../../App";
+import { PostContext } from "../../App";
 import showToast from "../Toast";
 
 const PostTop = ({
@@ -33,8 +33,6 @@ const PostTop = ({
     setCommentHovered,
     commentHovered,
   } = useContext(PostContext);
-
-  const { setCommentSidebarOpen } = useContext(CommentContext);
 
   return (
     <div

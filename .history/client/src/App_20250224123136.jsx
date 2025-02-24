@@ -67,8 +67,7 @@ function App() {
     setCommentOptionsShow,
     commentDeleteConfirm,
     setCommentDeleteConfirm,
-    commentSidebarOpen,
-    setCommentSidebarOpen,
+    
   };
 
   useEffect(() => {
@@ -90,7 +89,7 @@ function App() {
         {commentSidebarOpen && (
           <PostContext.Provider value={contextValue}>
             <CommentContext.Provider value={commentContextValue}>
-              <CommentSidebar postId={commentSidebarOpen} />
+              <CommentSidebar />
             </CommentContext.Provider>
           </PostContext.Provider>
         )}

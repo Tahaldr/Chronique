@@ -219,7 +219,7 @@ const PostComments = ({ PostId, type }) => {
           <div className="flex items-center justify-center w-full">
             <button
               className="text-sm font-smallMedium text-dark py-2 px-5 border border-light hover:text-darkest hover:border-dark rounded-full"
-              onClick={() => setCommentSidebarOpen(PostId)}
+              onClick={() => setCommentSidebarOpen(postId)}
             >
               See all comments
             </button>

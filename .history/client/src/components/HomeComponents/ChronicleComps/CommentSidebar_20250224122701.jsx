@@ -1,13 +1,12 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import PostComments from "../../PostComp/PostComments";
+import { GrSidebar } from "react-icons/gr";
+import { CgSidebarRight } from "react-icons/cg";
 import { HiArrowSmallUp } from "react-icons/hi2";
-import { CommentContext } from "../../../App";
-import PropTypes from "prop-types";
+import ArrowScrollUp from "../../Elements/ArrowScrollUp";
 
-const CommentSidebar = ({ postId }) => {
-  const { setCommentSidebarOpen } = useContext(CommentContext);
-
+const CommentSidebar = () => {
   useEffect(() => {
     // Disable scrolling but keep the scrollbar visible
     const scrollbarWidth =
@@ -33,21 +32,17 @@ const CommentSidebar = ({ postId }) => {
         />
         <div className="w-[500px] h-full px-5 py-5 absolute top-0 right-0 overflow-scroll flex flex-col gap-5">
           <div>
+            <ArrowScrollUp type="sticky" />
             <HiArrowSmallUp
               className="text-3xl text-darkish cursor-pointer rotate-90 p-1 rounded-full border border-darkish
             hover:border-darker hover:text-darker"
-              onClick={() => setCommentSidebarOpen(null)}
             />
           </div>
-          <PostComments PostId={postId} type="full" />
+          <PostComments PostId="676a8e5b970b6b88d66e77aa" type="full" />
         </div>
       </div>
     </>
   );
-};
-
-CommentSidebar.propTypes = {
-  postId: PropTypes.string.isRequired,
 };
 
 export default CommentSidebar;

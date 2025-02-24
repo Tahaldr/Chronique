@@ -19,11 +19,8 @@ const PostComments = ({ PostId, type }) => {
   const queryClient = useQueryClient();
   const { user } = useUserStore();
 
-  const {
-    commentDeleteConfirm,
-    setCommentDeleteConfirm,
-    setCommentSidebarOpen,
-  } = useContext(CommentContext);
+  const { commentDeleteConfirm, setCommentDeleteConfirm, setCommentSidebarOpen } =
+    useContext(CommentContext);
 
   // const commentContext = useContext(CommentContext) || {}; // Prevent null error
   // const { commentDeleteConfirm = {}, setCommentDeleteConfirm = () => {} } =
@@ -217,9 +214,8 @@ const PostComments = ({ PostId, type }) => {
         {/* SeeMore btn */}
         {type === "mini" && (
           <div className="flex items-center justify-center w-full">
-            <button
-              className="text-sm font-smallMedium text-dark py-2 px-5 border border-light hover:text-darkest hover:border-dark rounded-full"
-              onClick={() => setCommentSidebarOpen(PostId)}
+            <button className="text-sm font-smallMedium text-dark py-2 px-5 border border-light hover:text-darkest hover:border-dark rounded-full"
+              onClick={() => setCommentSidebarOpen()}
             >
               See all comments
             </button>

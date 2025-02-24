@@ -67,8 +67,6 @@ function App() {
     setCommentOptionsShow,
     commentDeleteConfirm,
     setCommentDeleteConfirm,
-    commentSidebarOpen,
-    setCommentSidebarOpen,
   };
 
   useEffect(() => {
@@ -87,15 +85,13 @@ function App() {
     <>
       {/* Comment sidebar */}
       <AnimatePresence>
-        {commentSidebarOpen && (
-          <PostContext.Provider value={contextValue}>
-            <CommentContext.Provider value={commentContextValue}>
-              <CommentSidebar postId={commentSidebarOpen} />
-            </CommentContext.Provider>
-          </PostContext.Provider>
-        )}
+        <PostContext.Provider value={contextValue}>
+          <CommentContext.Provider value={commentContextValue}>
+            <CommentSidebar />
+          </CommentContext.Provider>
+        </PostContext.Provider>
       </AnimatePresence>
-      {/* Routes */}
+      {/* Routes  */}
       <ScrollToTop /> {/* Add this component here */}
       <PostContext.Provider value={contextValue}>
         <CommentContext.Provider value={commentContextValue}>
