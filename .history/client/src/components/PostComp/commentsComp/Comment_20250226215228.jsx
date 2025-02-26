@@ -10,8 +10,13 @@ import { useUserStore } from "../../../stores/useUserStore";
 import { CommentContext } from "../../../App";
 import CommentOptionsDropdown from "../../Elements/CommentOptionsDropdown";
 import { AnimatePresence } from "framer-motion";
+import { IoMdHeart } from "react-icons/io";
 
-const Comment = ({ comment, handleLikeComment, handleUnlikeComment }) => {
+const Comment = ({
+  comment,
+  handleLikeComment,
+  handleUnlikeComment,
+}) => {
   const [commentExpanded, setCommentExpanded] = useState(false);
   const [lineCount, setLineCount] = useState(0);
   const contentRef = useRef(null);

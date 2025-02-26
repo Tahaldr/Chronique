@@ -140,7 +140,7 @@ const HomeNav = ({
               </Link>
               {/* line divider */}
               <div
-                className={`w-[1px] h-full bg-darker transition-colors duration-300 ${
+                className={`w-[1px] h-full bg-darker transition-colors duration-100 delay-200 ${
                   btnHovered ? "bg-darkish" : ""
                 }`}
               ></div>

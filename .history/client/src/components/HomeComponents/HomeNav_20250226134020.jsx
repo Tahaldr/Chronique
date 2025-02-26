@@ -134,17 +134,14 @@ const HomeNav = ({
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               ></motion.span>
 
-              {/* signup btn */}
               <Link to="/signup" className="pr-4">
                 Sign in
               </Link>
-              {/* line divider */}
               <div
-                className={`w-[1px] h-full bg-darker transition-colors duration-300 ${
-                  btnHovered ? "bg-darkish" : ""
+                className={`w-[1px] h-full ${
+                  btnHovered ? "bg-lighter" : "bg-darker"
                 }`}
               ></div>
-              {/* login btn */}
               <Link to="/login" className="pl-4">
                 Log in
               </Link>

@@ -126,7 +126,7 @@ const HomeNav = ({
               onMouseEnter={() => setBtnHovered(true)}
               onMouseLeave={() => setBtnHovered(false)}
             >
-              <span className="absolute w-full h-full bg-dark top-0 left-0 z-[-1]"></span>
+              {/* <span className="absolute w-full h-full bg-dark top-0 left-0 z-[-1]"></span> */}
 
               <motion.span
                 className="absolute w-full h-full bg-light top-0 left-0 z-[-1] origin-left"
@@ -134,17 +134,10 @@ const HomeNav = ({
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               ></motion.span>
 
-              {/* signup btn */}
               <Link to="/signup" className="pr-4">
                 Sign in
               </Link>
-              {/* line divider */}
-              <div
-                className={`w-[1px] h-full bg-darker transition-colors duration-300 ${
-                  btnHovered ? "bg-darkish" : ""
-                }`}
-              ></div>
-              {/* login btn */}
+              <div className="w-[1px] h-full bg-darker"></div>
               <Link to="/login" className="pl-4">
                 Log in
               </Link>

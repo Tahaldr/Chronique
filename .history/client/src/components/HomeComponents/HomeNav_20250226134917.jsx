@@ -138,9 +138,9 @@ const HomeNav = ({
               <Link to="/signup" className="pr-4">
                 Sign in
               </Link>
-              {/* line divider */}
+              {/* line d */}
               <div
-                className={`w-[1px] h-full bg-darker transition-colors duration-300 ${
+                className={`w-[1px] h-full bg-darker transition-colors duration-500 delay-1000 ${
                   btnHovered ? "bg-darkish" : ""
                 }`}
               ></div>

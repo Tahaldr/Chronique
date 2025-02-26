@@ -11,7 +11,12 @@ import { CommentContext } from "../../../App";
 import CommentOptionsDropdown from "../../Elements/CommentOptionsDropdown";
 import { AnimatePresence } from "framer-motion";
 
-const Comment = ({ comment, handleLikeComment, handleUnlikeComment }) => {
+const Comment = ({
+  comment,
+  postAuthorId,
+  handleLikeComment,
+  handleUnlikeComment,
+}) => {
   const [commentExpanded, setCommentExpanded] = useState(false);
   const [lineCount, setLineCount] = useState(0);
   const contentRef = useRef(null);
@@ -190,6 +195,8 @@ const Comment = ({ comment, handleLikeComment, handleUnlikeComment }) => {
                   });
             }}
           />
+
+          {/* Liked from  */}
         </div>
       </div>
     </div>
@@ -198,6 +205,7 @@ const Comment = ({ comment, handleLikeComment, handleUnlikeComment }) => {
 
 Comment.propTypes = {
   comment: PropTypes.object.isRequired,
+  postAuthorId: PropTypes.string.isRequired,
   handleLikeComment: PropTypes.func.isRequired,
   handleUnlikeComment: PropTypes.func.isRequired,
 };
