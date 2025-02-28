@@ -334,11 +334,11 @@ export const getRelatedAuthorPosts = async (req, res) => {
     const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 posts
 
     const post = await Post.findById(postId).select(
-      "author title description tags category votes postPic"
+      "author title description tags category votesz"
     );
     if (!post) return res.status(404).json({ message: "Post not found" });
 
-    const { author, title, description, tags, postPic } = post;
+    const { author, title, description, tags } = post;
     const authorId = mongoose.Types.ObjectId.isValid(author)
       ? new mongoose.Types.ObjectId(author)
       : author;
@@ -357,9 +357,6 @@ export const getRelatedAuthorPosts = async (req, res) => {
     })
       .sort({ createdAt: -1 })
       .limit(limit);
-
-    // Filter out posts where postPic is null
-    relatedPosts = relatedPosts.filter((post) => post.postPic !== "null");
 
     if (relatedPosts.length < limit) {
       const remaining = limit - relatedPosts.length;

@@ -359,7 +359,7 @@ export const getRelatedAuthorPosts = async (req, res) => {
       .limit(limit);
 
     // Filter out posts where postPic is null
-    relatedPosts = relatedPosts.filter((post) => post.postPic !== "null");
+    relatedPosts = relatedPosts.filter(post => post.postPic !== 'null');
 
     if (relatedPosts.length < limit) {
       const remaining = limit - relatedPosts.length;
@@ -397,6 +397,7 @@ export const getRelatedAuthorPosts = async (req, res) => {
       .json({ message: error.message, location: "getRelatedAuthorPosts" });
   }
 };
+
 
 export const getPost = async (req, res) => {
   try {

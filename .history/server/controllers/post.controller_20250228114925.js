@@ -331,14 +331,14 @@ const extractKeywords = (text) => {
 export const getRelatedAuthorPosts = async (req, res) => {
   try {
     const { postId } = req.params;
-    const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 posts
+    const limit = parseInt(req.query.limit, 10) || 7; // Default to 7 posts
 
     const post = await Post.findById(postId).select(
-      "author title description tags category votes postPic"
+      "author title description tags category votes"
     );
     if (!post) return res.status(404).json({ message: "Post not found" });
 
-    const { author, title, description, tags, postPic } = post;
+    const { author, title, description, tags } = post;
     const authorId = mongoose.Types.ObjectId.isValid(author)
       ? new mongoose.Types.ObjectId(author)
       : author;
@@ -349,6 +349,7 @@ export const getRelatedAuthorPosts = async (req, res) => {
     let relatedPosts = await Post.find({
       _id: { $ne: postId },
       author: authorId,
+      postPic: { $exists: true, $ne: "" },
       $or: [
         { tags: { $in: tags } },
         { title: { $regex: keywords.join("|"), $options: "i" } },
@@ -358,37 +359,51 @@ export const getRelatedAuthorPosts = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(limit);
 
-    // Filter out posts where postPic is null
-    relatedPosts = relatedPosts.filter((post) => post.postPic !== "null");
-
-    if (relatedPosts.length < limit) {
+    while (relatedPosts.length < limit) {
       const remaining = limit - relatedPosts.length;
 
       const moreFromAuthor = await Post.find({
         author: authorId,
+        postPic: { $exists: true, $ne: "" },
         _id: { $nin: [...relatedPosts.map((p) => p._id), postId] },
       })
         .sort({ votes: -1 })
         .limit(remaining);
 
       relatedPosts = [...relatedPosts, ...moreFromAuthor];
-    }
 
-    if (relatedPosts.length < limit) {
-      const remaining = limit - relatedPosts.length;
+      if (relatedPosts.length >= limit) break;
 
       const topVotedOthers = await Post.find({
         _id: { $nin: [...relatedPosts.map((p) => p._id), postId] },
+        postPic: { $exists: true, $ne: "" },
       })
         .sort({ votes: -1 })
-        .limit(remaining);
+        .limit(limit - relatedPosts.length);
 
       relatedPosts = [...relatedPosts, ...topVotedOthers];
+
+      if (relatedPosts.length >= limit) break;
     }
 
+    const postsWithAuthorsComments = await Promise.all(
+      relatedPosts.map(async (post) => {
+        try {
+          const author = await get().getAuthorPost(post.author);
+          const comments = await useCommentStore
+            .getState()
+            .getComments(post._id);
+          return { ...post, author, comments: comments.comments.length };
+        } catch (error) {
+          console.log(error);
+          return { ...post, author: null, comments: 0 };
+        }
+      })
+    );
+
     res.status(200).json({
-      message: `${relatedPosts.length} related post(s) found`,
-      posts: relatedPosts,
+      message: `${postsWithAuthorsComments.length} related post(s) found`,
+      posts: postsWithAuthorsComments,
     });
   } catch (error) {
     console.error("Error in getRelatedAuthorPosts:", error.message);

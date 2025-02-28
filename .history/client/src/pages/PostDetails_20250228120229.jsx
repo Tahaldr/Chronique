@@ -47,7 +47,7 @@ const PostDetails = () => {
       fetchRelatedPosts();
     }
   }, [getRelatedAuthorPosts, postId]);
-  console.log("relatedPosts", relatedPosts);
+  // console.log("relatedPosts", relatedPosts);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -194,7 +194,7 @@ const PostDetails = () => {
                     </div>
                   ) : (
                     <>
-                      <AuthorOtherPosts posts={relatedPosts} />
+                      {/* <AuthorOtherPosts posts={relatedPosts} /> */}
                       {/* Note for dragging */}
                       <div className="w-full h-12 justify-center text-sm font-smallSemiBoldItalic text-darkish flex items-center gap-1">
                         <TbHandMove />

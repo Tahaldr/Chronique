@@ -47,7 +47,7 @@ const PostDetails = () => {
       fetchRelatedPosts();
     }
   }, [getRelatedAuthorPosts, postId]);
-  console.log("relatedPosts", relatedPosts);
+  // console.log("relatedPosts", relatedPosts);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -179,11 +179,10 @@ const PostDetails = () => {
               <PostComments PostId={postId} type="mini" />
             </div>
 
-            <hr className="border-light -mb-10" />
-
             {/* Author Other Posts */}
-            {relatedPosts.length !== 0 && (
+            {relatedPosts.length === 0 && (
               <>
+                <hr className="border-light -mb-10" />
                 <div className="w-full flex flex-col gap-8 mb-10">
                   <h4 className="font-smallSemiBold text-darker">
                     You may also like

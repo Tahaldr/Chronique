@@ -358,9 +358,6 @@ export const getRelatedAuthorPosts = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(limit);
 
-    // Filter out posts where postPic is null
-    relatedPosts = relatedPosts.filter((post) => post.postPic !== "null");
-
     if (relatedPosts.length < limit) {
       const remaining = limit - relatedPosts.length;
 
@@ -386,6 +383,15 @@ export const getRelatedAuthorPosts = async (req, res) => {
       relatedPosts = [...relatedPosts, ...topVotedOthers];
     }
 
+    // Conditionally add postPic if it's not null
+    relatedPosts = relatedPosts.map((post) => {
+      if (!post.postPic) {
+        const { postPic, ...postWithoutPic } = post.toObject();
+        return postWithoutPic;
+      }
+      return post;
+    });
+
     res.status(200).json({
       message: `${relatedPosts.length} related post(s) found`,
       posts: relatedPosts,
@@ -397,6 +403,7 @@ export const getRelatedAuthorPosts = async (req, res) => {
       .json({ message: error.message, location: "getRelatedAuthorPosts" });
   }
 };
+
 
 export const getPost = async (req, res) => {
   try {

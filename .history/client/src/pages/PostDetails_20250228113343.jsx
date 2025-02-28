@@ -47,7 +47,7 @@ const PostDetails = () => {
       fetchRelatedPosts();
     }
   }, [getRelatedAuthorPosts, postId]);
-  console.log("relatedPosts", relatedPosts);
+  // console.log("relatedPosts", relatedPosts);
 
   useEffect(() => {
     const fetchPost = async () => {

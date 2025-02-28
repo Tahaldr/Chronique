@@ -56,7 +56,7 @@ const PostComments = ({ PostId, type }) => {
       return null;
     },
   });
-  // console.log("data", data);
+  console.log("data", data);
 
   // handle comment upvote
   const handleLikeComment = async (commentId) => {

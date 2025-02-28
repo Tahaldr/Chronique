@@ -331,14 +331,14 @@ const extractKeywords = (text) => {
 export const getRelatedAuthorPosts = async (req, res) => {
   try {
     const { postId } = req.params;
-    const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 posts
+    const limit = parseInt(req.query.limit, 10) || 10;
 
     const post = await Post.findById(postId).select(
       "author title description tags category votes postPic"
     );
     if (!post) return res.status(404).json({ message: "Post not found" });
 
-    const { author, title, description, tags, postPic } = post;
+    const { author, title, description, tags } = post;
     const authorId = mongoose.Types.ObjectId.isValid(author)
       ? new mongoose.Types.ObjectId(author)
       : author;
@@ -354,35 +354,33 @@ export const getRelatedAuthorPosts = async (req, res) => {
         { title: { $regex: keywords.join("|"), $options: "i" } },
         { description: { $regex: keywords.join("|"), $options: "i" } },
       ],
+      postPic: { $ne: null },
     })
       .sort({ createdAt: -1 })
       .limit(limit);
 
-    // Filter out posts where postPic is null
-    relatedPosts = relatedPosts.filter((post) => post.postPic !== "null");
-
     if (relatedPosts.length < limit) {
       const remaining = limit - relatedPosts.length;
-
       const moreFromAuthor = await Post.find({
         author: authorId,
         _id: { $nin: [...relatedPosts.map((p) => p._id), postId] },
+        postPic: { $ne: null },
       })
         .sort({ votes: -1 })
         .limit(remaining);
-
+      
       relatedPosts = [...relatedPosts, ...moreFromAuthor];
     }
 
     if (relatedPosts.length < limit) {
       const remaining = limit - relatedPosts.length;
-
       const topVotedOthers = await Post.find({
         _id: { $nin: [...relatedPosts.map((p) => p._id), postId] },
+        postPic: { $ne: null },
       })
         .sort({ votes: -1 })
         .limit(remaining);
-
+      
       relatedPosts = [...relatedPosts, ...topVotedOthers];
     }
 
@@ -397,6 +395,7 @@ export const getRelatedAuthorPosts = async (req, res) => {
       .json({ message: error.message, location: "getRelatedAuthorPosts" });
   }
 };
+
 
 export const getPost = async (req, res) => {
   try {

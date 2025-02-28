@@ -47,7 +47,7 @@ const PostDetails = () => {
       fetchRelatedPosts();
     }
   }, [getRelatedAuthorPosts, postId]);
-  console.log("relatedPosts", relatedPosts);
+  // console.log("relatedPosts", relatedPosts);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -142,11 +142,8 @@ const PostDetails = () => {
           </div>
 
           {/* Post & comments */}
-          <motion.div
-            className="py-20 px-5 lg:py-5 lg:px-0 w-full lg:w-1/2 flex flex-col gap-20"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
+          <motion.div className="py-20 px-5 lg:py-5 lg:px-0 w-full lg:w-1/2 flex flex-col gap-20"
+          
           >
             {/* Post */}
             <div className="w-full">
@@ -176,35 +173,31 @@ const PostDetails = () => {
 
             {/* Comments & comment form */}
             <div className="w-full flex flex-col gap-5">
-              <PostComments PostId={postId} type="mini" />
+              <PostComments PostId={post?._id} type="mini" />
             </div>
 
             <hr className="border-light -mb-10" />
 
             {/* Author Other Posts */}
-            {relatedPosts.length !== 0 && (
-              <>
-                <div className="w-full flex flex-col gap-8 mb-10">
-                  <h4 className="font-smallSemiBold text-darker">
-                    You may also like
-                  </h4>
-                  {loading ? (
-                    <div className="w-full h-20 flex items-center justify-center">
-                      <Loading color="dark" size="3xl" />
-                    </div>
-                  ) : (
-                    <>
-                      <AuthorOtherPosts posts={relatedPosts} />
-                      {/* Note for dragging */}
-                      <div className="w-full h-12 justify-center text-sm font-smallSemiBoldItalic text-darkish flex items-center gap-1">
-                        <TbHandMove />
-                        <span>Drag to scroll</span>
-                      </div>
-                    </>
-                  )}
+            <div className="w-full flex flex-col gap-8 mb-10">
+              <h4 className="font-smallSemiBold text-darker">
+                You may also like
+              </h4>
+              {loading ? (
+                <div className="w-full h-20 flex items-center justify-center">
+                  <Loading color="dark" size="3xl" />
                 </div>
-              </>
-            )}
+              ) : (
+                <>
+                  <AuthorOtherPosts posts={relatedPosts} />
+                  {/* Note for dragging */}
+                  <div className="w-full h-12 justify-center text-sm font-smallSemiBoldItalic text-darkish flex items-center gap-1">
+                    <TbHandMove />
+                    <span>Drag to scroll</span>
+                  </div>
+                </>
+              )}
+            </div>
           </motion.div>
         </div>
       </div>
