@@ -12,7 +12,6 @@ import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import ConfirmWindow from "../components/Elements/ConfirmWindow";
 import Post from "../components/HomeComponents/ChronicleComps/Post";
 import { PostContext } from "../App";
-import { Toaster } from "react-hot-toast";
 import Loading from "../components/Loading";
 import { useInView } from "react-intersection-observer";
 import showToast from "../components/Toast";
@@ -167,7 +166,6 @@ const Profile = () => {
 
   return (
     <>
-      <Toaster />
       <ArrowScrollUp type="fixed" />
 
       {deleteConfirm.postId && deleteConfirm.confirming && (

@@ -7,7 +7,6 @@ import Post from "../components/HomeComponents/ChronicleComps/Post";
 import { useUserStore } from "../stores/useUserStore";
 import Loading from "../components/Loading";
 import Transition from "../components/Transition";
-import { Toaster } from "react-hot-toast";
 import ConfirmWindow from "../components/Elements/ConfirmWindow";
 import { PostContext } from "../App";
 import showToast from "../components/Toast";
@@ -117,7 +116,6 @@ const PostDetails = () => {
   return (
     <>
       <ArrowScrollUp type="fixed" />
-      <Toaster />
       {deleteConfirm.postId && deleteConfirm.confirming && (
         <ConfirmWindow
           confirming={setDeleteConfirm}

@@ -9,7 +9,6 @@ import showToast from "../../components/Toast";
 import RecentPost from "../../components/HomeComponents/ChronicleComps/RecentPost";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { useUserStore } from "../../stores/useUserStore";
-import { Toaster } from "react-hot-toast";
 import TopWriter from "../../components/HomeComponents/ChronicleComps/TopWriter";
 import ConfirmWindow from "../../components/Elements/ConfirmWindow";
 import Post from "../../components/HomeComponents/ChronicleComps/Post";
@@ -233,7 +232,6 @@ const TheChronicle = ({
 
   return (
     <>
-      <Toaster />
       {deleteConfirm.postId && deleteConfirm.confirming && (
         <ConfirmWindow
           confirming={setDeleteConfirm}

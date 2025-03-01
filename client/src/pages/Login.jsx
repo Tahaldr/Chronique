@@ -7,7 +7,6 @@ import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 // import { TbArrowBackUp } from "react-icons/tb";
 
-import { Toaster } from "react-hot-toast";
 import Loading from "../components/Loading";
 import MarkerCircle from "../components/MarkerCircle";
 
@@ -49,7 +48,6 @@ const Login = () => {
 
   return (
     <>
-      <Toaster />
       {/* Go back to home */}
       <BackBtn />
       <motion.div

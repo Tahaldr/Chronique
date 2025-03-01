@@ -12,6 +12,7 @@ import ScrollToTop from "./components/ScrollToTop.jsx";
 import PostDetails from "./pages/PostDetails.jsx";
 import ScrollRestoration from "./lib/ScrollRestoration.js";
 import CommentSidebar from "./components/HomeComponents/ChronicleComps/CommentSidebar.jsx";
+import { Toaster } from "react-hot-toast";
 
 export const PostContext = createContext(null);
 export const CommentContext = createContext(null);
@@ -85,6 +86,8 @@ function App() {
 
   return (
     <>
+      {/* Toast */}
+      <Toaster />
       {/* Comment sidebar */}
       <AnimatePresence>
         {commentSidebarOpen && (

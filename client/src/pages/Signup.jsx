@@ -8,7 +8,6 @@ import { VscEyeClosed } from "react-icons/vsc";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
 
-import { Toaster } from "react-hot-toast";
 import Loading from "../components/Loading";
 import MarkerCircle from "../components/MarkerCircle";
 
@@ -99,7 +98,6 @@ const Signup = () => {
 
   return (
     <>
-      <Toaster />
       {/* Go back to home */}
       <BackBtn />
       <motion.div
