@@ -31,9 +31,6 @@ const PostComments = ({ PostId, type }) => {
 
   // console.log(getComments(PostId, 10, 1));
 
-  const queryKey =
-    type === "mini" ? ["comments-mini", PostId] : ["comments", PostId];
-
   const {
     data,
     isLoading,
@@ -44,18 +41,11 @@ const PostComments = ({ PostId, type }) => {
     isFetchingNextPage,
     isFetching,
   } = useInfiniteQuery({
-    queryKey,
-    queryFn: ({ pageParam = 1 }) => {
-      return getComments(PostId, type === "mini" ? 3 : 10, pageParam);
-    },
-    getNextPageParam: (lastPage, pages) => {
-      if (pages.length < lastPage.totalPages) {
-        return pages.length + 1;
+    queryKey: ["comments"z
       }
       return null;
     },
   });
-
   // console.log("data", data);
 
   // handle comment upvote
