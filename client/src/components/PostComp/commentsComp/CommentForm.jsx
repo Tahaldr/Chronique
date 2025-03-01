@@ -23,7 +23,7 @@ const CommentForm = ({ PostId }) => {
 
   return (
     <div
-      className="flex flex-col gap-3 w-full border border-light py-3 px-6 overflow-hidden"
+      className="flex flex-col gap-3 w-full border border-light py-3 px-6 overflow-hidden transition-all duration-[3000ms] ease-in-out"
       style={{
         flexDirection: commentFocused ? "column" : "row",
       }}
@@ -33,10 +33,9 @@ const CommentForm = ({ PostId }) => {
         {commentFocused && (
           <motion.div
             className="flex items-center gap-2 overflow-hidden"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{
-              height: 0,
               opacity: 0,
               position: "absolute",
               transition: { duration: 0.1, ease: [0, 0.71, 0.2, 1.01] },
@@ -67,7 +66,6 @@ const CommentForm = ({ PostId }) => {
           value={commentContent.content}
           onChange={(e) => {
             setCommentContent({ content: e.target.value });
-            console.log(commentContent);
           }}
           onInput={handleInput}
           onFocus={() => setCommentFocused(true)}

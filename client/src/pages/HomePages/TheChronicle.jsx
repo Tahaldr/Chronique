@@ -124,7 +124,7 @@ const TheChronicle = ({
       return null;
     },
   });
-  console.log("data", data);
+  // console.log("data", data);
 
   // Fetch next page when in view
   useEffect(() => {
@@ -236,6 +236,7 @@ const TheChronicle = ({
         <ConfirmWindow
           confirming={setDeleteConfirm}
           handleFunc={() => handleDeletePost(deleteConfirm.postId)}
+          type="post"
         />
       )}
       <div className="flex">

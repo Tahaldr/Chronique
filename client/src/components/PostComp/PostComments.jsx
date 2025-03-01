@@ -63,7 +63,10 @@ const PostComments = ({ PostId, type }) => {
     try {
       await likeComment(commentId); // Perform the API call to like the comment
 
-      queryClient.setQueryData(["comments", PostId], (oldData) => {
+      const queryKey =
+        type === "mini" ? ["comments-mini", PostId] : ["comments", PostId];
+
+      queryClient.setQueryData(queryKey, (oldData) => {
         if (!oldData) return oldData;
 
         const newData = {
@@ -90,7 +93,10 @@ const PostComments = ({ PostId, type }) => {
     try {
       await unlikeComment(commentId); // Perform the API call to remove the vote
 
-      queryClient.setQueryData(["comments", PostId], (oldData) => {
+      const queryKey =
+        type === "mini" ? ["comments-mini", PostId] : ["comments", PostId];
+
+      queryClient.setQueryData(queryKey, (oldData) => {
         if (!oldData) return oldData;
 
         const newData = {
@@ -123,7 +129,10 @@ const PostComments = ({ PostId, type }) => {
     try {
       await deleteComment(commentId); // API call to delete the comment
 
-      queryClient.setQueryData(["comments", PostId], (oldData) => {
+      const queryKey =
+        type === "mini" ? ["comments-mini", PostId] : ["comments", PostId];
+
+      queryClient.setQueryData(queryKey, (oldData) => {
         if (!oldData) return oldData;
 
         const newData = {
@@ -166,6 +175,7 @@ const PostComments = ({ PostId, type }) => {
         <ConfirmWindow
           confirming={setCommentDeleteConfirm}
           handleFunc={() => handleDeleteComment(commentDeleteConfirm.commentId)}
+          type="comment"
         />
       )}
       <div className="flex flex-col gap-8">

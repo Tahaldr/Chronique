@@ -110,8 +110,8 @@ const Comment = ({ comment, handleLikeComment, handleUnlikeComment }) => {
                   prev === comment._id ? null : comment._id
                 );
 
-                console.log("Updated commentOptionsShow:", commentOptionsShow);
-                console.log("Clicked comment ID:", comment._id);
+                // console.log("Updated commentOptionsShow:", commentOptionsShow);
+                // console.log("Clicked comment ID:", comment._id);
               }}
             />
           )}

@@ -172,6 +172,7 @@ const Profile = () => {
         <ConfirmWindow
           confirming={setDeleteConfirm}
           handleFunc={() => handleDeletePost(deleteConfirm.postId)}
+          type="post"
         />
       )}
       <div className="bg-darker w-full flex items-center justify-center">

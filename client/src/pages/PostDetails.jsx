@@ -46,7 +46,7 @@ const PostDetails = () => {
       fetchRelatedPosts();
     }
   }, [getRelatedAuthorPosts, postId]);
-  console.log("relatedPosts", relatedPosts);
+  // console.log("relatedPosts", relatedPosts);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -120,6 +120,7 @@ const PostDetails = () => {
         <ConfirmWindow
           confirming={setDeleteConfirm}
           handleFunc={() => handleDeletePost(deleteConfirm.postId)}
+          type="post"
         />
       )}
       <div className="w-full">

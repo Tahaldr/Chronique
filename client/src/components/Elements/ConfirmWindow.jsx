@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 
-const ConfirmWindow = ({ confirming, handleFunc }) => {
+const ConfirmWindow = ({ confirming, handleFunc, type }) => {
   const confirmBoxRef = useRef(null);
 
   useEffect(() => {
@@ -68,7 +68,13 @@ const ConfirmWindow = ({ confirming, handleFunc }) => {
         </div>
         <div className="flex gap-8">
           <button
-            onClick={() => confirming({ postId: null, confirming: false })}
+            onClick={() => {
+              if (type === "post") {
+                confirming({ postId: null, confirming: false });
+              } else {
+                confirming({ commentId: null, confirming: false });
+              }
+            }}
             className="flex place-items-center text-lg text-lightest bg-dark
                 hover:bg-darkest px-6 font-bigPrimary"
           >
@@ -77,7 +83,11 @@ const ConfirmWindow = ({ confirming, handleFunc }) => {
           <button
             onClick={() => {
               handleFunc();
-              confirming({ postId: null, confirming: false });
+              if (type === "post") {
+                confirming({ postId: null, confirming: false });
+              } else {
+                confirming({ commentId: null, confirming: false });
+              }
             }}
             className="flex place-items-center text-lg text-lightest bg-dark
                 hover:bg-red-800 px-6 font-bigPrimary"
@@ -92,8 +102,8 @@ const ConfirmWindow = ({ confirming, handleFunc }) => {
 
 ConfirmWindow.propTypes = {
   confirming: PropTypes.func.isRequired,
-  confirmed: PropTypes.object.isRequired,
   handleFunc: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 export default ConfirmWindow;
