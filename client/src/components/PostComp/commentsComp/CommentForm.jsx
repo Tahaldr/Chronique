@@ -2,9 +2,8 @@ import PropTypes from "prop-types";
 import { useUserStore } from "../../../stores/useUserStore";
 import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useCommentStore } from "../../../stores/useCommentStore";
 
-const CommentForm = ({ PostId }) => {
+const CommentForm = ({ handleCreateComment }) => {
   const [commentFocused, setCommentFocused] = useState(false);
   const [commentContent, setCommentContent] = useState({
     content: "",
@@ -12,7 +11,6 @@ const CommentForm = ({ PostId }) => {
   const textareaRef = useRef(null);
 
   const { user } = useUserStore();
-  const { createComment } = useCommentStore();
 
   // Adjust height dynamically
   const handleInput = () => {
@@ -95,9 +93,10 @@ const CommentForm = ({ PostId }) => {
           )}
         </AnimatePresence>
         <button
-          className="text-sm font-mediumPrimary text-lighter px-6 bg-darker hover:bg-darkest"
+          disabled={!commentContent.content}
+          className="text-sm font-mediumPrimary text-lighter px-6 bg-darker hover:bg-darkest disabled:bg-light disabled:cursor-not-allowed"
           onClick={() => {
-            createComment(PostId, commentContent);
+            handleCreateComment(commentContent);
             setCommentContent({ content: "" });
             setCommentFocused(false);
           }}
@@ -110,7 +109,7 @@ const CommentForm = ({ PostId }) => {
 };
 
 CommentForm.propTypes = {
-  PostId: PropTypes.string.isRequired,
+  handleCreateComment: PropTypes.func.isRequired,
 };
 
 export default CommentForm;

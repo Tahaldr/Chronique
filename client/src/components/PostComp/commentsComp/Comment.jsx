@@ -49,7 +49,7 @@ const Comment = ({ comment, handleLikeComment, handleUnlikeComment }) => {
   // Check if comment is long
   const charLimit = 250;
   const maxLines = 6;
-  const isLongText = comment.content.length > charLimit;
+  const isLongText = comment?.content?.length > charLimit;
   const isManyLines = lineCount > maxLines;
 
   // Handle clicks outside comment dropdown

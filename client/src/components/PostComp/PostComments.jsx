@@ -13,8 +13,13 @@ import { CommentContext } from "../../App";
 import formatNumber from "../../lib/formatNumber";
 
 const PostComments = ({ PostId, type }) => {
-  const { getComments, likeComment, unlikeComment, deleteComment } =
-    useCommentStore();
+  const {
+    getComments,
+    createComment,
+    likeComment,
+    unlikeComment,
+    deleteComment,
+  } = useCommentStore();
   const { ref, inView } = useInView();
   const queryClient = useQueryClient();
   const { user } = useUserStore();
@@ -57,6 +62,48 @@ const PostComments = ({ PostId, type }) => {
   });
 
   // console.log("data", data);
+
+  // handle comment creation
+  const handleCreateComment = async (comment) => {
+    try {
+      const data = await createComment(PostId, comment); // API call to create comment
+      const newComment = data.comment;
+
+      if (!newComment || !newComment._id) {
+        console.error("Invalid comment data:", newComment);
+        showToast({ message: "Failed to add comment.", type: "error" });
+        return;
+      }
+
+      console.log("New Comment:", newComment);
+
+      const queryKey =
+        type === "mini" ? ["comments-mini", PostId] : ["comments", PostId];
+
+      queryClient.setQueryData(queryKey, (oldData) => {
+        if (!oldData) return oldData;
+
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page, index) => {
+            if (index === 0) {
+              return {
+                ...page,
+                comments: [newComment, ...page.comments],
+                totalComments: page.totalComments + 1,
+              };
+            }
+            return page;
+          }),
+        };
+      });
+
+      showToast({ message: "Comment added successfully.", type: "success" });
+    } catch (error) {
+      console.error("Failed to create comment:", error);
+      showToast({ message: "Failed to add comment.", type: "error" });
+    }
+  };
 
   // handle comment upvote
   const handleLikeComment = async (commentId) => {
@@ -185,7 +232,10 @@ const PostComments = ({ PostId, type }) => {
         {/* comment form */}
         {user && (
           <div>
-            <CommentForm PostId={PostId} />
+            <CommentForm
+              PostId={PostId}
+              handleCreateComment={handleCreateComment}
+            />
           </div>
         )}
         {/* comments */}

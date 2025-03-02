@@ -6,7 +6,8 @@ import { CommentContext } from "../../../App";
 import PropTypes from "prop-types";
 
 const CommentSidebar = ({ postId }) => {
-  const { setCommentSidebarOpen } = useContext(CommentContext);
+  const { commentDeleteConfirm, setCommentSidebarOpen } =
+    useContext(CommentContext);
   const CommentSidebarRef = useRef(null);
 
   useEffect(() => {
@@ -45,7 +46,11 @@ const CommentSidebar = ({ postId }) => {
   return (
     <>
       <motion.div
-        className="w-screen h-screen fixed top-0 left-0 bg-black bg-opacity-70 z-[60] overflow-hidden select-none"
+        className={`w-screen h-screen fixed top-0 left-0 bg-black z-[60] overflow-hidden select-none ${
+          commentDeleteConfirm.commentId && commentDeleteConfirm.confirming
+            ? "bg-opacity-0"
+            : "bg-opacity-70"
+        }`}
         initial={{ opacity: 0 }}
         animate={{
           opacity: 1,

@@ -12,7 +12,24 @@ export const useCommentStore = create((set) => ({
       set({ loading: true });
       const res = await axios.post(`/comment/createcomment/${postId}`, comment);
       set({ loading: false });
-      return res.data;
+      // return res.data;
+
+      const commentData = res.data;
+
+      // Fetch author data for the comment
+      try {
+        const author = await usePostStore
+          .getState()
+          .getAuthorPost(commentData.comment.author);
+        // return comment&author and message
+        return { ...commentData, comment: { ...commentData.comment, author } };
+      } catch (error) {
+        console.log(error);
+        return {
+          ...commentData,
+          comment: { ...commentData.comment, author: null },
+        };
+      }
     } catch (error) {
       set({ loading: false });
       showToast({
