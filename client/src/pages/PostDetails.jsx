@@ -134,7 +134,7 @@ const PostDetails = () => {
 
             {/* Profile dropdown */}
             {user && (
-              <div className="absolute top-5 right-5">
+              <div className="fixed top-5 right-5 z-40">
                 <ProfileImg type="postdetails" />
               </div>
             )}

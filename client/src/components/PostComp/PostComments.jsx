@@ -240,7 +240,7 @@ const PostComments = ({ PostId, type }) => {
         )}
         {/* comments */}
         <div>
-          {data.pages ? (
+          {data.pages && data?.pages[0]?.totalComments > 0 ? (
             <div className="flex flex-col gap-7">
               {data?.pages.map((group, i) => (
                 <div key={i} className="flex flex-col gap-7">

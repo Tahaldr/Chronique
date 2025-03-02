@@ -248,6 +248,7 @@ export const usePostStore = create((set, get) => ({
 
       return {
         ...res.data,
+        type: "search",
         posts: postsWithAuthorsComments,
       };
     } catch (error) {

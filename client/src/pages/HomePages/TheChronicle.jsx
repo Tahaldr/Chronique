@@ -256,7 +256,7 @@ const TheChronicle = ({
               </h1>
             )}
 
-          {data?.pages ? (
+          {data?.pages && data.pages[0].posts.length > 0 ? (
             <div>
               {data?.pages.map((group, i) => (
                 <div key={i}>
@@ -289,13 +289,16 @@ const TheChronicle = ({
               ))}
             </div>
           ) : (
-            <div className="w-screen md:w-full h-full flex flex-col items-center justify-center p-28 font-mediumPrimary text-lg leading-6">
-              <p className="text-dark">No posts yet ...</p>
-              <p className="text-darkest flex items-center gap-1">
-                be the first to write
-                <MdOutlinePostAdd className="text-darkest" />
-              </p>
-            </div>
+            !searchSubmitted &&
+            data?.pages[0]?.type !== "search" && (
+              <div className="w-screen md:w-full h-full flex flex-col items-center justify-center p-28 font-mediumPrimary text-lg leading-6">
+                <p className="text-dark">No posts yet ...</p>
+                <p className="text-darkest flex items-center gap-1">
+                  be the first to write
+                  <MdOutlinePostAdd className="text-darkest" />
+                </p>
+              </div>
+            )
           )}
 
           {isFetching && isFetchingNextPage && (
@@ -331,10 +334,16 @@ const TheChronicle = ({
                   <div className="flex items-center justify-center h-full">
                     <Loading size="3xl" color="dark" />
                   </div>
-                ) : (
+                ) : recentPosts.length > 0 ? (
                   recentPosts.map((post) => (
                     <RecentPost key={post._id} post={post} />
                   ))
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <p className="text-darkest font-mediumPrimary">
+                      No recent posts
+                    </p>
+                  </div>
                 )}
               </div>
             </div>
@@ -349,10 +358,16 @@ const TheChronicle = ({
                   <div className="flex items-center justify-center h-full">
                     <Loading size="3xl" color="dark" />
                   </div>
-                ) : (
+                ) : topWriters.length > 0 ? (
                   topWriters.map((author) => (
                     <TopWriter key={author._id} author={author} />
                   ))
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <p className="text-darkest font-mediumPrimary">
+                      No top writers
+                    </p>
+                  </div>
                 )}
               </div>
             </div>

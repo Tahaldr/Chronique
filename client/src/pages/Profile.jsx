@@ -258,7 +258,7 @@ const Profile = () => {
                 </div>
                 {/* Posts */}
                 <div className="h-screen w-full relative">
-                  {data?.pages ? (
+                  {data?.pages && data?.pages[0]?.posts.length > 0 ? (
                     <div>
                       {data?.pages.map((group, i) => (
                         <div key={i}>
