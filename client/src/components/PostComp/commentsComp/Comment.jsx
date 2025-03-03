@@ -134,7 +134,7 @@ const Comment = ({ comment, handleLikeComment, handleUnlikeComment }) => {
       <div>
         <pre
           ref={contentRef}
-          className="font-small whitespace-pre-wrap transition-all duration-300 overflow-hidden"
+          className="font-small whitespace-pre-wrap break-words transition-all duration-300 overflow-hidden"
           style={{
             maxHeight: !commentExpanded && isManyLines ? "9em" : "none", // 9em ≈ 6 lines
           }}

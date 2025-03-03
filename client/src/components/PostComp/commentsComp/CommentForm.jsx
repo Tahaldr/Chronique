@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useUserStore } from "../../../stores/useUserStore";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CommentForm = ({ handleCreateComment }) => {
@@ -15,14 +15,22 @@ const CommentForm = ({ handleCreateComment }) => {
   // Adjust height dynamically
   const handleInput = () => {
     const textarea = textareaRef.current;
-    textarea.style.height = "auto";
-    textarea.style.height = `${textarea.scrollHeight}px`;
+    textarea.style.height = "auto"; // Reset height to auto
+    textarea.style.height = `${textarea.scrollHeight}px`; // Adjust to fit content
   };
+
+  // Reset the textarea height when the content is cleared
+  useEffect(() => {
+    if (commentContent.content === "") {
+      const textarea = textareaRef.current;
+      textarea.style.height = "auto"; // Reset height when content is cleared
+    }
+  }, [commentContent.content]);
 
   return (
     <div
       className={`flex flex-col gap-3 w-full border border-light pt-3 px-6 overflow-hidden relative ${
-        commentFocused ? "pb-20" : "pb-3"
+        commentFocused ? "pb-24" : "pb-3"
       }`}
     >
       {/* user info */}
@@ -118,4 +126,3 @@ CommentForm.propTypes = {
 };
 
 export default CommentForm;
-  
