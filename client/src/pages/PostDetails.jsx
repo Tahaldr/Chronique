@@ -163,13 +163,11 @@ const PostDetails = () => {
                   handleUnlikePost={handleUnlikePost}
                 />
               ) : (
-                !loading && (
-                  <div className="w-full flex items-center justify-center">
-                    <p className="text-lg font-small text-darker">
-                      No post found
-                    </p>
-                  </div>
-                )
+                <div className="w-full flex items-center justify-center">
+                  <p className="text-lg font-small text-darker">
+                    No post found
+                  </p>
+                </div>
               )}
             </div>
 
