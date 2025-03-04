@@ -150,24 +150,20 @@ const PostDetails = () => {
             {/* Post */}
             <div className="w-full">
               {loading ? (
-                <div className="w-full h-screen flex items-center justify-center">
-                  <Loading color="dark" size="7xl" />
+                <div className="w-full h-20 flex items-center justify-center">
+                  <Loading color="dark" size="4xl" />
                 </div>
-              ) : post ? (
-                <Post
-                  type="details"
-                  page="details"
-                  post={post}
-                  user={user}
-                  handleLikePost={handleLikePost}
-                  handleUnlikePost={handleUnlikePost}
-                />
               ) : (
-                <div className="w-full flex items-center justify-center">
-                  <p className="text-lg font-small text-darker">
-                    No post found
-                  </p>
-                </div>
+                post && (
+                  <Post
+                    type="details"
+                    page="details"
+                    post={post}
+                    user={user}
+                    handleLikePost={handleLikePost}
+                    handleUnlikePost={handleUnlikePost}
+                  />
+                )
               )}
             </div>
 

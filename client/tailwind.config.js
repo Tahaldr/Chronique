@@ -29,7 +29,10 @@ export default {
         bigPrimary: ["canopee", "sans-serif"],
         bigSecondary: ["DomaineDisplay", "canopee", "serif"],
         bigSecondaryItalic: ["DomaineDisplayItalic", "sans-serif"],
-        bigThird: ["Cheltenham", "sans-serif"],
+        bigThird: ["Cheltenham", "Gloucester", "I-Am-Awake", "sans-serif"],
+        // bigThird: ["Cheltenham", "sans-serif"],
+        // bigThird: ["Gloucester", "sans-serif"],
+        // bigThird: ["I-Am-Awake", "sans-serif"],
 
         // Medium fonts variants
         mediumPrimary: ["cormorantBold", "serif"],

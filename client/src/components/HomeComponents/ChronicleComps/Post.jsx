@@ -120,7 +120,11 @@ const Post = ({
             {/* Post title */}
             <h3
               className={`${
-                index === 0 && i === 0 && type === "home" && !searchSubmitted
+                (index === 0 &&
+                  i === 0 &&
+                  type === "home" &&
+                  !searchSubmitted) ||
+                page === "details"
                   ? "text-3xl"
                   : "text-2xl"
               } font-bigThird text-darker text-justify
@@ -152,7 +156,7 @@ const Post = ({
                         ${
                           page !== "details"
                             ? "bg-lightish py-1 px-4 text-xs text-darker"
-                            : "text-dark"
+                            : "text-dark mt-2"
                         }
               `}
           >
@@ -174,7 +178,7 @@ const Post = ({
                   textExpanded ? "h-fit" : "max-h-[800px] overflow-hidden"
                 }`}
               >
-                <pre className="whitespace-pre-wrap text-justify">
+                <pre className="whitespace-pre-wrap text-justify font-smallMedium text-lg text-darker">
                   {post.content}
                 </pre>
               </div>

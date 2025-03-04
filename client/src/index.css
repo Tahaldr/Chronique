@@ -40,7 +40,7 @@
 
 @font-face {
   font-family: "Cheltenham";
-  src: url("FontFaces/cheltenham/cheltenham-cond-normal-700.ttf")
+  src: url("/FontFaces/cheltenham/cheltenham-cond-normal-700.ttf")
     format("truetype");
   font-weight: normal;
   font-style: normal;
@@ -155,6 +155,24 @@
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
+}
+
+@font-face {
+  font-family: "Gloucester";
+  src: url("/FontFaces/gloucester/Gloucester Bold Cond.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+}
+
+@font-face {
+  font-family: "I-Am-Awake";
+  src: url("/FontFaces/iamawake/I-Am-Awake.ttf") format("truetype"),
+    url("/FontFaces/iamawake/I-Am-Awake.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  size-adjust: 80%; /* Reduces the default size by 15% */
 }
 
 body {
