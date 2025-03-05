@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "../lib/axios";
 import showToast from "../components/Toast";
-import { Navigate } from "react-router-dom";
+import { getGlobalNavigate } from "../lib/navigation.js";
 
 export const useUserStore = create((set, get) => ({
   // user: JSON.parse(localStorage.getItem("user")) || null,
@@ -78,8 +78,12 @@ export const useUserStore = create((set, get) => ({
   logout: async () => {
     try {
       await axios.post("auth/logout");
-      Navigate("/");
       set({ user: null });
+      // navigate("/");
+      // window.location.href = "/"; // Forces navigation to home
+
+      const navigate = getGlobalNavigate();
+      if (navigate) navigate("/");
     } catch (error) {
       console.log("Error in logout", error?.response?.data?.message);
     }

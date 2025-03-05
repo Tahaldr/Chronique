@@ -1,4 +1,10 @@
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useUserStore } from "./stores/useUserStore.js";
 import Signup from "./pages/Signup.jsx";
 import Home from "./pages/Home.jsx";
@@ -13,6 +19,7 @@ import PostDetails from "./pages/PostDetails.jsx";
 import ScrollRestoration from "./lib/ScrollRestoration.js";
 import CommentSidebar from "./components/HomeComponents/ChronicleComps/CommentSidebar.jsx";
 import { Toaster } from "react-hot-toast";
+import { setGlobalNavigate } from "./lib/navigation.js.js";
 
 export const PostContext = createContext(null);
 export const CommentContext = createContext(null);
@@ -20,6 +27,12 @@ export const CommentContext = createContext(null);
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
   const location = useLocation();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setGlobalNavigate(navigate); // store navigate globally
+  }, [navigate]);
 
   // Post context variables and functions
   const dropdownRef = useRef(null);
