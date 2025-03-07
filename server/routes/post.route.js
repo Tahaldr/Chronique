@@ -21,12 +21,7 @@ import multerUpload from "../middlewares/multer.middleware.js";
 
 const router = express.Router();
 
-router.post(
-  "/createpost/:author",
-  protectedRoute,
-  multerUpload.single("postPic"),
-  createPost
-);
+router.post("/createpost", protectedRoute, createPost);
 router.get("/getallposts", getAllPosts);
 router.get("/topwriters", getTopWriters);
 router.get("/getrecentposts", getRecentPosts);

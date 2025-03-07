@@ -6,16 +6,107 @@ import redis from "../lib/redis.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
+// export const createPost = async (req, res) => {
+//   try {
+//     const { title, description, content, category, tags } = req.body;
+//     const { author } = req.params;
+
+//     // Check if author exists
+//     const authorFound = await User.findById(author);
+
+//     if (!authorFound) {
+//       return res.status(404).json({ message: "Author not found" });
+//     }
+
+//     // Required fields validation
+//     if (!title) {
+//       return res.status(400).json({ message: "Title is required" });
+//     }
+
+//     if (!description) {
+//       return res.status(400).json({ message: "Description is required" });
+//     }
+
+//     if (!content) {
+//       return res.status(400).json({ message: "Content is required" });
+//     }
+
+//     if (!category) {
+//       return res.status(400).json({ message: "Category is required" });
+//     }
+
+//     // upload image to cloudinary
+//     let cloundinaryResponse = null;
+//     if (req.file && req.file.path) {
+//       // Ensure the file is below 10 MB
+//       if (req.file.size > 10 * 1024 * 1024) {
+//         return res
+//           .status(400)
+//           .send({ message: "File size should not exceed 10 MB" });
+//       }
+
+//       cloundinaryResponse = await cloudinary.uploader.upload(req.file.path, {
+//         folder: "postique/posts",
+//       });
+//     }
+
+//     const newPost = await Post.create({
+//       postPic: cloundinaryResponse?.secure_url || "null",
+//       title,
+//       author,
+//       description,
+//       content,
+//       category,
+//       tags,
+//     });
+
+//     res.status(200).json({ message: "Post created successfully", newPost });
+//   } catch (error) {
+//     console.log("Error in createpost controller", error.message);
+//     res.status(500).json({ message: error.message, location: "createpost" });
+//   }
+// };
+
 export const createPost = async (req, res) => {
   try {
-    const { title, description, content, category, tags } = req.body;
-    const { author } = req.params;
+    const { postPic, title, description, content, category, tags } = req.body;
+
+    // Get user id from token
+
+    const refreshToken = req.cookies.refreshToken;
+    let userId;
+
+    if (refreshToken) {
+      try {
+        const decoded = jwt.verify(
+          refreshToken,
+          process.env.REFRESH_TOKEN_SECRET
+        );
+        userId = decoded.userId;
+      } catch (error) {
+        return res.status(401).json({ message: "Not authorized, Login first" });
+      }
+    } else {
+      return res.status(401).json({ message: "Refresh token not found" });
+    }
+
+    const author = userId;
 
     // Check if author exists
     const authorFound = await User.findById(author);
 
     if (!authorFound) {
       return res.status(404).json({ message: "Author not found" });
+    }
+
+    // Get post image size and validate
+    if (postPic) {
+      const imageSize = Buffer.byteLength(postPic, "base64");
+      const ImageSizeMb = imageSize / 1024 / 1024;
+      // console.log(ImageSizeMb, "Mbs");
+      if (ImageSizeMb > 10) {
+        return res.status(400).json({ message: "Max image size is 10mb" });
+      }
     }
 
     // Required fields validation
@@ -35,18 +126,11 @@ export const createPost = async (req, res) => {
       return res.status(400).json({ message: "Category is required" });
     }
 
-    // upload image to cloudinary
+    // Upload image to cloudinary
     let cloundinaryResponse = null;
-    if (req.file && req.file.path) {
-      // Ensure the file is below 10 MB
-      if (req.file.size > 10 * 1024 * 1024) {
-        return res
-          .status(400)
-          .send({ message: "File size should not exceed 10 MB" });
-      }
-
-      cloundinaryResponse = await cloudinary.uploader.upload(req.file.path, {
-        folder: "postique/posts",
+    if (postPic) {
+      cloundinaryResponse = await cloudinary.uploader.upload(postPic, {
+        folder: "Chronique/posts",
       });
     }
 
