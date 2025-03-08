@@ -6,7 +6,7 @@ import MarkerCircle from "../MarkerCircle";
 import { useState } from "react";
 import CategoriesCarousel from "./ChronicleComps/CategoriesCarousel";
 import Search from "./ChronicleComps/Search";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProfileImg from "../Elements/ProfileImg";
 
 const HomeNav = ({
@@ -26,6 +26,8 @@ const HomeNav = ({
 
   const { user } = useUserStore();
   const cubicBezierVar = [1, -0.01, 0.7, 1.04];
+
+  const navigate = useNavigate();
 
   return (
     <motion.div
@@ -101,6 +103,7 @@ const HomeNav = ({
               className=" text-lightest font-bigSecondaryItalic py-[.2rem] px-4 relative"
               onMouseEnter={() => setBtnHovered(true)}
               onMouseLeave={() => setBtnHovered(false)}
+              onClick={() => navigate("/create")}
             >
               <span className="absolute w-full h-full bg-dark top-0 left-0 z-[-1]"></span>
               <motion.span

@@ -194,12 +194,20 @@ body {
   color: #666;
 }
 
+.placeholder-text-darkish::placeholder {
+  color: #666;
+}
+
 .bg-darkish {
   background-color: #666;
 }
 
 .border-darkish {
   border-color: #666;
+}
+
+.border-darkish-50 {
+  border-color: rgba(102, 102, 102, 0.5);
 }
 
 /* .shadow-top {

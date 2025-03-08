@@ -20,6 +20,7 @@ import ScrollRestoration from "./lib/ScrollRestoration.js";
 import CommentSidebar from "./components/HomeComponents/ChronicleComps/CommentSidebar.jsx";
 import { Toaster } from "react-hot-toast";
 import { setGlobalNavigate } from "./lib/navigation.js.js";
+import CreatePost from "./pages/CreatePost.jsx";
 
 export const PostContext = createContext(null);
 export const CommentContext = createContext(null);
@@ -135,6 +136,10 @@ function App() {
 
               <Route path="/profile/:id" element={<Profile />} />
               <Route path="/post/:postId" element={<PostDetails />} />
+              <Route
+                path="/create"
+                element={!user ? <Home /> : <CreatePost />}
+              />
             </Routes>
           </AnimatePresence>
         </CommentContext.Provider>
