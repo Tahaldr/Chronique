@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { RxCross2 } from "react-icons/rx";
+import { usePostStore } from "../../../stores/usePostStore";
+import Loading from "../../Loading";
 
 const CreatepostForm = () => {
   const textareasRef = useRef([]);
   const [categorySelected, setCategorySelected] = useState(null);
   const [imageSelected, setImageSelected] = useState(null);
   const [dragActive, setDragActive] = useState(false);
+  const [tag, setTag] = useState(null);
   const [post, setPost] = useState({
     title: "",
     description: "",
@@ -15,6 +18,8 @@ const CreatepostForm = () => {
     content: "",
     tags: [],
   });
+
+  const { createPost, loading } = usePostStore();
 
   useEffect(() => {
     console.log(post);
@@ -98,16 +103,36 @@ const CreatepostForm = () => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (tag.trim()) {
+        setPost({ ...post, tags: [...post.tags, tag.trim()] });
+        setTag("");
+      }
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createPost(post);
+  };
+
   return (
     <div className="w-full">
-      <form id="createpost-form" className="w-full flex flex-col gap-7">
+      <form
+        id="createpost-form"
+        className="w-full flex flex-col gap-10"
+        onSubmit={handleSubmit}
+      >
         {/* post title */}
         <textarea
           ref={(el) => (textareasRef.current[0] = el)}
           type="text"
           placeholder="Title"
           className="w-full py-2 px-10 text-6xl bg-transparent text-lightest placeholder-text-darkish font-bigThird
-                border-l border-darkish-50 resize-none overflow-hidden outline-none
+                border-l border-darkish-50 resize-none overflow-hidden outline-none focus:border-light
+                transition-colors duration-300 ease-in-out
               "
           rows={1}
           value={post.title}
@@ -122,8 +147,9 @@ const CreatepostForm = () => {
           ref={(el) => (textareasRef.current[1] = el)}
           type="text"
           placeholder="Description"
-          className="w-full py-2 px-10 text-4xl bg-transparent text-lightest placeholder-text-darkish font-bigThird
-                border-l border-darkish-50 resize-none overflow-hidden outline-none
+          className="w-full py-2 px-10 text-3xl bg-transparent text-lightest placeholder-text-darkish font-smallMedium placeholder:font-bigThird
+                border-l border-darkish-50 resize-none overflow-hidden outline-none focus:border-light
+                transition-colors duration-500 ease-in-out
               "
           rows={1}
           value={post.description}
@@ -142,7 +168,7 @@ const CreatepostForm = () => {
                 key={category.id}
                 htmlFor={category.name}
                 className={`flex items-center justify-center gap-3 cursor-pointer py-2 px-5 font-smallMedium
-                      transition-colors duration-300 ease-in-out ${
+                      transition-colors duration-500 ease-in-out ${
                         categorySelected === category.name
                           ? "text-lighter border border-lighter"
                           : "text-darkish border border-darkish"
@@ -238,6 +264,71 @@ const CreatepostForm = () => {
         </div>
 
         {/* Post Content */}
+        <textarea
+          ref={(el) => (textareasRef.current[2] = el)}
+          type="text"
+          placeholder="Content"
+          className="w-full py-2 px-10 text-xl bg-transparent text-lightest placeholder-text-darkish font-smallMedium placeholder:font-bigThird
+                placeholder:text-2xl border-l border-darkish-50 resize-none overflow-hidden outline-none focus:border-light
+                transition-colors duration-500 ease-in-out
+              "
+          rows={5}
+          value={post.content}
+          onChange={(e) => {
+            setPost({ ...post, content: e.target.value });
+          }}
+          onInput={handleInput}
+        />
+
+        {/* Post Tags */}
+        <div className="flex flex-wrap gap-3">
+          {post.tags.map((tag, index) => (
+            // Tags
+            <div
+              key={index}
+              className="flex items-center gap-2 border border-lighter border-opacity-40 px-5 py-2 text-lighter
+              hover:text-lightest hover:border-opacity-100 transition-colors duration-500 ease-in-out"
+            >
+              <p className="font-smallMedium">{tag}</p>
+              <RxCross2
+                className="text-xl cursor-pointer"
+                onClick={() => {
+                  setPost({
+                    ...post,
+                    tags: post.tags.filter((_, i) => i !== index),
+                  });
+                }}
+              />
+            </div>
+          ))}
+          {/* Tag input */}
+          <input
+            type="text"
+            placeholder={`${
+              post.tags.length > 0 ? "Add new tag" : "Add a tag"
+            }`}
+            className="py-2 px-10 text-xl bg-transparent text-lightest placeholder-text-darkish font-smallMedium placeholder:font-bigThird
+                placeholder:text-2xl border-l border-darkish-50 resize-none outline-none focus:border-light
+                transition-colors duration-500 ease-in-out
+              "
+            value={tag || ""}
+            onChange={(e) => {
+              setTag(e.target.value);
+            }}
+            onKeyDown={handleKeyPress}
+          />
+        </div>
+
+        {/* Submit button */}
+        <button
+          className={`w-full text-2xl mt-5 bg-lightest hover:bg-lighter text-dark hover:text-darkest font-bigPrimary
+        transition-colors duration-300 ease-in-out flex items-center justify-center ${
+          loading ? "py-6" : "py-2"
+        }`}
+          type="submit"
+        >
+          {loading ? <Loading size="3xl" color="dark" /> : <span>Publish</span>}
+        </button>
       </form>
     </div>
   );

@@ -2,9 +2,25 @@ import { create } from "zustand";
 import axios from "../lib/axios";
 import showToast from "../components/Toast";
 import { useCommentStore } from "./useCommentStore";
+import { getGlobalNavigate } from "../lib/navigation.js";
 
 export const usePostStore = create((set, get) => ({
   loading: false,
+
+  createPost: async (post) => {
+    try {
+      const res = await axios.post("/post/createpost", post);
+      const navigate = getGlobalNavigate();
+      if (navigate) navigate("/");
+      return res.data.post;
+    } catch (error) {
+      set({ loading: false });
+      showToast({
+        message: error.response?.data?.message || "Failed to create post",
+        type: "error",
+      });
+    }
+  },
 
   getAuthorPost: async (authorId) => {
     try {

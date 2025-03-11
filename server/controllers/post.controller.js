@@ -118,12 +118,12 @@ export const createPost = async (req, res) => {
       return res.status(400).json({ message: "Description is required" });
     }
 
-    if (!content) {
-      return res.status(400).json({ message: "Content is required" });
-    }
-
     if (!category) {
       return res.status(400).json({ message: "Category is required" });
+    }
+
+    if (!content) {
+      return res.status(400).json({ message: "Content is required" });
     }
 
     // Upload image to cloudinary

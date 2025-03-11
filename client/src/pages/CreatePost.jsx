@@ -5,13 +5,13 @@ import CreatepostForm from "../components/PostComp/CreatePostComp/CreatepostForm
 
 const CreatePost = () => {
   return (
-    <div className="w-screen bg-darker">
-      {/* Back button */}
+    <div className="w-full h-full bg-darker">
       <div className="fixed z-40">
         <BackBtn type={"create"} />
       </div>
+      {/* Back button */}
       {/* Main Page */}
-      <div className="w-full relative top-20 flex justify-between gap-7 px-5">
+      <div className="w-full py-20 flex justify-between gap-7 px-5">
         {/* Main side - left */}
         <div className="w-full md:w-3/4">
           <CreatepostForm />
