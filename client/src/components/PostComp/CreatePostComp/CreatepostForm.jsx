@@ -21,9 +21,9 @@ const CreatepostForm = () => {
 
   const { createPost, loading } = usePostStore();
 
-  useEffect(() => {
-    console.log(post);
-  }, [post]);
+  // useEffect(() => {
+  //   console.log(post);
+  // }, [post]);
 
   // Categories
   const categories = [

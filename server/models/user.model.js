@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Name is required"],
       unique: [true, "Name already exists"],
+      maxlength: [30, "Name must be less than 30 characters"],
     },
     email: {
       type: String,

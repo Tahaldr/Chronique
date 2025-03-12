@@ -1,10 +1,10 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Transition from "../components/Transition";
 import { motion } from "framer-motion";
 import BackBtn from "../components/Elements/BackBtn";
 import { useUserStore } from "../stores/useUserStore";
 import { usePostStore } from "../stores/usePostStore";
-import { MdOutlineLogout, MdShield } from "react-icons/md";
+import { MdOutlineAdd, MdOutlineLogout, MdShield } from "react-icons/md";
 import { useContext, useEffect, useState } from "react";
 import formatNumber from "../lib/formatNumber";
 import ArrowScrollUp from "../components/Elements/ArrowScrollUp";
@@ -237,15 +237,28 @@ const Profile = () => {
                   {formatNumber(author?.totalLikes) || "0"} votes
                 </p>
                 {user && user._id === id && (
-                  <button
-                    onClick={() => logout()}
-                    className="flex justify-center items-center gap-3 font-bigPrimary text-lighter bg-darker hover:bg-red-800 tracking-wide py-1 px-4 text-xs md:text-sm"
-                  >
-                    <span>
-                      <MdOutlineLogout className="" />
-                    </span>
-                    <p>LOGOUT</p>
-                  </button>
+                  <div className="flex gap-3">
+                    <Link
+                      to="/create"
+                      className="flex size-8 justify-center items-center font-bigPrimary border border-darkish-50 hover:border-darkest
+                       text-dark bg-lightish hover:bg-light hover:text-darkest tracking-wide text-base md:text-lg"
+                    >
+                      <span>
+                        <MdOutlineAdd className="" />
+                      </span>
+                      {/* <p>CREATE POST</p> */}
+                    </Link>
+                    <button
+                      onClick={() => logout()}
+                      className="flex size-8 justify-center items-center font-bigPrimary border border-darkish-50 hover:border-none
+                       text-dark bg-lightish hover:bg-red-800 hover:text-lightest tracking-wide text-xs md:text-sm"
+                    >
+                      <span>
+                        <MdOutlineLogout className="" />
+                      </span>
+                      {/* <p>LOGOUT</p> */}
+                    </button>
+                  </div>
                 )}
               </div>
               {/* User Posts */}

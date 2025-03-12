@@ -96,18 +96,53 @@ export const signup = async (req, res) => {
       });
     }
 
+    // Check if password has been used before
+    const passwordUsedBefore = await User.findOne({ password });
+    if (passwordUsedBefore) {
+      return res.status(400).json({
+        message: "Password has been used before. Please choose a new one",
+      });
+    }
+
+    // Password validation
+    // Check password length
+    if (password.length < 8) {
+      return res.status(400).json({
+        message: "Password must be at least 8 characters long",
+      });
+    }
+
+    // Check if password starts with a capital letter
+    if (!/^[A-Z]/.test(password)) {
+      return res.status(400).json({
+        message: "Password must start with a capital letter",
+      });
+    }
+
+    // Check if password starts with a number or symbol
+    if (/^[0-9!@#$%^&*()_+={}|[\]\\:;'"<>,.?/-]/.test(password)) {
+      return res.status(400).json({
+        message: "Password cannot start with a number or symbol",
+      });
+    }
+
+    // Check for a combination of characters, symbols, and numbers
+    if (
+      !/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+={}|[\]\\:;'"<>,.?/-])/.test(
+        password
+      )
+    ) {
+      return res.status(400).json({
+        message:
+          "Password must contain a mix of uppercase, lowercase, numbers, and symbols",
+      });
+    }
+
     // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
       console.log(userExists);
       return res.status(400).json({ message: "User already exists" });
-    }
-
-    // Password strength validation
-    if (password.length < 6) {
-      return res.status(400).json({
-        message: "Password must be at least 6 characters long",
-      });
     }
 
     // Upload image to cloudinary
