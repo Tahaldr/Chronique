@@ -8,6 +8,7 @@ import {
   refreshToken,
   getAllUsers,
   getOnlyUsers,
+  getOnlyAdmins,
   getUser,
   deleteUser,
   deleteAllUsers,
@@ -27,6 +28,7 @@ router.post('/refreshtoken', refreshToken);
 router.get('/profile', protectedRoute, getprofile);
 router.get('/getallusers', protectedRoute, adminRoute, getAllUsers);
 router.get('/getonlyusers', protectedRoute, adminRoute, getOnlyUsers);
+router.get('/getonlyadmins', protectedRoute, adminRoute, getOnlyAdmins);
 router.get('/getuser/:id', getUser);
 router.post('/deleteuser/:id', protectedRoute, adminRoute, deleteUser);
 

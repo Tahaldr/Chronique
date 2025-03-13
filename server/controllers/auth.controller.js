@@ -325,19 +325,14 @@ export const getOnlyUsers = async (req, res) => {
   try {
     const page = req.query.page ? parseInt(req.query.page, 10) : null;
     const limit = req.query.limit ? parseInt(req.query.limit, 10) : null;
-
-    // If limit or page is NaN (due to empty query), set them to null
-    if (isNaN(page)) page = null;
-    if (isNaN(limit)) limit = null;
-
     const skip = page && limit ? (page - 1) * limit : 0;
 
     // Count total non-admin users
-    const totalUsers = await User.countDocuments({ isAdmin: false });
+    const totalUsers = await User.countDocuments({ idAdmin: false });
     const totalPages = limit ? Math.ceil(totalUsers / limit) : 1;
 
     // Fetch non-admin users with pagination
-    const usersQuery = User.find({ isAdmin: false }).sort({ createdAt: -1 });
+    const usersQuery = User.find({ idAdmin: false }).sort({ createdAt: -1 });
 
     if (page && limit) {
       usersQuery.skip(skip).limit(limit);
@@ -359,6 +354,42 @@ export const getOnlyUsers = async (req, res) => {
   } catch (error) {
     console.log('Error in getOnlyUsers controller', error.message);
     res.status(500).json({ message: error.message, location: 'getOnlyUsers' });
+  }
+};
+
+export const getOnlyAdmins = async (req, res) => {
+  try {
+    const page = req.query.page ? parseInt(req.query.page, 10) : null;
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : null;
+    const skip = page && limit ? (page - 1) * limit : 0;
+
+    // Count total admin users
+    const totalUsers = await User.countDocuments({ idAdmin: true });
+    const totalPages = limit ? Math.ceil(totalUsers / limit) : 1;
+
+    // Fetch admin users with pagination
+    const usersQuery = User.find({ idAdmin: true }).sort({ createdAt: -1 });
+
+    if (page && limit) {
+      usersQuery.skip(skip).limit(limit);
+    }
+
+    const users = await usersQuery;
+
+    // Check if there are more pages
+    const hasMore = page && limit ? page * limit < totalUsers : false;
+
+    res.status(200).json({
+      message: `${users.length} admin(s) found successfully`,
+      users,
+      totalUsers,
+      totalPages,
+      nextPage: hasMore ? page + 1 : null,
+      hasMore,
+    });
+  } catch (error) {
+    console.log('Error in getOnlyAdmins controller', error.message);
+    res.status(500).json({ message: error.message, location: 'getOnlyAdmins' });
   }
 };
 
