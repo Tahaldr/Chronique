@@ -178,7 +178,7 @@ const Post = ({
                   textExpanded ? "h-fit" : "max-h-[800px] overflow-hidden"
                 }`}
               >
-                <pre className="whitespace-pre-wrap text-justify font-smallMedium text-lg text-darker">
+                <pre className="whitespace-pre-wrap text-justify font-smallMedium text-lg text-darker leading-tight">
                   {post.content}
                 </pre>
               </div>
