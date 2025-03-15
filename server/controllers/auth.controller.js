@@ -1,5 +1,6 @@
 import redis from '../lib/redis.js';
 import User from '../models/user.model.js';
+import Post from '../models/post.model.js';
 import jwt from 'jsonwebtoken';
 import cloudinary from '../lib/cloudinary.js';
 import mongoose from 'mongoose';
@@ -302,7 +303,17 @@ export const getAllUsers = async (req, res) => {
       usersQuery.skip(skip).limit(limit);
     }
 
-    const users = await usersQuery;
+    let users = await usersQuery;
+
+    // Calculate votes and post count
+    users = await Promise.all(
+      users.map(async (user) => {
+        const posts = await Post.find({ author: user._id }, 'likes');
+        const votes = posts.reduce((sum, post) => sum + (post.likes ? post.likes.length : 0), 0);
+        const postCount = posts.length; // Count the posts created by the user
+        return { ...user.toObject(), votes, postCount }; // Add postCount to the user object
+      })
+    );
 
     // Check if there are more pages
     const hasMore = page && limit ? page * limit < totalUsers : false;
@@ -338,7 +349,17 @@ export const getOnlyUsers = async (req, res) => {
       usersQuery.skip(skip).limit(limit);
     }
 
-    const users = await usersQuery;
+    let users = await usersQuery;
+
+    // Calculate votes (sum of likes array length from all user posts)
+    users = await Promise.all(
+      users.map(async (user) => {
+        const posts = await Post.find({ author: user._id }, 'likes');
+        const votes = posts.reduce((sum, post) => sum + (post.likes ? post.likes.length : 0), 0);
+        const postCount = posts.length; // Count the posts created by the user
+        return { ...user.toObject(), votes, postCount };
+      })
+    );
 
     // Check if there are more pages
     const hasMore = page && limit ? page * limit < totalUsers : false;
@@ -374,7 +395,17 @@ export const getOnlyAdmins = async (req, res) => {
       usersQuery.skip(skip).limit(limit);
     }
 
-    const users = await usersQuery;
+    let users = await usersQuery;
+
+    // Calculate votes (sum of likes array length from all admin user posts)
+    users = await Promise.all(
+      users.map(async (user) => {
+        const posts = await Post.find({ author: user._id }, 'likes');
+        const votes = posts.reduce((sum, post) => sum + (post.likes ? post.likes.length : 0), 0);
+        const postCount = posts.length; // Count the posts created by the user
+        return { ...user.toObject(), votes, postCount };
+      })
+    );
 
     // Check if there are more pages
     const hasMore = page && limit ? page * limit < totalUsers : false;
@@ -390,6 +421,58 @@ export const getOnlyAdmins = async (req, res) => {
   } catch (error) {
     console.log('Error in getOnlyAdmins controller', error.message);
     res.status(500).json({ message: error.message, location: 'getOnlyAdmins' });
+  }
+};
+
+export const searchUsers = async (req, res) => {
+  try {
+    const term = req.query.term || '';
+    const page = req.query.page ? parseInt(req.query.page, 10) : null;
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : null;
+    const skip = page && limit ? (page - 1) * limit : 0;
+
+    const matchStage = term
+      ? {
+          $or: [
+            { name: { $regex: term, $options: 'i' } },
+            { email: { $regex: term, $options: 'i' } },
+            { _id: mongoose.Types.ObjectId.isValid(term) ? mongoose.Types.ObjectId(term) : null },
+          ],
+        }
+      : {};
+
+    const totalUsers = await User.countDocuments(matchStage);
+    const totalPages = limit ? Math.ceil(totalUsers / limit) : 1;
+
+    const usersQuery = User.find(matchStage).sort({ createdAt: -1 });
+
+    if (page && limit) {
+      usersQuery.skip(skip).limit(limit);
+    }
+
+    let users = await usersQuery;
+    users = await Promise.all(
+      users.map(async (user) => {
+        const posts = await Post.find({ author: user._id }, 'likes');
+        const votes = posts.reduce((sum, post) => sum + (post.likes ? post.likes.length : 0), 0);
+        const postCount = posts.length; // Count the posts created by the user
+        return { ...user.toObject(), votes, postCount };
+      })
+    );
+
+    const hasMore = page && limit ? page * limit < totalUsers : false;
+
+    res.status(200).json({
+      message: `${users.length} user(s) found successfully`,
+      users,
+      totalUsers,
+      totalPages,
+      nextPage: hasMore ? page + 1 : null,
+      hasMore,
+    });
+  } catch (error) {
+    console.error('Error in searchUsers controller:', error.message);
+    res.status(500).json({ message: error.message, location: 'searchUsers' });
   }
 };
 

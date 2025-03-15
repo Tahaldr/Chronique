@@ -9,6 +9,7 @@ import {
   getAllUsers,
   getOnlyUsers,
   getOnlyAdmins,
+  searchUsers,
   getUser,
   deleteUser,
   deleteAllUsers,
@@ -29,6 +30,7 @@ router.get('/profile', protectedRoute, getprofile);
 router.get('/getallusers', protectedRoute, adminRoute, getAllUsers);
 router.get('/getonlyusers', protectedRoute, adminRoute, getOnlyUsers);
 router.get('/getonlyadmins', protectedRoute, adminRoute, getOnlyAdmins);
+router.get('/searchusers', protectedRoute, adminRoute, searchUsers);
 router.get('/getuser/:id', getUser);
 router.post('/deleteuser/:id', protectedRoute, adminRoute, deleteUser);
 
