@@ -14,7 +14,7 @@ const HomeHeader = ({ navY }) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, ease: 'easeInOut' }}>
       {/* Left Side */}
-      <div className='w-1/4 py-6 border border-darker'>
+      <div className='w-1/4 py-6 border border-darker hidden md:flex'>
         <div className='text-darker font-smallMediumItalic px-3 hidden md:flex flex-col justify-center items-center w-full h-full text-xs lg:text-sm'>
           <h5 className='font-smallBoldItalic text-center'>Why We Write</h5>
           <p>
@@ -43,7 +43,7 @@ const HomeHeader = ({ navY }) => {
       </div>
 
       {/* Right Side */}
-      <div className='w-1/4 py-6 border border-darker'>
+      <div className='w-1/4 py-6 border border-darker hidden md:flex'>
         <div className='text-darker font-smallMediumItalic px-3 hidden md:flex flex-col justify-center items-center w-full h-full text-xs lg:text-sm'>
           <h5 className='font-smallBoldItalic text-center'>The Date Speaks</h5>
           <p>
