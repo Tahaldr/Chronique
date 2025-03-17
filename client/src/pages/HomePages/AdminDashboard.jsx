@@ -1,27 +1,28 @@
-import { BiFilterAlt } from 'react-icons/bi';
-import { RiNotification3Line } from 'react-icons/ri';
-import { FiSearch } from 'react-icons/fi';
+import { useContext } from 'react';
+import { AdminDashboardContext } from '../../App';
+import AdminHeader from '../../components/AdminComp/AdminHeader';
 
 const AdminDashboard = () => {
+  const {
+    usersSearch_Term,
+    setUsersSearch_Term,
+    usersSearch_FinalTerm,
+    setUsersSearch_FinalTerm,
+    usersSearch_Submitted,
+    setUsersSearch_Submitted,
+  } = useContext(AdminDashboardContext);
+
   return (
     <div className='flex flex-col'>
-      <div className='bg-red-300 flex items-center justify-end py-3 px-6 gap-3'>
-        {/* Search users */}
-        <div></div>
-        {/* Search button */}
-        <div>
-          <FiSearch className='text-2xl' />
-        </div>
-        {/* Reports notifications */}
-        <div>
-          <RiNotification3Line className='text-2xl' />
-        </div>
-        {/* Filter users */}
-        <div>
-          <BiFilterAlt className='text-2xl' />
-        </div>
-      </div>
+      {/* Header */}
+      <AdminHeader
+        usersSearch_Term={usersSearch_Term}
+        setUsersSearch_Term={setUsersSearch_Term}
+        setUsersSearch_FinalTerm={setUsersSearch_FinalTerm}
+      />
+      {/* Stats */}
       <div className='h-20 bg-blue-300'>2</div>
+      {/* Users list */}
       <div className='h-10 bg-green-300'>3</div>
     </div>
   );
