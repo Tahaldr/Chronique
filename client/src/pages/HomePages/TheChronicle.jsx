@@ -1,19 +1,20 @@
-import { motion } from "framer-motion";
-import { useContext, useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
-import { usePostStore } from "../../stores/usePostStore";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { useInView } from "react-intersection-observer";
-import Loading from "../../components/Loading";
-import showToast from "../../components/Toast";
-import RecentPost from "../../components/HomeComponents/ChronicleComps/RecentPost";
-import { MdOutlinePostAdd } from "react-icons/md";
-import { useUserStore } from "../../stores/useUserStore";
-import TopWriter from "../../components/HomeComponents/ChronicleComps/TopWriter";
-import ConfirmWindow from "../../components/Elements/ConfirmWindow";
-import Post from "../../components/HomeComponents/ChronicleComps/Post";
-import ArrowScrollUp from "../../components/Elements/ArrowScrollUp";
-import { PostContext } from "../../App";
+import { motion } from 'framer-motion';
+import { useContext, useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
+import { usePostStore } from '../../stores/usePostStore';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
+import Loading from '../../components/Loading';
+import showToast from '../../components/Toast';
+import RecentPost from '../../components/HomeComponents/ChronicleComps/RecentPost';
+import { MdOutlinePostAdd } from 'react-icons/md';
+import { useUserStore } from '../../stores/useUserStore';
+import TopWriter from '../../components/HomeComponents/ChronicleComps/TopWriter';
+import ConfirmWindow from '../../components/Elements/ConfirmWindow';
+import Post from '../../components/HomeComponents/ChronicleComps/Post';
+import ArrowScrollUp from '../../components/Elements/ArrowScrollUp';
+import { PostContext } from '../../App';
+import MarkerCircle from '../../components/MarkerCircle';
 
 const TheChronicle = ({
   activeCategory,
@@ -28,11 +29,12 @@ const TheChronicle = ({
   // const [arrowUpShow, setArrowUpShow] = useState(false);
   const [recentPosts, setRecentPosts] = useState([]);
   const [topWriters, setTopWriters] = useState([]);
+  const [hovered, setHovered] = useState(null);
+  const cubicBezierVar = [1, -0.01, 0.7, 1.04];
 
   const { ref, inView } = useInView();
 
-  const { setDeleteConfirm, deleteConfirm, searchSubmitted } =
-    useContext(PostContext);
+  const { setDeleteConfirm, deleteConfirm, searchSubmitted } = useContext(PostContext);
 
   // Stores
   const {
@@ -88,9 +90,9 @@ const TheChronicle = ({
         setSidebarTop(sidebarRef.current.getBoundingClientRect().top);
       }
     };
-    document.addEventListener("scroll", handleScroll);
+    document.addEventListener('scroll', handleScroll);
 
-    return () => document.removeEventListener("scroll", handleScroll);
+    return () => document.removeEventListener('scroll', handleScroll);
   }, [sidebarRef]);
 
   // Fetch posts data & search posts using infinite query
@@ -104,14 +106,14 @@ const TheChronicle = ({
     isFetchingNextPage,
     isFetching,
   } = useInfiniteQuery({
-    queryKey: ["posts", activeCategory, searchFinalTerm],
+    queryKey: ['posts', activeCategory, searchFinalTerm],
     queryFn: ({ pageParam = 1 }) => {
       if (searchSubmitted && searchFinalTerm) {
         if (pageParam === 1) {
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         return searchPosts(searchFinalTerm, pageParam);
-      } else if (activeCategory === "Popular") {
+      } else if (activeCategory === 'Popular') {
         return getPopularPosts(pageParam);
       } else {
         return getCategoryPosts(activeCategory, pageParam);
@@ -137,28 +139,23 @@ const TheChronicle = ({
   const handleLikePost = async (postId) => {
     try {
       await likePost(postId); // Perform the API call to like the post
-      queryClient.setQueryData(
-        ["posts", activeCategory, searchFinalTerm],
-        (oldData) => {
-          if (!oldData) return oldData;
+      queryClient.setQueryData(['posts', activeCategory, searchFinalTerm], (oldData) => {
+        if (!oldData) return oldData;
 
-          const newData = {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              posts: page.posts.map((post) =>
-                post._id === postId
-                  ? { ...post, likes: [...post.likes, user?._id] }
-                  : post
-              ),
-            })),
-          };
-          return newData;
-        }
-      );
+        const newData = {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            posts: page.posts.map((post) =>
+              post._id === postId ? { ...post, likes: [...post.likes, user?._id] } : post
+            ),
+          })),
+        };
+        return newData;
+      });
     } catch (error) {
       console.log(error);
-      showToast({ message: "Failed to like the post.", type: "error" });
+      showToast({ message: 'Failed to like the post.', type: 'error' });
     }
   };
 
@@ -166,31 +163,28 @@ const TheChronicle = ({
   const handleUnlikePost = async (postId) => {
     try {
       await unlikePost(postId); // Perform the API call to unlike the post
-      queryClient.setQueryData(
-        ["posts", activeCategory, searchFinalTerm],
-        (oldData) => {
-          if (!oldData) return oldData;
+      queryClient.setQueryData(['posts', activeCategory, searchFinalTerm], (oldData) => {
+        if (!oldData) return oldData;
 
-          const newData = {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              posts: page.posts.map((post) =>
-                post._id === postId
-                  ? {
-                      ...post,
-                      likes: post.likes.filter((like) => like !== user?._id),
-                    }
-                  : post
-              ),
-            })),
-          };
-          return newData;
-        }
-      );
+        const newData = {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            posts: page.posts.map((post) =>
+              post._id === postId
+                ? {
+                    ...post,
+                    likes: post.likes.filter((like) => like !== user?._id),
+                  }
+                : post
+            ),
+          })),
+        };
+        return newData;
+      });
     } catch (error) {
       console.log(error);
-      showToast({ message: "Failed to unlike the post.", type: "error" });
+      showToast({ message: 'Failed to unlike the post.', type: 'error' });
     }
   };
 
@@ -199,35 +193,32 @@ const TheChronicle = ({
     try {
       await deletePost(postId); // API call to delete the post
 
-      queryClient.setQueryData(
-        ["posts", activeCategory, searchFinalTerm],
-        (oldData) => {
-          if (!oldData) return oldData;
+      queryClient.setQueryData(['posts', activeCategory, searchFinalTerm], (oldData) => {
+        if (!oldData) return oldData;
 
-          const newData = {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              posts: page.posts.filter((post) => post._id !== postId),
-            })),
-          };
-          return newData;
-        }
-      );
+        const newData = {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            posts: page.posts.filter((post) => post._id !== postId),
+          })),
+        };
+        return newData;
+      });
     } catch (error) {
-      console.error("Failed to delete post:", error);
+      console.error('Failed to delete post:', error);
     }
   };
 
   if (isLoading)
     return (
-      <div className="flex items-center justify-center h-screen">
-        <Loading size="3xl" color="dark" />
+      <div className='flex items-center justify-center h-screen'>
+        <Loading size='3xl' color='dark' />
       </div>
     );
 
   if (isError) {
-    showToast({ message: error.message, type: "error" });
+    showToast({ message: error.message, type: 'error' });
   }
 
   return (
@@ -236,25 +227,21 @@ const TheChronicle = ({
         <ConfirmWindow
           confirming={setDeleteConfirm}
           handleFunc={() => handleDeletePost(deleteConfirm.postId)}
-          type="post"
+          type='post'
         />
       )}
-      <div className="flex">
+      <div className='flex'>
         {/* Main Posts */}
-        <div className="h-full md:w-2/3 relative">
-          <ArrowScrollUp type="sticky" />
+        <div className='h-full md:w-2/3 relative'>
+          <ArrowScrollUp type='sticky' />
 
-          {searchSubmitted &&
-            data &&
-            data.pages &&
-            data.pages[0] &&
-            data.pages[0].posts && (
-              <h1 className="text-base font-smallMedium text-darker w-full px-6 py-4">
-                {data.pages[0].posts.length > 0
-                  ? `Search Results for "${searchFinalTerm}"`
-                  : `No results found for "${searchFinalTerm}"`}
-              </h1>
-            )}
+          {searchSubmitted && data && data.pages && data.pages[0] && data.pages[0].posts && (
+            <h1 className='text-base font-smallMedium text-darker w-full px-6 py-4'>
+              {data.pages[0].posts.length > 0
+                ? `Search Results for "${searchFinalTerm}"`
+                : `No results found for "${searchFinalTerm}"`}
+            </h1>
+          )}
 
           {data?.pages && data.pages[0].posts.length > 0 ? (
             <div>
@@ -264,17 +251,12 @@ const TheChronicle = ({
                     <div
                       key={post._id}
                       className={`
-                        ${
-                          searchSubmitted && searchFinalTerm
-                            ? "w-screen md:w-auto"
-                            : ""
-                        }
-                        py-2 px-5 flex flex-col gap-5`}
-                    >
+                        ${searchSubmitted && searchFinalTerm ? 'w-screen md:w-auto' : ''}
+                        py-2 px-5 flex flex-col gap-5`}>
                       {/* Post Component */}
                       <Post
-                        type="home"
-                        page="home"
+                        type='home'
+                        page='home'
                         post={post}
                         user={user}
                         index={index}
@@ -282,7 +264,7 @@ const TheChronicle = ({
                         handleLikePost={handleLikePost}
                         handleUnlikePost={handleUnlikePost}
                       />
-                      <hr className="border-light" />
+                      <hr className='border-light' />
                     </div>
                   ))}
                 </div>
@@ -290,83 +272,94 @@ const TheChronicle = ({
             </div>
           ) : (
             !searchSubmitted &&
-            data?.pages[0]?.type !== "search" && (
-              <div className="w-screen md:w-full h-full flex flex-col items-center justify-center p-28 font-mediumPrimary text-lg leading-6">
-                <p className="text-dark">No posts yet ...</p>
-                <p className="text-darkest flex items-center gap-1">
+            data?.pages[0]?.type !== 'search' && (
+              <div className='w-screen md:w-full h-full flex flex-col items-center justify-center p-28 font-mediumPrimary text-lg leading-6'>
+                <p className='text-dark'>No posts yet ...</p>
+                <p className='text-darkest flex items-center gap-1'>
                   be the first to write
-                  <MdOutlinePostAdd className="text-darkest" />
+                  <MdOutlinePostAdd className='text-darkest' />
                 </p>
               </div>
             )
           )}
 
           {isFetching && isFetchingNextPage && (
-            <div className="flex items-center justify-center h-10">
-              <Loading size="3xl" color="dark" />
+            <div className='flex items-center justify-center h-10'>
+              <Loading size='3xl' color='dark' />
             </div>
           )}
 
-          <div ref={ref} className="h-20"></div>
+          <div ref={ref} className='h-20'></div>
         </div>
 
         {/* Sidebar */}
-        <div
-          className="h-screen w-1/3 hidden md:block"
-          id="sidebar"
-          ref={sidebarRef}
-        >
+        <div className='h-screen w-1/3 hidden md:block' id='sidebar' ref={sidebarRef}>
           <motion.div
-            className="w-full h-full border-l border-light p-3 lg:p-5 flex flex-col gap-7"
+            className='w-full h-full border-l border-light p-3 lg:p-5 flex flex-col gap-7'
             style={
               sidebarTop <= 0 && sidebarTop != null && sidebarTop != undefined
-                ? { position: "fixed", top: 0, width: "33.333333%" }
+                ? { position: 'fixed', top: 0, width: '33.333333%' }
                 : {}
-            }
-          >
+            }>
             {/* Recent Posts */}
-            <div className="flex flex-col w-full gap-3 h-3/5">
-              <p className="text-darkest font-mediumPrimary border-b border-light pb-2">
-                Latest Headlines
-              </p>
-              <div className="flex flex-col justify-start gap-2 lg:gap-4 h-full">
+            <div className='flex flex-col w-full gap-3 h-3/5'>
+              <div className=' border-b border-light pb-2 '>
+                <p
+                  className='text-darkest font-mediumPrimary w-fit relative'
+                  onMouseEnter={() => setHovered(1)}
+                  onMouseLeave={() => setHovered(null)}>
+                  Latest Headlines
+                  <MarkerCircle
+                    hovered={hovered === 1}
+                    cubicBezierVar={cubicBezierVar}
+                    width='130px'
+                    height='130px'
+                    strokeWidth='.3'
+                  />
+                </p>
+              </div>
+              <div className='flex flex-col justify-start gap-2 lg:gap-4 h-full'>
                 {loading ? (
-                  <div className="flex items-center justify-center h-full">
-                    <Loading size="3xl" color="dark" />
+                  <div className='flex items-center justify-center h-full'>
+                    <Loading size='3xl' color='dark' />
                   </div>
                 ) : recentPosts.length > 0 ? (
-                  recentPosts.map((post) => (
-                    <RecentPost key={post._id} post={post} />
-                  ))
+                  recentPosts.map((post) => <RecentPost key={post._id} post={post} />)
                 ) : (
-                  <div className="flex items-center justify-center h-full">
-                    <p className="text-darkest font-mediumPrimary">
-                      No recent posts
-                    </p>
+                  <div className='flex items-center justify-center h-full'>
+                    <p className='text-darkest font-mediumPrimary'>No recent posts</p>
                   </div>
                 )}
               </div>
             </div>
             {/* Best Authors */}
-            <div className="flex flex-col w-full gap-3 h-2/5">
-              <p className="text-darkest font-mediumPrimary border-b border-light pb-2">
-                Top Writers
-              </p>
+            <div className='flex flex-col w-full gap-3 h-2/5'>
+              <div className='border-b border-light pb-2'>
+                <p
+                  className='text-darkest font-mediumPrimary w-fit relative'
+                  onMouseEnter={() => setHovered(2)}
+                  onMouseLeave={() => setHovered(null)}>
+                  Top Writers
+                  <MarkerCircle
+                    hovered={hovered === 2}
+                    cubicBezierVar={cubicBezierVar}
+                    width='100px'
+                    height='100px'
+                    strokeWidth='.3'
+                  />
+                </p>
+              </div>
 
-              <div className="flex flex-col justify-start gap-3 h-full">
+              <div className='flex flex-col justify-start gap-3 h-full'>
                 {loading ? (
-                  <div className="flex items-center justify-center h-full">
-                    <Loading size="3xl" color="dark" />
+                  <div className='flex items-center justify-center h-full'>
+                    <Loading size='3xl' color='dark' />
                   </div>
                 ) : topWriters.length > 0 ? (
-                  topWriters.map((author) => (
-                    <TopWriter key={author._id} author={author} />
-                  ))
+                  topWriters.map((author) => <TopWriter key={author._id} author={author} />)
                 ) : (
-                  <div className="flex items-center justify-center h-full">
-                    <p className="text-darkest font-mediumPrimary">
-                      No top writers
-                    </p>
+                  <div className='flex items-center justify-center h-full'>
+                    <p className='text-darkest font-mediumPrimary'>No top writers</p>
                   </div>
                 )}
               </div>
