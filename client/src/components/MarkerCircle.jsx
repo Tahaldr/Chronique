@@ -18,6 +18,9 @@ const MarkerCircle = ({
           style={{
             width: `${width}`,
             height: `${height}`,
+            top: "50%", // Centre verticalement
+            left: "50%", // Centre horizontalement
+            transform: "translate(-50%, -50%)", // Ajuste l'alignement
           }}
           preserveAspectRatio="xMidYMid meet"
           key="hovered-ellipse"
