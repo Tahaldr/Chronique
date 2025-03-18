@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import { Link } from "react-router-dom";
 import formatNumber from "../../../lib/formatNumber";
+import Tooltip from "../../Elements/Tooltip";
 
 const TopWriter = ({ author }) => {
   return (
@@ -27,18 +28,20 @@ const TopWriter = ({ author }) => {
       </div>
       {/* Profile button */}
       <div>
-        <Link to={`/profile/${author.authorDetails._id}`}>
-          <motion.button
-            className="text-sm font-smallSemiBold text-darkish border-darkish hover:border-darker hover:text-darker flex items-center border rounded-[100%] px-4"
-            whileHover={{
-              padding: "0 18px",
-              transition: { duration: 0.2, ease: "easeInOut" },
-            }}
-          >
-            {/* View Profile */}
-            <HiOutlineArrowLongRight className="text-xl" />
-          </motion.button>
-        </Link>
+        <Tooltip text="visit profile">
+          <Link to={`/profile/${author.authorDetails._id}`}>
+            <motion.button
+              className="text-sm font-smallSemiBold text-darkish border-darkish hover:border-darker hover:text-darker flex items-center border rounded-[100%] px-4"
+              whileHover={{
+                padding: "0 18px",
+                transition: { duration: 0.2, ease: "easeInOut" },
+              }}
+            >
+              {/* View Profile */}
+              <HiOutlineArrowLongRight className="text-xl" />
+            </motion.button>
+          </Link>
+        </Tooltip>
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ import {
 import { useContext } from "react";
 import { CommentContext, PostContext } from "../../App";
 import showToast from "../Toast";
+import Tooltip from "../Elements/Tooltip";
 
 const PostTop = ({
   post,
@@ -69,60 +70,68 @@ const PostTop = ({
             {/* Upvote */}
             <div className="flex items-center gap-1">
               {post.likes.find((like) => like === user?._id) ? (
-                <TbArrowBigDownFilled className="text-lg rotate-180" />
+                <Tooltip text="upvote">
+                  <TbArrowBigDownFilled className="text-lg rotate-180" />
+                </Tooltip>
               ) : (
-                <TbArrowBigDown
-                  className="text-lg rotate-180 hover:text-darker"
-                  onClick={() => {
-                    user
-                      ? handleLikePost(post._id)
-                      : showToast({
-                          message: "You must be logged in to upvote",
-                          type: "error",
-                        });
-                  }}
-                />
+                <Tooltip text="upvote">
+                  <TbArrowBigDown
+                    className="text-lg rotate-180 hover:text-darker"
+                    onClick={() => {
+                      user
+                        ? handleLikePost(post._id)
+                        : showToast({
+                            message: "You must be logged in to upvote",
+                            type: "error",
+                          });
+                    }}
+                  />
+                </Tooltip>
               )}
               <p className="text-sm">{formatNumber(post.likes.length)}</p>
             </div>
             {/* Downvote */}
-            <TbArrowBigDown
-              className="text-lg hover:text-darker"
-              onClick={() => {
-                user
-                  ? handleUnlikePost(post._id)
-                  : showToast({
-                      message: "You must be logged in to downvote",
-                      type: "error",
-                    });
-              }}
-            />
+            <Tooltip text="downvote">
+              <TbArrowBigDown
+                className="text-lg hover:text-darker"
+                onClick={() => {
+                  user
+                    ? handleUnlikePost(post._id)
+                    : showToast({
+                        message: "You must be logged in to downvote",
+                        type: "error",
+                      });
+                }}
+              />
+            </Tooltip>
           </div>
           {/* Post comments */}
-          <div
-            className="flex items-center gap-1 hover:text-darker cursor-pointer"
-            onMouseEnter={() =>
-              setCommentHovered((prev) => ({
-                ...prev,
-                [post._id]: true,
-              }))
-            }
-            onMouseLeave={() =>
-              setCommentHovered((prev) => ({
-                ...prev,
-                [post._id]: false,
-              }))
-            }
-            onClick={() => setCommentSidebarOpen(post._id)}
-          >
-            {commentHovered[post._id] ? (
-              <TbMessageCircleFilled className="text-lg" />
-            ) : (
-              <TbMessageCircle className="text-lg" />
-            )}
+          <Tooltip text="comments">
+            <div
+              className="flex items-center gap-1 hover:text-darker cursor-pointer"
+              onMouseEnter={() =>
+                setCommentHovered((prev) => ({
+                  ...prev,
+                  [post._id]: true,
+                }))
+              }
+              onMouseLeave={() =>
+                setCommentHovered((prev) => ({
+                  ...prev,
+                  [post._id]: false,
+                }))
+              }
+              onClick={() => setCommentSidebarOpen(post._id)}
+            >
+              {commentHovered[post._id] ? (
+                <TbMessageCircleFilled className="text-lg" />
+              ) : (
+                <TbMessageCircle className="text-lg" />
+              )}
 
-            <p className="text-sm">{formatNumber(post.comments)}</p>
-          </div>
+              <p className="text-sm">{formatNumber(post.comments)}</p>
+            </div>
+          </Tooltip>
         </div>
       )}
 
@@ -130,23 +139,27 @@ const PostTop = ({
       {right === "options" && (
         <div className="px-1">
           {user && (
-            <SlOptions
-              className="text-3xl text-dark mr-[-8px] hover:text-darkest p-2 rounded-full hover-bg-lightish active:bg-light cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                const { top } = e.target.getBoundingClientRect();
-                if (top < window.innerHeight / 2) {
-                  setOptionsPosition("up");
-                } else {
-                  setOptionsPosition("down");
-                }
-                // console.log(top);
-                // console.log(window.innerHeight / 2);
-                // console.log(optionsPosition);
+            <Tooltip text="options">
+              <SlOptions
+                className="text-3xl text-dark mr-[-8px] hover:text-darkest p-2 rounded-full hover-bg-lightish active:bg-light cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const { top } = e.target.getBoundingClientRect();
+                  if (top < window.innerHeight / 2) {
+                    setOptionsPosition("up");
+                  } else {
+                    setOptionsPosition("down");
+                  }
+                  // console.log(top);
+                  // console.log(window.innerHeight / 2);
+                  // console.log(optionsPosition);
 
-                setOptionsShow((prev) => (prev === post._id ? null : post._id));
-              }}
-            />
+                  setOptionsShow((prev) =>
+                    prev === post._id ? null : post._id
+                  );
+                }}
+              />
+            </Tooltip>
           )}
           {/* Options Dropdown */}
           <AnimatePresence>

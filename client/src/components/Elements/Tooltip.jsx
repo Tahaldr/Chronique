@@ -7,13 +7,13 @@ const Tooltip = ({ children, text }) => {
 
   return (
     <div
-      className='relative w-full flex flex-col items-center'
+      className='relative w-full flex flex-col items-center z-50'
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}>
       <AnimatePresence>
         {isVisible && (
           <motion.div
-            className='absolute -top-8 bg-lightish font-smallMedium text-sm text-darkish px-1'
+            className='absolute -top-8 bg-lightish font-smallMedium text-sm text-darkish px-1 whitespace-nowrap'
             initial={{ opacity: 0, scale: 0.5, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{
