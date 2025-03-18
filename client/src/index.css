@@ -5,69 +5,66 @@
 /* Font Faces */
 
 @font-face {
-  font-family: "canterbury";
-  src: url("/FontFaces/canterbury/Canterbury.ttf") format("truetype");
+  font-family: 'canterbury';
+  src: url('/FontFaces/canterbury/Canterbury.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "canopee";
-  src: url("/FontFaces/canopeeRegular/Canopee Regular.otf") format("opentype");
+  font-family: 'canopee';
+  src: url('/FontFaces/canopeeRegular/Canopee Regular.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "DomaineDisplay";
-  src: url("/FontFaces/DomaineDisplay/TestDomaineDisplayNarrow-Medium-BF66174a222b7b0.otf")
-    format("opentype");
+  font-family: 'DomaineDisplay';
+  src: url('/FontFaces/DomaineDisplay/TestDomaineDisplayNarrow-Medium-BF66174a222b7b0.otf')
+    format('opentype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "DomaineDisplayItalic";
-  src: url("/FontFaces/DomaineDisplay/TestDomaineDisplayNarrow-MediumItalic-BF66174a21a5b2e.otf")
-    format("opentype");
+  font-family: 'DomaineDisplayItalic';
+  src: url('/FontFaces/DomaineDisplay/TestDomaineDisplayNarrow-MediumItalic-BF66174a21a5b2e.otf')
+    format('opentype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "Cheltenham";
-  src: url("/FontFaces/cheltenham/cheltenham-cond-normal-700.ttf")
-    format("truetype");
+  font-family: 'Cheltenham';
+  src: url('/FontFaces/cheltenham/cheltenham-cond-normal-700.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "cormorantBold";
-  src: url("/FontFaces/cormorantGaramond/CormorantGaramond-BoldItalic.ttf")
-    format("truetype");
+  font-family: 'cormorantBold';
+  src: url('/FontFaces/cormorantGaramond/CormorantGaramond-BoldItalic.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "cormorantMedium";
-  src: url("/FontFaces/cormorantGaramond/CormorantGaramond-MediumItalic.ttf")
-    format("truetype");
+  font-family: 'cormorantMedium';
+  src: url('/FontFaces/cormorantGaramond/CormorantGaramond-MediumItalic.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "aldhabi";
-  src: url("/FontFaces/aldhabi/aldhabi.ttf") format("truetype");
+  font-family: 'aldhabi';
+  src: url('/FontFaces/aldhabi/aldhabi.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
@@ -75,100 +72,97 @@
 
 /* Eb Garamond fonts */
 @font-face {
-  font-family: "EBGaramond-Regular";
-  src: url("/FontFaces/EbGaramond/EBGaramond-Regular.ttf") format("truetype");
+  font-family: 'EBGaramond-Regular';
+  src: url('/FontFaces/EbGaramond/EBGaramond-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "EBGaramond-Italic";
-  src: url("/FontFaces/EbGaramond/EBGaramond-Italic.ttf") format("truetype");
+  font-family: 'EBGaramond-Italic';
+  src: url('/FontFaces/EbGaramond/EBGaramond-Italic.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "EBGaramond-Medium";
-  src: url("/FontFaces/EbGaramond/EBGaramond-Medium.ttf") format("truetype");
+  font-family: 'EBGaramond-Medium';
+  src: url('/FontFaces/EbGaramond/EBGaramond-Medium.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "EBGaramond-MediumItalic";
-  src: url("/FontFaces/EbGaramond/EBGaramond-MediumItalic.ttf")
-    format("truetype");
+  font-family: 'EBGaramond-MediumItalic';
+  src: url('/FontFaces/EbGaramond/EBGaramond-MediumItalic.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "EBGaramond-SemiBold";
-  src: url("/FontFaces/EbGaramond/EBGaramond-SemiBold.ttf") format("truetype");
+  font-family: 'EBGaramond-SemiBold';
+  src: url('/FontFaces/EbGaramond/EBGaramond-SemiBold.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "EBGaramond-SemiBoldItalic";
-  src: url("/FontFaces/EbGaramond/EBGaramond-SemiBoldItalic.ttf")
-    format("truetype");
+  font-family: 'EBGaramond-SemiBoldItalic';
+  src: url('/FontFaces/EbGaramond/EBGaramond-SemiBoldItalic.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "EBGaramond-Bold";
-  src: url("/FontFaces/EbGaramond/EBGaramond-Bold.ttf") format("truetype");
+  font-family: 'EBGaramond-Bold';
+  src: url('/FontFaces/EbGaramond/EBGaramond-Bold.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "EBGaramond-BoldItalic";
-  src: url("/FontFaces/EbGaramond/EBGaramond-BoldItalic.ttf") format("truetype");
+  font-family: 'EBGaramond-BoldItalic';
+  src: url('/FontFaces/EbGaramond/EBGaramond-BoldItalic.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "EBGaramond-ExtraBold";
-  src: url("/FontFaces/EbGaramond/EBGaramond-ExtraBold.ttf") format("truetype");
+  font-family: 'EBGaramond-ExtraBold';
+  src: url('/FontFaces/EbGaramond/EBGaramond-ExtraBold.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "EBGaramond-ExtraBoldItalic";
-  src: url("/FontFaces/EbGaramond/EBGaramond-ExtraBoldItalic.ttf")
-    format("truetype");
+  font-family: 'EBGaramond-ExtraBoldItalic';
+  src: url('/FontFaces/EbGaramond/EBGaramond-ExtraBoldItalic.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "Gloucester";
-  src: url("/FontFaces/gloucester/Gloucester Bold Cond.ttf") format("truetype");
+  font-family: 'Gloucester';
+  src: url('/FontFaces/gloucester/Gloucester Bold Cond.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
 }
 
 @font-face {
-  font-family: "I-Am-Awake";
-  src: url("/FontFaces/iamawake/I-Am-Awake.ttf") format("truetype"),
-    url("/FontFaces/iamawake/I-Am-Awake.otf") format("opentype");
+  font-family: 'I-Am-Awake';
+  src: url('/FontFaces/iamawake/I-Am-Awake.ttf') format('truetype'),
+    url('/FontFaces/iamawake/I-Am-Awake.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
   text-rendering: optimizeLegibility;
@@ -179,7 +173,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-image: url("/OtherImg/NewsPaper_texture.png");
+  background-image: url('/OtherImg/NewsPaper_texture.png');
   background-repeat: repeat;
   background-size: cover;
   background-position: center;
@@ -187,7 +181,7 @@ body {
 }
 
 .bg-navBg {
-  background-image: url("/OtherImg/NewsPaper_texture.png");
+  background-image: url('/OtherImg/NewsPaper_texture.png');
 }
 
 .text-darkish {
@@ -200,6 +194,10 @@ body {
 
 .bg-darkish {
   background-color: #666;
+}
+
+.bg-darkish-50 {
+  background-color: rgba(102, 102, 102, 0.5);
 }
 
 .border-darkish {
