@@ -7,9 +7,11 @@ import { MdKeyboardCommandKey } from 'react-icons/md';
 import Search from '../Elements/Search';
 import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
+import FilterDropdown from '../Elements/FilterDropdown';
 
 const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_FinalTerm }) => {
   const [searchToggled, setSearchToggled] = useState(false);
+  const [filterClicked, setFilterClicked] = useState(false);
   const searchToggleRef = useRef(null); // Hold reference to search toggle button
 
   // Click the search toggle btn shortcut (CTRL + k)
@@ -35,13 +37,18 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
       {/* Buttons */}
       <div className='flex items-center gap-3 text-darkest'>
         {/* Filter btn */}
-        <div>
-          <BiFilterAlt className='text-xl' />
+        <div onClick={() => setFilterClicked(!filterClicked)} className='relative'>
+          <BiFilterAlt className='text-xl hover:text-light filter-btn' />
+
+          {/* Filter menu */}
+          <AnimatePresence>
+            {filterClicked && <FilterDropdown setFilterClicked={setFilterClicked} />}
+          </AnimatePresence>
         </div>
 
         {/* Report btn */}
         <div>
-          <RiNotification3Line className='text-xl' />
+          <RiNotification3Line className='text-xl hover:text-light' />
         </div>
 
         {/* Toggle search btn */}

@@ -57,6 +57,7 @@ function App() {
   const [usersSearch_Term, setUsersSearch_Term] = useState('');
   const [usersSearch_FinalTerm, setUsersSearch_FinalTerm] = useState('');
   const [usersSearch_Submitted, setUsersSearch_Submitted] = useState(false);
+  const [filterUsers, setFilterUsers] = useState('all');
 
   // Post context value
   const contextValue = {
@@ -94,6 +95,8 @@ function App() {
     setUsersSearch_FinalTerm,
     usersSearch_Submitted,
     setUsersSearch_Submitted,
+    filterUsers,
+    setFilterUsers,
   };
 
   useEffect(() => {

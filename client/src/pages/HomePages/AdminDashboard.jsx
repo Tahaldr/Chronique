@@ -22,7 +22,7 @@ const AdminDashboard = () => {
         setUsersSearch_FinalTerm={setUsersSearch_FinalTerm}
       />
       {/* Stats */}
-      <div className=''>
+      <div className='z-0'>
         <AdminStats />
       </div>
       {/* Users list */}
