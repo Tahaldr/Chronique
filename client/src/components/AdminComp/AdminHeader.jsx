@@ -8,11 +8,65 @@ import Search from '../Elements/Search';
 import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import FilterDropdown from '../Elements/FilterDropdown';
+import AdminsReports from './AdminsReports';
 
 const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_FinalTerm }) => {
   const [searchToggled, setSearchToggled] = useState(false);
+  const [reportsToggled, setReportsToggled] = useState(false);
   const [filterClicked, setFilterClicked] = useState(false);
   const searchToggleRef = useRef(null); // Hold reference to search toggle button
+
+  const reports = [
+    {
+      description:
+        'lorem ipsum pdap dap odap ddad lorem ipsum pdap dap odap ddad lorem ipsum pdap dap odap ddad',
+      createdAt: Date.now(),
+    },
+    {
+      description: 'lorem ipsum pdap dap odap ddad',
+      createdAt: Date.now(),
+    },
+    {
+      description: 'lorem ipsum pdap dap odap ddad',
+      createdAt: Date.now(),
+    },
+    {
+      description: 'lorem ipsum pdap dap odap ddad',
+      createdAt: Date.now(),
+    },
+    {
+      description: 'lorem ipsum pdap dap odap ddad',
+      createdAt: Date.now(),
+    },
+    {
+      description: 'lorem ipsum pdap dap odap ddad',
+      createdAt: Date.now(),
+    },
+    {
+      description: 'lorem ipsum pdap dap odap ddad',
+      createdAt: Date.now(),
+    },
+    {
+      description: 'lorem ipsum pdap dap odap ddad',
+      createdAt: Date.now(),
+    },
+    {
+      description: 'lorem ipsum pdap dap odap ddad',
+      createdAt: Date.now(),
+    },
+    {
+      description: 'lorem ipsum pdap dap odap ddad',
+      createdAt: Date.now(),
+    },
+    {
+      description: 'lorem ipsum pdap dap odap ddad',
+      createdAt: Date.now(),
+    },
+    {
+      description: 'lorem ipsum pdap dap odap ddad',
+      createdAt: Date.now(),
+    },
+  ];
 
   // Click the search toggle btn shortcut (CTRL + k)
   useEffect(() => {
@@ -47,8 +101,18 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
         </div>
 
         {/* Report btn */}
-        <div>
-          <RiNotification3Line className='text-xl hover:text-light' />
+        <div className='relative'>
+          <RiNotification3Line
+            className='text-xl hover:text-light reports-btn'
+            onClick={() => setReportsToggled(!reportsToggled)}
+          />
+
+          {/* Report menu */}
+          <AnimatePresence>
+            {reportsToggled && (
+              <AdminsReports reports={reports} setReportsToggled={setReportsToggled} />
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Toggle search btn */}
@@ -69,7 +133,7 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
                   setUsersSearch_Term('');
                   setSearchToggled(false);
                 }}>
-                <RxCross2 className='text-xl' />
+                <RxCross2 className='text-xl hover:text-light' />
               </motion.div>
             ) : (
               <motion.div
@@ -80,7 +144,7 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
                 exit={{ rotate: 360, scale: 0.9 }}
                 transition={{ duration: 0.2, ease: 'easeInOut' }}
                 onClick={() => setSearchToggled(true)}>
-                <FiSearch className='text-xl' />
+                <FiSearch className='text-xl hover:text-light' />
               </motion.div>
             )}
           </AnimatePresence>
