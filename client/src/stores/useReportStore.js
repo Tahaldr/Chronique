@@ -32,4 +32,19 @@ export const useReportStore = create((set) => ({
       });
     }
   },
+
+  siteStats: async () => {
+    try {
+      set({ loading: true });
+      const res = await axios.get('/post/sitestats');
+      set({ loading: false });
+      return res.data.stats;
+    } catch (error) {
+      set({ loading: false });
+      showToast({
+        message: error.response?.data?.message || 'Failed to get site stats',
+        type: 'error',
+      });
+    }
+  },
 }));

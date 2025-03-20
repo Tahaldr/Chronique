@@ -6,46 +6,97 @@ import { MdOutlineTrendingUp } from 'react-icons/md';
 import { MdTrendingDown } from 'react-icons/md';
 import formatNumber from '../../lib/formatNumber';
 import Tooltip from '../Elements/Tooltip';
+import { useReportStore } from '../../stores/useReportStore';
+import { useEffect, useState } from 'react';
 
 const AdminStats = () => {
-  const stats = [
+  const { siteStats } = useReportStore();
+  const [stats, setStats] = useState([
     {
       icon: <MdOutlinePerson />,
       title: 'Total users',
-      number: formatNumber(1000),
-      tooltip: 1000 + ' users',
+      number: 0,
+      tooltip: 0 + ' users',
       trendstate: 'up',
-      trend: 30.5,
+      trend: 0,
       days: 15,
     },
     {
       icon: <MdOutlineArticle />,
       title: 'Total posts',
-      number: formatNumber(1000),
-      tooltip: 1000 + ' posts',
+      number: 0,
+      tooltip: 0 + ' posts',
       trendstate: 'up',
-      trend: 30.5,
+      trend: 0,
       days: 15,
     },
     {
       icon: <MdOutlineShield />,
       title: 'Total admins',
-      number: formatNumber(1000),
-      tooltip: 1000 + ' admins',
-      trendstate: 'none',
+      number: 0,
+      tooltip: 0 + ' admins',
+      trendstate: 'up',
       trend: 0,
-      days: 0,
+      days: 15,
     },
     {
       icon: <RiRadioButtonLine />,
       title: 'Inactive users',
-      number: formatNumber(1000),
-      tooltip: 1000 + ' users',
+      number: 0,
+      tooltip: 0 + ' users',
       trendstate: 'up',
-      trend: 20.56,
+      trend: 0,
       days: 30,
     },
-  ];
+  ]);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const res = await siteStats();
+      console.log('res', res.totalUsers);
+
+      setStats([
+        {
+          icon: <MdOutlinePerson />,
+          title: 'Total users',
+          number: formatNumber(res.totalUsers),
+          tooltip: res.totalUsers + ' users',
+          trendstate: 'up',
+          trend: res.userCreationPercentage,
+          days: 15,
+        },
+        {
+          icon: <MdOutlineArticle />,
+          title: 'Total posts',
+          number: formatNumber(res.totalPosts),
+          tooltip: res.totalPosts + ' posts',
+          trendstate: 'up',
+          trend: res.postCreationPercentage,
+          days: 15,
+        },
+        {
+          icon: <MdOutlineShield />,
+          title: 'Total admins',
+          number: formatNumber(res.totalAdmins),
+          tooltip: res.totalAdmins + ' admins',
+          trendstate: 'none',
+          trend: 0,
+          days: 0,
+        },
+        {
+          icon: <RiRadioButtonLine />,
+          title: 'Inactive users',
+          number: formatNumber(res.inactiveUsers),
+          tooltip: res.inactiveUsers + ' users',
+          trendstate: 'up',
+          trend: res.inactiveUsersPercentage,
+          days: 30,
+        },
+      ]);
+    };
+
+    fetchStats();
+  }, [siteStats]);
 
   return (
     <div className='w-full px-10 md:px-6 py-3'>
@@ -54,7 +105,7 @@ const AdminStats = () => {
         {stats.map((stat, index) => {
           return (
             // Each stat
-            <div key={index} className='flex w-full h-32 px-4 gap-3 bg-lightish'>
+            <div key={index} className='flex w-full h-32 px-4 gap-3 bg-lightish overflow-hidden'>
               {/* Tooltip */}
               <Tooltip text={stat.tooltip}>
                 <div className='w-full h-full grid grid-rows-3'>
@@ -63,9 +114,7 @@ const AdminStats = () => {
                     {stat.icon}
                     <p className='font-mediumPrimary'>{stat.title}</p>
                   </div>
-
                   {/* Number */}
-
                   <div className='text-2xl md:text-3xl text-darker'>{stat.number}</div>
                   {/* Trend */}
                   <div className='flex items-center gap-2'>
