@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import FilterDropdown from '../Elements/FilterDropdown';
 import AdminsReports from './AdminsReports';
+import Tooltip from '../Elements/Tooltip';
 
 const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_FinalTerm }) => {
   const [searchToggled, setSearchToggled] = useState(false);
@@ -40,7 +41,9 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
       <div className='flex items-center gap-3 text-darkest'>
         {/* Filter btn */}
         <div onClick={() => setFilterClicked(!filterClicked)} className='relative'>
-          <BiFilterAlt className='text-xl hover:text-light filter-btn' />
+          <Tooltip text='filter users'>
+            <BiFilterAlt className='text-xl hover:text-light filter-btn' />
+          </Tooltip>
 
           {/* Filter menu */}
           <AnimatePresence>
@@ -50,10 +53,12 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
 
         {/* Report btn */}
         <div className='relative'>
-          <RiNotification3Line
-            className='text-xl hover:text-light reports-btn'
-            onClick={() => setReportsToggled(!reportsToggled)}
-          />
+          <Tooltip text='reports'>
+            <RiNotification3Line
+              className='text-xl hover:text-light reports-btn'
+              onClick={() => setReportsToggled(!reportsToggled)}
+            />
+          </Tooltip>
 
           {/* Report menu */}
           <AnimatePresence>

@@ -1,16 +1,21 @@
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useReportStore } from '../../stores/useReportStore';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import showToast from '../Toast';
 import Loading from '../Loading';
+import { AdminDashboardContext } from '../../App';
 
 const AdminsReports = ({ setReportsToggled }) => {
+  const { setReportSelected } = useContext(AdminDashboardContext);
   const reportsRef = useRef(null);
-  const { getAllReports, loading } = useReportStore();
+  const {
+    getAllReports,
+    // loading
+  } = useReportStore();
   const { ref, inView } = useInView();
 
   // Get all reports
@@ -21,8 +26,8 @@ const AdminsReports = ({ setReportsToggled }) => {
     error,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage,
-    isFetching,
+    // isFetchingNextPage,
+    // isFetching,
   } = useInfiniteQuery({
     queryKey: ['reports'],
     queryFn: ({ pageParam = 1 }) => {
@@ -91,7 +96,10 @@ const AdminsReports = ({ setReportsToggled }) => {
                     {group.reports.map((report, index) => (
                       <div
                         key={index}
-                        className='cursor-pointer flex items-center justify-start w-full gap-5 bg-darker hover:bg-darkest py-1 px-4 whitespace-nowrap'>
+                        className='cursor-pointer flex items-center justify-start w-full gap-5 bg-darker hover:bg-darkest py-1 px-4 whitespace-nowrap'
+                        onClick={() => {
+                          setReportSelected(report);
+                        }}>
                         <p className='font-small text-lighter text-sm sm:text-base w-[75%] truncate'>
                           {report.description}
                         </p>
