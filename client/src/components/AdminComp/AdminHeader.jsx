@@ -16,58 +16,6 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
   const [filterClicked, setFilterClicked] = useState(false);
   const searchToggleRef = useRef(null); // Hold reference to search toggle button
 
-  const reports = [
-    {
-      description:
-        'lorem ipsum pdap dap odap ddad lorem ipsum pdap dap odap ddad lorem ipsum pdap dap odap ddad',
-      createdAt: Date.now(),
-    },
-    {
-      description: 'lorem ipsum pdap dap odap ddad',
-      createdAt: Date.now(),
-    },
-    {
-      description: 'lorem ipsum pdap dap odap ddad',
-      createdAt: Date.now(),
-    },
-    {
-      description: 'lorem ipsum pdap dap odap ddad',
-      createdAt: Date.now(),
-    },
-    {
-      description: 'lorem ipsum pdap dap odap ddad',
-      createdAt: Date.now(),
-    },
-    {
-      description: 'lorem ipsum pdap dap odap ddad',
-      createdAt: Date.now(),
-    },
-    {
-      description: 'lorem ipsum pdap dap odap ddad',
-      createdAt: Date.now(),
-    },
-    {
-      description: 'lorem ipsum pdap dap odap ddad',
-      createdAt: Date.now(),
-    },
-    {
-      description: 'lorem ipsum pdap dap odap ddad',
-      createdAt: Date.now(),
-    },
-    {
-      description: 'lorem ipsum pdap dap odap ddad',
-      createdAt: Date.now(),
-    },
-    {
-      description: 'lorem ipsum pdap dap odap ddad',
-      createdAt: Date.now(),
-    },
-    {
-      description: 'lorem ipsum pdap dap odap ddad',
-      createdAt: Date.now(),
-    },
-  ];
-
   // Click the search toggle btn shortcut (CTRL + k)
   useEffect(() => {
     const handleShortcut = (event) => {
@@ -109,9 +57,7 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
 
           {/* Report menu */}
           <AnimatePresence>
-            {reportsToggled && (
-              <AdminsReports reports={reports} setReportsToggled={setReportsToggled} />
-            )}
+            {reportsToggled && <AdminsReports setReportsToggled={setReportsToggled} />}
           </AnimatePresence>
         </div>
 
