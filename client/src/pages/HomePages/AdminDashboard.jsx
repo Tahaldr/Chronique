@@ -1,9 +1,10 @@
-import { useContext } from 'react';
-import { AdminDashboardContext } from '../../App';
-import AdminHeader from '../../components/AdminComp/AdminHeader';
-import AdminStats from '../../components/AdminComp/AdminStats';
-import Report from '../../components/AdminComp/Report';
-import { AnimatePresence } from 'framer-motion';
+import { useContext } from "react";
+import { AdminDashboardContext } from "../../App";
+import AdminHeader from "../../components/AdminComp/AdminHeader";
+import AdminStats from "../../components/AdminComp/AdminStats";
+import Report from "../../components/AdminComp/Report";
+import { AnimatePresence } from "framer-motion";
+import ReportTemp from "../../components/AdminComp/ReportTemp";
 
 const AdminDashboard = () => {
   const {
@@ -23,7 +24,7 @@ const AdminDashboard = () => {
           <Report />
         </AnimatePresence>
       )}
-      <div className='flex flex-col'>
+      <div className="flex flex-col">
         {/* Header */}
         <AdminHeader
           usersSearch_Term={usersSearch_Term}
@@ -31,11 +32,13 @@ const AdminDashboard = () => {
           setUsersSearch_FinalTerm={setUsersSearch_FinalTerm}
         />
         {/* Stats */}
-        <div className='z-0'>
+        <div className="z-0">
           <AdminStats />
         </div>
         {/* Users list */}
-        <div className='h-10 bg-green-300'>3</div>
+        <div className="h-10 bg-green-300">
+          <ReportTemp />
+        </div>
       </div>
     </>
   );
