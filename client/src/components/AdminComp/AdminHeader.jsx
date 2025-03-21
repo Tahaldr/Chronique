@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { BiFilterAlt } from 'react-icons/bi';
 import { FiSearch } from 'react-icons/fi';
 import { RiNotification3Line } from 'react-icons/ri';
@@ -10,12 +10,13 @@ import PropTypes from 'prop-types';
 import FilterDropdown from '../Elements/FilterDropdown';
 import AdminsReports from './AdminsReports';
 import Tooltip from '../Elements/Tooltip';
+import { AdminDashboardContext } from '../../App';
 
 const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_FinalTerm }) => {
   const [searchToggled, setSearchToggled] = useState(false);
-  const [reportsToggled, setReportsToggled] = useState(false);
   const [filterClicked, setFilterClicked] = useState(false);
   const searchToggleRef = useRef(null); // Hold reference to search toggle button
+  const { reportsToggled, setReportsToggled } = useContext(AdminDashboardContext);
 
   // Click the search toggle btn shortcut (CTRL + k)
   useEffect(() => {
@@ -62,7 +63,7 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
 
           {/* Report menu */}
           <AnimatePresence>
-            {reportsToggled && <AdminsReports setReportsToggled={setReportsToggled} />}
+            {reportsToggled && <AdminsReports />}
           </AnimatePresence>
         </div>
 

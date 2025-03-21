@@ -105,7 +105,7 @@ const AdminStats = () => {
         {stats.map((stat, index) => {
           return (
             // Each stat
-            <div key={index} className='flex w-full h-32 px-4 gap-3 bg-lightish overflow-hidden'>
+            <div key={index} className='flex w-full h-32 px-4 gap-3 bg-lightish'>
               {/* Tooltip */}
               <Tooltip text={stat.tooltip}>
                 <div className='w-full h-full grid grid-rows-3'>
@@ -120,11 +120,13 @@ const AdminStats = () => {
                   <div className='flex items-center gap-2'>
                     {stat.trendstate !== 'none' && (
                       <>
+                        {/* Trend icon */}
                         {stat.trendstate === 'up' && (
                           <MdOutlineTrendingUp className='text-green-800' />
                         )}
                         {stat.trendstate === 'down' && <MdTrendingDown className='text-red-800' />}
                         {stat.trendstate === 'none' && <MdOutlineTrendingUp />}
+                        {/* Trend percentage */}
                         <div className='flex items-center gap-3'>
                           <p
                             className={`flex items-center gap-1 text-sm ${
@@ -132,7 +134,8 @@ const AdminStats = () => {
                             }`}>
                             <p>{stat.trend}</p> <span>%</span>
                           </p>
-                          <p className='text-sm text-darkish whitespace-nowrap'>
+                          {/* Days before */}
+                          <p className='text-sm text-darkish'>
                             {stat.days === 30 ? 'One month before' : '15 days before'}
                           </p>
                         </div>

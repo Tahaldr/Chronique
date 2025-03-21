@@ -58,6 +58,7 @@ function App() {
   const [usersSearch_FinalTerm, setUsersSearch_FinalTerm] = useState('');
   const [usersSearch_Submitted, setUsersSearch_Submitted] = useState(false);
   const [filterUsers, setFilterUsers] = useState('all');
+  const [reportsToggled, setReportsToggled] = useState(false);
   const [reportSelected, setReportSelected] = useState(null);
 
   // Post context value
@@ -98,6 +99,8 @@ function App() {
     setUsersSearch_Submitted,
     filterUsers,
     setFilterUsers,
+    reportsToggled,
+    setReportsToggled,
     reportSelected,
     setReportSelected,
   };

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import { useContext, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
@@ -9,8 +8,8 @@ import showToast from '../Toast';
 import Loading from '../Loading';
 import { AdminDashboardContext } from '../../App';
 
-const AdminsReports = ({ setReportsToggled }) => {
-  const { setReportSelected } = useContext(AdminDashboardContext);
+const AdminsReports = () => {
+  const { setReportSelected, setReportsToggled } = useContext(AdminDashboardContext);
   const reportsRef = useRef(null);
   const {
     getAllReports,
@@ -99,6 +98,7 @@ const AdminsReports = ({ setReportsToggled }) => {
                         className='cursor-pointer flex items-center justify-start w-full gap-5 bg-darker hover:bg-darkest py-1 px-4 whitespace-nowrap'
                         onClick={() => {
                           setReportSelected(report);
+                          setReportsToggled(false);
                         }}>
                         <p className='font-small text-lighter text-sm sm:text-base w-[75%] truncate'>
                           {report.description}
@@ -123,10 +123,6 @@ const AdminsReports = ({ setReportsToggled }) => {
       </div>
     </motion.div>
   );
-};
-
-AdminsReports.propTypes = {
-  setReportsToggled: PropTypes.func.isRequired,
 };
 
 export default AdminsReports;
