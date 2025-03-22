@@ -57,7 +57,7 @@ const ReportTemp = ({ reportSelected }) => {
               gap: 10,
               fontFamily: 'smallFont',
               fontSize: 12,
-              width: '40%',
+              width: '50%',
             }}>
             <Text
               style={{
@@ -76,7 +76,7 @@ const ReportTemp = ({ reportSelected }) => {
             {reportSelected?.comment && (
               <Text
                 style={{
-                  backgroundColor: '#c1c1c1',
+                  backgroundColor: 'rgba(193, 193, 193, 0.5)',
                   paddingHorizontal: 10,
                 }}>
                 report comment : {reportSelected?.comment}

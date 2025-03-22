@@ -53,7 +53,6 @@ const AdminStats = () => {
   useEffect(() => {
     const fetchStats = async () => {
       const res = await siteStats();
-      console.log('res', res.totalUsers);
 
       setStats([
         {
