@@ -31,7 +31,7 @@ const HomeNav = ({
 
   return (
     <motion.div
-      className='sticky z-50 top-0 border-y border-darkest bg-navBg flex flex-col items-center justify-center'
+      className='sticky z-50 top-0 border-y border-darkish bg-navBg flex flex-col items-center justify-center'
       variants={{
         hidden: { y: 0 },
         visible: { y: '-100%' },
@@ -147,7 +147,7 @@ const HomeNav = ({
         </li>
       </div>
       {active === 'chronicle' && (
-        <div className='flex flex-col md:flex-row h-28 md:h-14 w-full border-t border-darker'>
+        <div className='flex flex-col md:flex-row h-28 md:h-14 w-full border-t border-darkish'>
           <CategoriesCarousel
             setActiveCategory={setActiveCategory}
             activeCategory={activeCategory}

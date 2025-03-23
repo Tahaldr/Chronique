@@ -5,6 +5,7 @@ import AdminStats from '../../components/AdminComp/AdminStats';
 import Report from '../../components/AdminComp/Report';
 import { AnimatePresence } from 'framer-motion';
 import ReportTemp from '../../components/AdminComp/ReportTemp';
+import UsersList from '../../components/AdminComp/UsersListComp/UsersList';
 
 const AdminDashboard = () => {
   const {
@@ -36,7 +37,9 @@ const AdminDashboard = () => {
           <AdminStats />
         </div>
         {/* Users list */}
-        <div className='h-10 bg-green-300'></div>
+        <div className='w-full'>
+          <UsersList />
+        </div>
       </div>
     </>
   );
