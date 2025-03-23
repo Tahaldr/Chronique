@@ -43,7 +43,7 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
         {/* Filter btn */}
         <div onClick={() => setFilterClicked(!filterClicked)} className='relative'>
           <Tooltip text='filter users'>
-            <BiFilterAlt className='text-xl hover:text-light filter-btn' />
+            <BiFilterAlt className='text-xl hover:text-light filter-btn cursor-pointer' />
           </Tooltip>
 
           {/* Filter menu */}
@@ -56,7 +56,7 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
         <div className='relative'>
           <Tooltip text='reports'>
             <RiNotification3Line
-              className='text-xl hover:text-light reports-btn'
+              className='text-xl hover:text-light reports-btn cursor-pointer'
               onClick={() => setReportsToggled(!reportsToggled)}
             />
           </Tooltip>
@@ -85,7 +85,7 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
                   setUsersSearch_Term('');
                   setSearchToggled(false);
                 }}>
-                <RxCross2 className='text-xl hover:text-light' />
+                <RxCross2 className='text-xl hover:text-light cursor-pointer' />
               </motion.div>
             ) : (
               <motion.div
@@ -96,7 +96,7 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
                 exit={{ rotate: 360, scale: 0.9 }}
                 transition={{ duration: 0.2, ease: 'easeInOut' }}
                 onClick={() => setSearchToggled(true)}>
-                <FiSearch className='text-xl hover:text-light' />
+                <FiSearch className='text-xl hover:text-light cursor-pointer' />
               </motion.div>
             )}
           </AnimatePresence>

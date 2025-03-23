@@ -1,5 +1,6 @@
 import { Fragment, useState } from 'react';
 import Usercard from './Usercard';
+import Tooltip from '../../Elements/Tooltip';
 
 const UsersList = () => {
   const [userSelected, setUserSelected] = useState(null);
@@ -172,7 +173,7 @@ const UsersList = () => {
             {users.map((user) => (
               <Fragment key={user._id}>
                 <tr
-                  className={`border-b border-light text-darker font-smallMedium ${
+                  className={`border-b border-light text-darker font-smallMedium cursor-pointer ${
                     userSelected === user._id
                       ? 'border-opacity-100'
                       : 'border-opacity-30 hover:border-opacity-100'
@@ -182,7 +183,9 @@ const UsersList = () => {
                   }}>
                   {/* Name */}
                   <td scope='row' className='px-6 py-3'>
-                    {user.name}
+                    <Tooltip text={user._id}>
+                      <p className='w-full h-full'>{user.name}</p>
+                    </Tooltip>
                   </td>
                   {/* Email */}
                   <td scope='row' className='px-6 py-3'>
