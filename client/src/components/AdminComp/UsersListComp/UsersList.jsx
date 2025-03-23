@@ -1,9 +1,11 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Usercard from './Usercard';
 import Tooltip from '../../Elements/Tooltip';
+import { useUserStore } from '../../../stores/useUserStore';
 
 const UsersList = () => {
   const [userSelected, setUserSelected] = useState(null);
+  const { getAllUsers, getOnlyUsers, getOnlyAdmins, searchUsers } = useUserStore();
 
   const users = [
     {

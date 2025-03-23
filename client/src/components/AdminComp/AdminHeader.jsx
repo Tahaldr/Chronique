@@ -62,9 +62,7 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
           </Tooltip>
 
           {/* Report menu */}
-          <AnimatePresence>
-            {reportsToggled && <AdminsReports />}
-          </AnimatePresence>
+          <AnimatePresence>{reportsToggled && <AdminsReports />}</AnimatePresence>
         </div>
 
         {/* Toggle search btn */}
