@@ -2,7 +2,7 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import Usercard from "./Usercard";
 import Tooltip from "../../Elements/Tooltip";
 import { useUserStore } from "../../../stores/useUserStore";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { AdminDashboardContext } from "../../../App";
 import { useInView } from "react-intersection-observer";
 import Loading from "../../Loading";
@@ -22,9 +22,10 @@ const UsersList = () => {
     contextMenuUser,
     setContextMenuUser,
   } = useContext(AdminDashboardContext);
-  const { getAllUsers, getOnlyUsers, getOnlyAdmins, searchUsers } =
+  const { getAllUsers, getOnlyUsers, getOnlyAdmins, searchUsers, makeAdmin } =
     useUserStore();
   const { ref, inView } = useInView();
+  const queryClient = useQueryClient();
 
   // Fetch users using infinite query
   const {
@@ -61,7 +62,7 @@ const UsersList = () => {
       return null;
     },
   });
-  console.log("data : ", data);
+  // console.log("data : ", data);
 
   // Fetch next page when in view
   useEffect(() => {
@@ -70,6 +71,45 @@ const UsersList = () => {
     }
   }, [inView, fetchNextPage, hasNextPage]);
 
+  const handleToggleAdmin = async (userId) => {
+    try {
+      // Fetch the user to get their current admin state
+      await makeAdmin(userId); // API call to toggle the admin status
+
+      // Toggle the admin state locally
+      queryClient.setQueryData(
+        ["users", usersSearch_Submitted, usersSearch_FinalTerm, filterUsers],
+        (oldData) => {
+          if (!oldData) return oldData;
+
+          const newData = {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              users: page.users.map((user) =>
+                user._id === userId
+                  ? { ...user, idAdmin: !user.idAdmin } // Toggle the idAdmin value
+                  : user
+              ),
+            })),
+          };
+          return newData;
+        }
+      );
+
+      // Show a success toast indicating the action was successful
+      showToast({
+        message: res.idAdmin
+          ? "User is now an admin."
+          : "User is no longer an admin.",
+        type: "success",
+      });
+    } catch (error) {
+      console.error(error);
+      showToast({ message: "Failed to toggle admin status.", type: "error" });
+    }
+  };
+
   if (isError) {
     showToast({ message: error.message, type: "error" });
   }
@@ -77,7 +117,7 @@ const UsersList = () => {
   return (
     <div className="w-full px-0 md:px-6 py-3">
       <div className="w-full">
-        <table className="w-full text-sm text-left">
+        <table className="w-full text-sm text-left table-fixed">
           <thead className="font-mediumPrimary bg-lightish text-dark">
             {/* Table Header */}
             <tr>
@@ -110,6 +150,7 @@ const UsersList = () => {
                   data?.pages.map((group, i) => (
                     <Fragment key={i}>
                       {group.users.map((user) => (
+                        // User row
                         <Fragment key={user._id}>
                           <tr
                             className={`border-b border-light text-darker font-smallMedium cursor-pointer ${
@@ -213,7 +254,10 @@ const UsersList = () => {
         {/* Context menu */}
         <AnimatePresence>
           {showContextMenu && contextMenuUser && (
-            <ContextMenu user={contextMenuUser} />
+            <ContextMenu
+              user={contextMenuUser}
+              handleToggleAdmin={handleToggleAdmin}
+            />
           )}
         </AnimatePresence>
       </div>

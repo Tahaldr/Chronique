@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import showToast from "../Toast";
 import { motion } from "framer-motion";
 
-const ContextMenu = ({ user }) => {
+const ContextMenu = ({ user, handleToggleAdmin }) => {
   const menuRef = useRef();
   const { setShowContextMenu, contextMenuPoints } = useContext(
     AdminDashboardContext
@@ -67,10 +67,15 @@ const ContextMenu = ({ user }) => {
     },
     {
       id: 3,
-      text: "Upgrade",
-      icon: <ChevronDoubleUpIcon className="size-5" />,
+      text: user?.idAdmin ? "Demote" : "Promote",
+      icon:
+        user.idAdmin === false ? (
+          <ChevronDoubleUpIcon className="size-5" />
+        ) : (
+          <ChevronDoubleUpIcon className="size-5 rotate-180" />
+        ),
       func: () => {
-        handleUpgradeUser(user), setShowContextMenu(false);
+        handleToggleAdmin(user?._id), setShowContextMenu(false);
       },
     },
     {
@@ -128,17 +133,17 @@ const ContextMenu = ({ user }) => {
       }}
     >
       {data.map((item) => (
-        <div
-          key={item.id}
-          className="hover:bg-light hover:bg-opacity-50 cursor-pointer p-2 flex items-center justify-center"
-          onClick={item.func}
-        >
-          <Tooltip text={item.text}>
+        <Tooltip text={item.text}>
+          <div
+            key={item.id}
+            className="hover:bg-light hover:bg-opacity-50 cursor-pointer p-2 flex items-center justify-center"
+            onClick={item.func}
+          >
             <span className="text-dark hover:text-darkest transition-colors duration-300 ease-in-out">
               {item.icon}
             </span>
-          </Tooltip>
-        </div>
+          </div>
+        </Tooltip>
       ))}
     </motion.div>
   );
@@ -146,6 +151,7 @@ const ContextMenu = ({ user }) => {
 
 ContextMenu.propTypes = {
   user: PropTypes.object,
+  handleToggleAdmin: PropTypes.func.isRequired,
 };
 
 export default ContextMenu;

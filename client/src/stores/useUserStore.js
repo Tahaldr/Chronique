@@ -1,7 +1,7 @@
-import { create } from 'zustand';
-import axios from '../lib/axios';
-import showToast from '../components/Toast';
-import { getGlobalNavigate } from '../lib/navigation.js';
+import { create } from "zustand";
+import axios from "../lib/axios";
+import showToast from "../components/Toast";
+import { getGlobalNavigate } from "../lib/navigation.js";
 
 export const useUserStore = create((set, get) => ({
   // user: JSON.parse(localStorage.getItem("user")) || null,
@@ -12,21 +12,21 @@ export const useUserStore = create((set, get) => ({
   upload: async (formData) => {
     set({ loading: true });
     try {
-      const res = await axios.post('/auth/upload', formData, {
+      const res = await axios.post("/auth/upload", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
       set({ loading: false });
-      console.log('File upload successful:', res.data);
-      console.log('data');
+      console.log("File upload successful:", res.data);
+      console.log("data");
 
       return res.data;
     } catch (error) {
       set({ loading: false });
       showToast({
-        message: error.response?.data || 'Upload failed',
-        type: 'error',
+        message: error.response?.data || "Upload failed",
+        type: "error",
       });
     }
   },
@@ -35,7 +35,7 @@ export const useUserStore = create((set, get) => ({
   signup: async ({ userPic, name, email, password }) => {
     set({ loading: true });
     try {
-      const res = await axios.post('/auth/signup', {
+      const res = await axios.post("/auth/signup", {
         userPic,
         name,
         email,
@@ -49,8 +49,8 @@ export const useUserStore = create((set, get) => ({
     } catch (error) {
       set({ loading: false });
       showToast({
-        message: error.response?.data.message || 'Signup failed',
-        type: 'error',
+        message: error.response?.data.message || "Signup failed",
+        type: "error",
       });
     }
   },
@@ -59,7 +59,7 @@ export const useUserStore = create((set, get) => ({
   login: async ({ email, password }) => {
     set({ loading: true });
     try {
-      const res = await axios.post('/auth/login', { email, password });
+      const res = await axios.post("/auth/login", { email, password });
       // const user = res.data.user;
       set({ user: res.data, loading: false });
 
@@ -68,8 +68,8 @@ export const useUserStore = create((set, get) => ({
     } catch (error) {
       set({ loading: false });
       showToast({
-        message: error.response?.data.message || 'Login failed',
-        type: 'error',
+        message: error.response?.data.message || "Login failed",
+        type: "error",
       });
     }
   },
@@ -77,15 +77,15 @@ export const useUserStore = create((set, get) => ({
   // Log Out
   logout: async () => {
     try {
-      await axios.post('auth/logout');
+      await axios.post("auth/logout");
       set({ user: null });
       // navigate("/");
       // window.location.href = "/"; // Forces navigation to home
 
       const navigate = getGlobalNavigate();
-      if (navigate) navigate('/');
+      if (navigate) navigate("/");
     } catch (error) {
-      console.log('Error in logout', error?.response?.data?.message);
+      console.log("Error in logout", error?.response?.data?.message);
     }
   },
 
@@ -93,10 +93,10 @@ export const useUserStore = create((set, get) => ({
   checkAuth: async () => {
     set({ checkingAuth: true });
     try {
-      const res = await axios.get('auth/profile');
+      const res = await axios.get("auth/profile");
       set({ user: res.data, checkingAuth: false });
     } catch (error) {
-      console.log('Error in checkAuth', error.message);
+      console.log("Error in checkAuth", error.message);
       set({ user: null, checkingAuth: false });
     }
   },
@@ -108,16 +108,16 @@ export const useUserStore = create((set, get) => ({
 
     set({ checkingAuth: true });
     try {
-      const res = await axios.post('/auth/refreshtoken');
+      const res = await axios.post("/auth/refreshtoken");
       set({ checkingAuth: false });
 
       // for dev
-      showToast({ message: 'Refresh token successful', type: 'success' });
-      console.log('Refresh token successful:', res.data);
+      showToast({ message: "Refresh token successful", type: "success" });
+      console.log("Refresh token successful:", res.data);
       return res.data;
     } catch (error) {
-      showToast({ message: 'Refresh token failed', type: 'error' });
-      console.log('Error in refreshToken', error.message);
+      showToast({ message: "Refresh token failed", type: "error" });
+      console.log("Error in refreshToken", error.message);
       set({ user: null, checkingAuth: false });
     }
   },
@@ -126,11 +126,13 @@ export const useUserStore = create((set, get) => ({
   getAllUsers: async (page = 1, limit = 10) => {
     try {
       set({ loading: true });
-      const res = await axios.get(`/auth/getallusers?page=${page}&limit=${limit}`);
+      const res = await axios.get(
+        `/auth/getallusers?page=${page}&limit=${limit}`
+      );
       set({ loading: false });
       return res.data;
     } catch (error) {
-      console.log('Error in getAllUsers', error.message);
+      console.log("Error in getAllUsers", error.message);
     }
   },
 
@@ -138,11 +140,13 @@ export const useUserStore = create((set, get) => ({
   getOnlyUsers: async (page = 1, limit = 10) => {
     try {
       set({ loading: true });
-      const res = await axios.get(`/auth/getonlyusers?page=${page}&limit=${limit}`);
+      const res = await axios.get(
+        `/auth/getonlyusers?page=${page}&limit=${limit}`
+      );
       set({ loading: false });
       return res.data;
     } catch (error) {
-      console.log('Error in getOnlyUsers', error.message);
+      console.log("Error in getOnlyUsers", error.message);
     }
   },
 
@@ -150,11 +154,13 @@ export const useUserStore = create((set, get) => ({
   getOnlyAdmins: async (page = 1, limit = 10) => {
     try {
       set({ loading: true });
-      const res = await axios.get(`/auth/getonlyadmins?page=${page}&limit=${limit}`);
+      const res = await axios.get(
+        `/auth/getonlyadmins?page=${page}&limit=${limit}`
+      );
       set({ loading: false });
       return res.data;
     } catch (error) {
-      console.log('Error in getOnlyAdmins', error.message);
+      console.log("Error in getOnlyAdmins", error.message);
     }
   },
 
@@ -168,7 +174,30 @@ export const useUserStore = create((set, get) => ({
       set({ loading: false });
       return res.data;
     } catch (error) {
-      console.log('Error in searchUsers', error.message);
+      console.log("Error in searchUsers", error.message);
+    }
+  },
+
+  // Make Admin
+  makeAdmin: async (userId) => {
+    try {
+      set({ loading: true });
+      const res = await axios.post(`/auth/makeadmin/${userId}`);
+      set({ loading: false });
+      return res.data;
+    } catch (error) {
+      console.log("Error in makeAdmin", error.message);
+    }
+  },
+
+  deleteUser: async (userId) => {
+    try {
+      set({ loading: true });
+      const res = await axios.delete(`/auth/deleteuser/${userId}`);
+      set({ loading: false });
+      return res.data;
+    } catch (error) {
+      console.log("Error in deleteUser", error.message);
     }
   },
 }));
