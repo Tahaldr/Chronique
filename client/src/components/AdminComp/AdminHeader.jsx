@@ -6,17 +6,22 @@ import { RxCross2 } from 'react-icons/rx';
 import { MdKeyboardCommandKey } from 'react-icons/md';
 import Search from '../Elements/Search';
 import { AnimatePresence, motion } from 'framer-motion';
-import PropTypes from 'prop-types';
 import FilterDropdown from '../Elements/FilterDropdown';
 import AdminsReports from './AdminsReports';
 import Tooltip from '../Elements/Tooltip';
 import { AdminDashboardContext } from '../../App';
 
-const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_FinalTerm }) => {
+const AdminHeader = () => {
   const [searchToggled, setSearchToggled] = useState(false);
   const [filterClicked, setFilterClicked] = useState(false);
   const searchToggleRef = useRef(null); // Hold reference to search toggle button
-  const { reportsToggled, setReportsToggled } = useContext(AdminDashboardContext);
+  const {
+    reportsToggled,
+    setReportsToggled,
+    usersSearch_Term,
+    setUsersSearch_Term,
+    setUsersSearch_FinalTerm,
+  } = useContext(AdminDashboardContext);
 
   // Click the search toggle btn shortcut (CTRL + k)
   useEffect(() => {
@@ -133,12 +138,6 @@ const AdminHeader = ({ usersSearch_Term, setUsersSearch_Term, setUsersSearch_Fin
       </div>
     </div>
   );
-};
-
-AdminHeader.propTypes = {
-  usersSearch_Term: PropTypes.string.isRequired,
-  setUsersSearch_Term: PropTypes.func.isRequired,
-  setUsersSearch_FinalTerm: PropTypes.func.isRequired,
 };
 
 export default AdminHeader;

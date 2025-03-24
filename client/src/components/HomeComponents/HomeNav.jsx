@@ -3,11 +3,12 @@ import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useUserStore } from '../../stores/useUserStore';
 import MarkerCircle from '../MarkerCircle';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import CategoriesCarousel from './ChronicleComps/CategoriesCarousel';
 import Search from '../Elements/Search';
 import { Link, useNavigate } from 'react-router-dom';
 import ProfileImg from '../Elements/ProfileImg';
+import { AdminDashboardContext } from '../../App';
 
 const HomeNav = ({
   hidden,
@@ -23,6 +24,8 @@ const HomeNav = ({
 }) => {
   const [hovered, setHovered] = useState(null);
   const [btnHovered, setBtnHovered] = useState(false);
+  const { setUsersSearch_FinalTerm, setUsersSearch_Submitted, setFilterUsers } =
+    useContext(AdminDashboardContext);
 
   const { user } = useUserStore();
   const cubicBezierVar = [1, -0.01, 0.7, 1.04];
@@ -81,7 +84,12 @@ const HomeNav = ({
             } relative grid place-items-center cursor-pointer`}
             onMouseEnter={() => setHovered(3)}
             onMouseLeave={() => setHovered(null)}
-            onClick={() => setActive('admin')}>
+            onClick={() => {
+              setUsersSearch_FinalTerm('');
+              setUsersSearch_Submitted(false);
+              setFilterUsers('all');
+              setActive('admin');
+            }}>
             <button>Admin Dashboard</button>
             <MarkerCircle
               hovered={hovered === 3}

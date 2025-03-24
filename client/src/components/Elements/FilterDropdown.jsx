@@ -4,7 +4,8 @@ import { AdminDashboardContext } from '../../App';
 import PropTypes from 'prop-types';
 
 const FilterDropdown = ({ setFilterClicked }) => {
-  const { filterUsers, setFilterUsers } = useContext(AdminDashboardContext);
+  const { filterUsers, setFilterUsers, setUsersSearch_FinalTerm, setUsersSearch_Submitted } =
+    useContext(AdminDashboardContext);
   const filterRef = useRef(null);
   const filters = [
     {
@@ -55,6 +56,8 @@ const FilterDropdown = ({ setFilterClicked }) => {
             key={index}
             className='flex items-center justify-start w-full gap-2 bg-darker hover:bg-darkest tracking-wide py-1 px-4 whitespace-nowrap'
             onClick={() => {
+              setUsersSearch_FinalTerm('');
+              setUsersSearch_Submitted(false);
               setFilterUsers(filter.value);
               setFilterClicked(false);
               console.log(filterUsers);

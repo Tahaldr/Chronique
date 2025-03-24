@@ -4,22 +4,16 @@ import AdminHeader from '../../components/AdminComp/AdminHeader';
 import AdminStats from '../../components/AdminComp/AdminStats';
 import Report from '../../components/AdminComp/Report';
 import { AnimatePresence } from 'framer-motion';
-import ReportTemp from '../../components/AdminComp/ReportTemp';
 import UsersList from '../../components/AdminComp/UsersListComp/UsersList';
+import ArrowScrollUp from '../../components/Elements/ArrowScrollUp';
 
 const AdminDashboard = () => {
-  const {
-    usersSearch_Term,
-    setUsersSearch_Term,
-    usersSearch_FinalTerm,
-    setUsersSearch_FinalTerm,
-    usersSearch_Submitted,
-    setUsersSearch_Submitted,
-    reportSelected,
-  } = useContext(AdminDashboardContext);
+  const { usersSearch_Term, setUsersSearch_Term, setUsersSearch_FinalTerm, reportSelected } =
+    useContext(AdminDashboardContext);
 
   return (
     <>
+      <ArrowScrollUp type='fixed' />
       {reportSelected && (
         <AnimatePresence>
           <Report />
