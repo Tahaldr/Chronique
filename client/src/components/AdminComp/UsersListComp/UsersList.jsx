@@ -1,14 +1,14 @@
-import { Fragment, useContext, useEffect, useState } from 'react';
-import Usercard from './Usercard';
-import Tooltip from '../../Elements/Tooltip';
-import { useUserStore } from '../../../stores/useUserStore';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { AdminDashboardContext } from '../../../App';
-import { useInView } from 'react-intersection-observer';
-import Loading from '../../Loading';
-import showToast from '../../Toast';
-import ContextMenu from '../ContextMenu';
-import { AnimatePresence } from 'framer-motion';
+import { Fragment, useContext, useEffect, useState } from "react";
+import Usercard from "./Usercard";
+import Tooltip from "../../Elements/Tooltip";
+import { useUserStore } from "../../../stores/useUserStore";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { AdminDashboardContext } from "../../../App";
+import { useInView } from "react-intersection-observer";
+import Loading from "../../Loading";
+import showToast from "../../Toast";
+import ContextMenu from "../ContextMenu";
+import { AnimatePresence } from "framer-motion";
 
 const UsersList = () => {
   const [userSelected, setUserSelected] = useState(null);
@@ -22,7 +22,8 @@ const UsersList = () => {
     contextMenuUser,
     setContextMenuUser,
   } = useContext(AdminDashboardContext);
-  const { getAllUsers, getOnlyUsers, getOnlyAdmins, searchUsers } = useUserStore();
+  const { getAllUsers, getOnlyUsers, getOnlyAdmins, searchUsers } =
+    useUserStore();
   const { ref, inView } = useInView();
 
   // Fetch users using infinite query
@@ -36,13 +37,18 @@ const UsersList = () => {
     isFetchingNextPage,
     isFetching,
   } = useInfiniteQuery({
-    queryKey: ['users', usersSearch_Submitted, usersSearch_FinalTerm, filterUsers],
+    queryKey: [
+      "users",
+      usersSearch_Submitted,
+      usersSearch_FinalTerm,
+      filterUsers,
+    ],
     queryFn: ({ pageParam = 1 }) => {
       if (usersSearch_Submitted && usersSearch_FinalTerm) {
         return searchUsers(usersSearch_FinalTerm, pageParam);
-      } else if (filterUsers === 'admins') {
+      } else if (filterUsers === "admins") {
         return getOnlyAdmins(pageParam);
-      } else if (filterUsers === 'users') {
+      } else if (filterUsers === "users") {
         return getOnlyUsers(pageParam);
       } else {
         return getAllUsers(pageParam);
@@ -55,7 +61,7 @@ const UsersList = () => {
       return null;
     },
   });
-  console.log('data : ', data);
+  console.log("data : ", data);
 
   // Fetch next page when in view
   useEffect(() => {
@@ -65,26 +71,26 @@ const UsersList = () => {
   }, [inView, fetchNextPage, hasNextPage]);
 
   if (isError) {
-    showToast({ message: error.message, type: 'error' });
+    showToast({ message: error.message, type: "error" });
   }
 
   return (
-    <div className='w-full px-0 md:px-6 py-3'>
-      <div className='w-full'>
-        <table className='w-full text-sm text-left'>
-          <thead className='font-mediumPrimary bg-lightish text-dark'>
+    <div className="w-full px-0 md:px-6 py-3">
+      <div className="w-full">
+        <table className="w-full text-sm text-left">
+          <thead className="font-mediumPrimary bg-lightish text-dark">
             {/* Table Header */}
             <tr>
-              <th scope='col' className='px-6 py-3'>
+              <th scope="col" className="px-6 py-3">
                 Name
               </th>
-              <th scope='col' className='px-6 py-3'>
+              <th scope="col" className="px-6 py-3">
                 Email
               </th>
-              <th scope='col' className='px-6 py-3'>
+              <th scope="col" className="px-6 py-3">
                 Votes
               </th>
-              <th scope='col' className='px-6 py-3'>
+              <th scope="col" className="px-6 py-3">
                 isAdmin
               </th>
             </tr>
@@ -92,9 +98,9 @@ const UsersList = () => {
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={4} className='px-6 py-10'>
-                  <div className='flex items-center justify-center'>
-                    <Loading size='3xl' color='dark' />
+                <td colSpan={4} className="px-6 py-10">
+                  <div className="flex items-center justify-center">
+                    <Loading size="3xl" color="dark" />
                   </div>
                 </td>
               </tr>
@@ -107,9 +113,10 @@ const UsersList = () => {
                         <Fragment key={user._id}>
                           <tr
                             className={`border-b border-light text-darker font-smallMedium cursor-pointer ${
-                              userSelected === user._id || contextMenuUser === user
-                                ? 'border-opacity-100'
-                                : 'border-opacity-30 hover:border-opacity-100'
+                              userSelected === user._id ||
+                              contextMenuUser === user
+                                ? "border-opacity-100"
+                                : "border-opacity-30 hover:border-opacity-100"
                             }`}
                             onClick={() => {
                               userSelected === user._id
@@ -138,32 +145,38 @@ const UsersList = () => {
                               setShowContextMenu(true);
                               setContextMenuPoints({ x: xPos, y: yPos });
                               setContextMenuUser(user);
-                            }}>
+                            }}
+                          >
                             {/* Name */}
-                            <td scope='row' className='px-6 py-3'>
+                            <td scope="row" className="px-6 py-3">
                               <Tooltip text={user._id}>
-                                <p className='w-full h-full'>{user.name}</p>
+                                <p className="w-full h-full">{user.name}</p>
                               </Tooltip>
                             </td>
                             {/* Email */}
-                            <td scope='row' className='px-6 py-3'>
+                            <td scope="row" className="px-6 py-3">
                               {user.email}
                             </td>
                             {/* Votes */}
-                            <td scope='row' className='px-6 py-3'>
+                            <td scope="row" className="px-6 py-3">
                               {user.votes}
                             </td>
                             {/* isAdmin */}
                             <td
-                              scope='row'
+                              scope="row"
                               className={`px-6 py-3 ${
-                                user.idAdmin ? 'font-smallBoldItalic text-darkest' : ''
-                              } `}>
-                              {user.idAdmin ? 'true' : 'false'}
+                                user.idAdmin
+                                  ? "font-smallBoldItalic text-darkest"
+                                  : ""
+                              } `}
+                            >
+                              {user.idAdmin ? "true" : "false"}
                             </td>
                           </tr>
                           {/* User card */}
-                          {userSelected === user._id && <Usercard user={user} />}
+                          {userSelected === user._id && (
+                            <Usercard user={user} />
+                          )}
                         </Fragment>
                       ))}
                     </Fragment>
@@ -172,7 +185,8 @@ const UsersList = () => {
                   <tr>
                     <td
                       colSpan={4}
-                      className='px-6 py-6 text-center font-mediumPrimary text-base text-dark'>
+                      className="px-6 py-6 text-center font-mediumPrimary text-base text-dark"
+                    >
                       No users found
                     </td>
                   </tr>
@@ -180,15 +194,15 @@ const UsersList = () => {
 
                 {isFetching && isFetchingNextPage && (
                   <tr>
-                    <td colSpan={4} className='px-6 py-10'>
-                      <div className='flex items-center justify-center'>
-                        <Loading size='3xl' color='dark' />
+                    <td colSpan={4} className="px-6 py-10">
+                      <div className="flex items-center justify-center">
+                        <Loading size="3xl" color="dark" />
                       </div>
                     </td>
                   </tr>
                 )}
 
-                <tr ref={ref} className='h-20'>
+                <tr ref={ref} className="h-20">
                   <td colSpan={4}></td>
                 </tr>
               </Fragment>
