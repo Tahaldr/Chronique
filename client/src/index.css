@@ -245,6 +245,10 @@ button {
   border-color: #b8b8b8;
 }
 
+.hover-bg-darkish:hover {
+  background-color: #666;
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,

@@ -7,11 +7,21 @@ import { AdminDashboardContext } from '../../../App';
 import { useInView } from 'react-intersection-observer';
 import Loading from '../../Loading';
 import showToast from '../../Toast';
+import ContextMenu from '../ContextMenu';
+import { AnimatePresence } from 'framer-motion';
 
 const UsersList = () => {
   const [userSelected, setUserSelected] = useState(null);
-  const { usersSearch_Submitted, usersSearch_FinalTerm, filterUsers } =
-    useContext(AdminDashboardContext);
+  const {
+    usersSearch_Submitted,
+    usersSearch_FinalTerm,
+    filterUsers,
+    setShowContextMenu,
+    showContextMenu,
+    setContextMenuPoints,
+    contextMenuUser,
+    setContextMenuUser,
+  } = useContext(AdminDashboardContext);
   const { getAllUsers, getOnlyUsers, getOnlyAdmins, searchUsers } = useUserStore();
   const { ref, inView } = useInView();
 
@@ -61,7 +71,7 @@ const UsersList = () => {
   return (
     <div className='w-full px-0 md:px-6 py-3'>
       <div className='w-full'>
-        <table className='w-full text-sm text-left table-fixed'>
+        <table className='w-full text-sm text-left'>
           <thead className='font-mediumPrimary bg-lightish text-dark'>
             {/* Table Header */}
             <tr>
@@ -97,7 +107,7 @@ const UsersList = () => {
                         <Fragment key={user._id}>
                           <tr
                             className={`border-b border-light text-darker font-smallMedium cursor-pointer ${
-                              userSelected === user._id
+                              userSelected === user._id || contextMenuUser === user
                                 ? 'border-opacity-100'
                                 : 'border-opacity-30 hover:border-opacity-100'
                             }`}
@@ -105,6 +115,29 @@ const UsersList = () => {
                               userSelected === user._id
                                 ? setUserSelected(null)
                                 : setUserSelected(user._id);
+                            }}
+                            onContextMenu={(e) => {
+                              e.preventDefault();
+
+                              const menuWidth = 200; // (adjust as needed)
+                              const menuHeight = 100; // (adjust as needed)
+
+                              let xPos = e.clientX + 20;
+                              let yPos = e.clientY;
+
+                              const screenWidth = window.innerWidth;
+                              if (xPos + menuWidth > screenWidth) {
+                                xPos = screenWidth - menuWidth - 20;
+                              }
+
+                              const screenHeight = window.innerHeight;
+                              if (yPos + menuHeight > screenHeight) {
+                                yPos = screenHeight - menuHeight + 20;
+                              }
+
+                              setShowContextMenu(true);
+                              setContextMenuPoints({ x: xPos, y: yPos });
+                              setContextMenuUser(user);
                             }}>
                             {/* Name */}
                             <td scope='row' className='px-6 py-3'>
@@ -162,6 +195,13 @@ const UsersList = () => {
             )}
           </tbody>
         </table>
+
+        {/* Context menu */}
+        <AnimatePresence>
+          {showContextMenu && contextMenuUser && (
+            <ContextMenu user={contextMenuUser} />
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

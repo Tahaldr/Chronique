@@ -60,6 +60,9 @@ function App() {
   const [filterUsers, setFilterUsers] = useState('all');
   const [reportsToggled, setReportsToggled] = useState(false);
   const [reportSelected, setReportSelected] = useState(null);
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [contextMenuUser, setContextMenuUser] = useState(null);
+  const [contextMenuPoints, setContextMenuPoints] = useState({ x: 0, y: 0 });
 
   // Post context value
   const contextValue = {
@@ -103,6 +106,12 @@ function App() {
     setReportsToggled,
     reportSelected,
     setReportSelected,
+    showContextMenu,
+    setShowContextMenu,
+    contextMenuUser,
+    setContextMenuUser,
+    contextMenuPoints,
+    setContextMenuPoints,
   };
 
   useEffect(() => {
