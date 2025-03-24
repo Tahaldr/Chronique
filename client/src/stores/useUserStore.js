@@ -190,6 +190,7 @@ export const useUserStore = create((set, get) => ({
     }
   },
 
+  // Delete User
   deleteUser: async (userId) => {
     try {
       set({ loading: true });

@@ -39,7 +39,7 @@ const PostTop = ({
 
   return (
     <div
-      className="flex items-center justify-between relative"
+      className="flex items-center justify-between relative z-0"
       ref={dropdownRef}
     >
       {/* Author details */}

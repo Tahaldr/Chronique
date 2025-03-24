@@ -32,7 +32,7 @@ router.get('/getonlyusers', protectedRoute, adminRoute, getOnlyUsers);
 router.get('/getonlyadmins', protectedRoute, adminRoute, getOnlyAdmins);
 router.get('/searchusers', protectedRoute, adminRoute, searchUsers);
 router.get('/getuser/:id', getUser);
-router.post('/deleteuser/:id', protectedRoute, adminRoute, deleteUser);
+router.delete('/deleteuser/:id', protectedRoute, adminRoute, deleteUser);
 
 // Delete all users - just for development purposes
 router.delete('/deleteallusers', protectedRoute, adminRoute, deleteAllUsers);

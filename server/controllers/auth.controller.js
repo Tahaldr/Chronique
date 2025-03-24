@@ -1,6 +1,8 @@
 import redis from '../lib/redis.js';
 import User from '../models/user.model.js';
 import Post from '../models/post.model.js';
+import Comment from '../models/comment.model.js';
+import Report from '../models/report.model.js';
 import jwt from 'jsonwebtoken';
 import cloudinary from '../lib/cloudinary.js';
 import mongoose from 'mongoose';
@@ -531,11 +533,54 @@ export const getUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
+    const ownerId = '67e1e4243797128f37393189';
+
+    // Get user id from token
+    const refreshToken = req.cookies.refreshToken;
+    let userId;
+
+    if (refreshToken) {
+      try {
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        userId = decoded.userId;
+      } catch (error) {
+        return res.status(401).json({ message: 'Not authorized, Login first' });
+      }
+    } else {
+      return res.status(401).json({ message: 'Refresh token not found' });
+    }
+
+    // Prevent self-deletion and deleting the server owner
+    if (id === userId) {
+      return res.status(403).json({ message: 'You cannot delete your own account' });
+    }
+    if (id === ownerId) {
+      return res.status(403).json({ message: 'You cannot delete the server owner' });
+    }
+
+    // Find the user to ensure they exist
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Cascade delete related posts, comments, and reports
+    // Delete posts where the user is the author
+    await Post.deleteMany({ author: id });
+
+    // Delete comments where the user is the author
+    await Comment.deleteMany({ author: id });
+
+    // Delete reports where the user is the reporter
+    await Report.deleteMany({ reporter: id });
+
+    // Delete the user
     await User.findByIdAndDelete(id);
-    res.status(200).json({ message: 'User deleted successfully' });
+
+    res.status(200).json({ message: 'User and related data deleted successfully' });
   } catch (error) {
-    console.log('Error in deleteuser controller', error.message);
-    res.status(500).json({ message: error.message, location: 'deleteuser' });
+    console.log('Error in deleteUser controller', error.message);
+    res.status(500).json({ message: error.message, location: 'deleteUser' });
   }
 };
 
@@ -560,17 +605,48 @@ export const deleteAllUsers = async (req, res) => {
   }
 };
 
-// Give/remove admin rights
+// Promote/demote user to Admin
 export const makeAdmin = async (req, res) => {
   try {
     const { id } = req.params;
-    // give/remove admin rights
+
+    const ownerId = '67e1e4243797128f37393189';
+
+    // Get user id from token
+    const refreshToken = req.cookies.refreshToken;
+    let userId;
+
+    if (refreshToken) {
+      try {
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        userId = decoded.userId;
+      } catch (error) {
+        return res.status(401).json({ message: 'Not authorized, Login first' });
+      }
+    } else {
+      return res.status(401).json({ message: 'Refresh token not found' });
+    }
+
+    // Prevent self-promotion/demotion and modifying the server owner
+    if (id === userId) {
+      return res.status(403).json({ message: 'You cannot change your own admin status' });
+    }
+    if (id === ownerId) {
+      return res.status(403).json({ message: 'You cannot change the server owner’s admin status' });
+    }
+
+    // Find user and toggle admin status
     const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
     user.idAdmin = !user.idAdmin;
     await user.save();
-    res.status(200).json({ message: 'Changed User to admin : ' + user.idAdmin });
+
+    res.status(200).json({ message: `User admin status changed: ${user.idAdmin}` });
   } catch (error) {
-    console.log('Error in makeadmin controller', error.message);
-    res.status(500).json({ message: error.message, location: 'makeadmin' });
+    console.log('Error in makeAdmin controller', error.message);
+    res.status(500).json({ message: error.message, location: 'makeAdmin' });
   }
 };
