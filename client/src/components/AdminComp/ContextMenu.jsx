@@ -13,6 +13,7 @@ const ContextMenu = ({ user }) => {
   const menuRef = useRef();
   const { setShowContextMenu, contextMenuPoints } = useContext(AdminDashboardContext);
 
+  // Handle copy user function
   const handleCopyUser = (user) => {
     const userInfo = JSON.stringify(user, null, 2);
 
@@ -22,7 +23,18 @@ const ContextMenu = ({ user }) => {
       .catch(() => showToast({ message: 'Failed to copy user.', type: 'error' }));
   };
 
-  const handleEmailUser = (user) => {};
+  // Handle email user function
+  const handleEmailUser = (user) => {
+    const { email, name } = user;
+    const subject = `Chronique stuff - [ Your Subject Here ]`;
+    const body = `Hello ${name},\n\nI just wanted to inform you about ...\n\nBest regards,`;
+
+    const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailtoLink;
+  };
 
   const handleUpgradeUser = (user) => {};
 
@@ -86,7 +98,6 @@ const ContextMenu = ({ user }) => {
 
   return (
     <motion.div
-      key={key}
       ref={menuRef}
       className='fixed border border-light p-1 bg-lightish flex items-center justify-between gap-1 shadow-sm shadow-light
       transition-colors duration-300 ease-in-out z-50'
