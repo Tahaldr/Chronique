@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { BiEditAlt } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { MdOutlineReport } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const OptionsDropdown = ({
   user,
@@ -12,6 +13,7 @@ const OptionsDropdown = ({
   optionsPosition,
   setDeleteConfirm,
 }) => {
+  const navigate = useNavigate();
   const isAuthor =
     user._id === postAuthor._id ||
     user.user?._id === postAuthor._id ||
@@ -34,7 +36,10 @@ const OptionsDropdown = ({
       {/* Show Edit and Delete buttons if the user is the post author or an admin || button is clicked */}
       {isAuthor && (
         <>
-          <button className="flex place-items-center gap-2 bg-darker hover:bg-darkest tracking-widest py-1 px-4">
+          <button
+            className="flex place-items-center gap-2 bg-darker hover:bg-darkest tracking-widest py-1 px-4"
+            onClick={() => navigate(`/create/${postId}`)}
+          >
             <span>
               <BiEditAlt className="text-lg" />
             </span>

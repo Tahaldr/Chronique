@@ -230,7 +230,7 @@ const Profile = () => {
                     {/* Create post btn */}
                     <Tooltip text="create post">
                       <Link
-                        to="/create/new"
+                        to="/create/null"
                         className="flex size-8 justify-center items-center font-bigPrimary border border-darkish-50 hover:border-darkest
                        text-dark bg-lightish hover:bg-light hover:text-darkest tracking-wide text-base md:text-lg"
                       >

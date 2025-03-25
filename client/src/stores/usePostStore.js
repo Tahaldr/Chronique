@@ -9,7 +9,9 @@ export const usePostStore = create((set, get) => ({
 
   createPost: async (post) => {
     try {
+      set({ loading: true });
       const res = await axios.post("/post/createpost", post);
+      set({ loading: false });
       const navigate = getGlobalNavigate();
       if (navigate) navigate("/");
       return res.data.post;
@@ -24,7 +26,9 @@ export const usePostStore = create((set, get) => ({
 
   updatePost: async (newPost) => {
     try {
+      set({ loading: true });
       const res = await axios.post("/post/updatepost", newPost);
+      set({ loading: false });
       const navigate = getGlobalNavigate();
       if (navigate) navigate("/");
       return res.data.updatedPost;

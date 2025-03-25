@@ -172,7 +172,7 @@ function App() {
                 <Route path="/profile/:id" element={<Profile />} />
                 <Route path="/post/:postId" element={<PostDetails />} />
                 <Route
-                  path="/create/:type"
+                  path="/create/:postId"
                   element={!user ? <Home /> : <CreatePost />}
                 />
               </Routes>

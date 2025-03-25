@@ -5,7 +5,7 @@ import { usePostStore } from "../../../stores/usePostStore";
 import Loading from "../../Loading";
 import PropTypes from "prop-types";
 
-const CreatepostForm = ({ type }) => {
+const CreatepostForm = ({ postId, type }) => {
   const textareasRef = useRef([]);
   const [categorySelected, setCategorySelected] = useState(null);
   const [imageSelected, setImageSelected] = useState(null);
@@ -35,11 +35,39 @@ const CreatepostForm = ({ type }) => {
     content: false,
   });
 
-  const { createPost, loading } = usePostStore();
+  const { createPost, updatePost, getOnePost, loading } = usePostStore();
 
-  // useEffect(() => {
-  //   console.log(post);
-  // }, [post]);
+  // Get post if Update type
+  useEffect(() => {
+    if (type === "update" && postId !== "null") {
+      // Make the useEffect async to await the result
+      const fetchData = async () => {
+        const data = await getOnePost(postId); // Wait for the result
+        // console.log("data", data);
+
+        // Only set state if data exists
+        if (data) {
+          setPost({
+            title: data.title,
+            description: data.description,
+            category: data.category,
+            postPic: data.postPic,
+            content: data.content,
+            tags: data.tags,
+          });
+        }
+
+        // Set categorySelected to the fetched category
+        setCategorySelected(data.category);
+      };
+
+      fetchData(); // Call the function to fetch data
+    }
+  }, [type, postId]);
+
+  useEffect(() => {
+    console.log("post", post);
+  }, [post]);
 
   // Categories
   const categories = [
@@ -131,7 +159,7 @@ const CreatepostForm = ({ type }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createPost(post);
+    type === "create" ? createPost(post) : updatePost(post);
   };
 
   return (
@@ -341,30 +369,33 @@ const CreatepostForm = ({ type }) => {
 
         {/* Post Tags */}
         <div className="flex flex-wrap gap-3">
-          {post.tags.map((tag, index) => (
-            // Tags
-            <div
-              key={index}
-              className="flex items-center gap-2 border border-lighter border-opacity-40 px-5 py-2 text-lighter
+          {Array.isArray(post.tags) &&
+            post.tags.map((tag, index) => (
+              // Tags
+              <div
+                key={index}
+                className="flex items-center gap-2 border border-lighter border-opacity-40 px-5 py-2 text-lighter
               hover:text-lightest hover:border-opacity-100 transition-colors duration-500 ease-in-out"
-            >
-              <p className="font-smallMedium">{tag}</p>
-              <RxCross2
-                className="text-xl cursor-pointer"
-                onClick={() => {
-                  setPost({
-                    ...post,
-                    tags: post.tags.filter((_, i) => i !== index),
-                  });
-                }}
-              />
-            </div>
-          ))}
+              >
+                <p className="font-smallMedium">{tag}</p>
+                <RxCross2
+                  className="text-xl cursor-pointer"
+                  onClick={() => {
+                    setPost({
+                      ...post,
+                      tags: post.tags.filter((_, i) => i !== index),
+                    });
+                  }}
+                />
+              </div>
+            ))}
           {/* Tag input */}
           <input
             type="text"
             placeholder={`${
-              post.tags.length > 0 ? "Add new tag" : "Add a tag"
+              Array.isArray(post.tags) && post.tags.length > 0
+                ? "Add new tag"
+                : "Add a tag"
             }`}
             className="py-2 px-10 text-xl bg-transparent text-lightest placeholder-text-darkish font-smallMedium placeholder:font-bigThird
                 placeholder:text-2xl border-l border-darkish-50 resize-none outline-none focus:border-light
@@ -394,6 +425,7 @@ const CreatepostForm = ({ type }) => {
 };
 
 CreatepostForm.propTypes = {
+  postId: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
 };
 

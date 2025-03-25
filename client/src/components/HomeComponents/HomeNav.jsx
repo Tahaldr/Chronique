@@ -111,7 +111,7 @@ const HomeNav = ({
               className=" text-lightest font-bigSecondaryItalic py-[.2rem] px-4 relative"
               onMouseEnter={() => setBtnHovered(true)}
               onMouseLeave={() => setBtnHovered(false)}
-              onClick={() => navigate("/create/new")}
+              onClick={() => navigate("/create/null")}
             >
               <span className="absolute w-full h-full bg-dark top-0 left-0 z-[-1]"></span>
               <motion.span

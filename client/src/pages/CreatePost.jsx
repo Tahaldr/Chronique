@@ -3,8 +3,17 @@ import Transition from "../components/Transition";
 import CreatepostNote from "../components/PostComp/CreatePostComp/CreatepostNote";
 import CreatepostForm from "../components/PostComp/CreatePostComp/CreatepostForm";
 import { motion } from "framer-motion";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const CreatePost = () => {
+  const [type, setType] = useState(null);
+  const { postId } = useParams();
+
+  useEffect(() => {
+    setType(postId !== "null" ? "update" : "create");
+  }, [postId]);
+
   return (
     <>
       <div className="w-full h-full bg-darker">
@@ -25,7 +34,7 @@ const CreatePost = () => {
           <div className="w-full py-20 flex justify-between gap-7 px-5">
             {/* Main side - left */}
             <div className="w-full md:w-3/4">
-              <CreatepostForm type={type} />
+              <CreatepostForm postId={postId} type={type} />
             </div>
             {/* Note side - right */}
             <div className="w-1/4 hidden md:block">
