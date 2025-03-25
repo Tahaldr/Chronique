@@ -24,10 +24,10 @@ export const usePostStore = create((set, get) => ({
     }
   },
 
-  updatePost: async (newPost) => {
+  updatePost: async (postId, newPost) => {
     try {
       set({ loading: true });
-      const res = await axios.post("/post/updatepost", newPost);
+      const res = await axios.put(`/post/updatepost/${postId}`, newPost);
       set({ loading: false });
       const navigate = getGlobalNavigate();
       if (navigate) navigate("/");

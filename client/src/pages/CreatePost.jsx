@@ -5,6 +5,7 @@ import CreatepostForm from "../components/PostComp/CreatePostComp/CreatepostForm
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import ArrowScrollUp from "../components/Elements/ArrowScrollUp";
 
 const CreatePost = () => {
   const [type, setType] = useState(null);
@@ -16,6 +17,7 @@ const CreatePost = () => {
 
   return (
     <>
+      <ArrowScrollUp type="fixed" />
       <div className="w-full h-full bg-darker">
         <motion.div
           key="create-post-motion" // Ensure it re-renders properly

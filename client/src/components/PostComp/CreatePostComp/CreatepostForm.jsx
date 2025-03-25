@@ -159,7 +159,7 @@ const CreatepostForm = ({ postId, type }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    type === "create" ? createPost(post) : updatePost(post);
+    type === "create" ? createPost(post) : updatePost(postId, post);
   };
 
   return (
@@ -417,7 +417,13 @@ const CreatepostForm = ({ postId, type }) => {
         }`}
           type="submit"
         >
-          {loading ? <Loading size="3xl" color="dark" /> : <span>Publish</span>}
+          {loading ? (
+            <Loading size="3xl" color="dark" />
+          ) : (
+            <span>
+              {type === "update" && postId !== "null" ? "Edit" : "Publish"}
+            </span>
+          )}
         </button>
       </form>
     </div>
