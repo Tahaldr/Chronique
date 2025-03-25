@@ -22,6 +22,21 @@ export const usePostStore = create((set, get) => ({
     }
   },
 
+  updatePost: async (newPost) => {
+    try {
+      const res = await axios.post("/post/updatepost", newPost);
+      const navigate = getGlobalNavigate();
+      if (navigate) navigate("/");
+      return res.data.updatedPost;
+    } catch {
+      set({ loading: false });
+      showToast({
+        message: error.response?.data?.message || "Failed to update post",
+        type: "error",
+      });
+    }
+  },
+
   getAuthorPost: async (authorId) => {
     try {
       const res = await axios.get(`/auth/getuser/${authorId}`);

@@ -25,7 +25,7 @@ const CreatePost = () => {
           <div className="w-full py-20 flex justify-between gap-7 px-5">
             {/* Main side - left */}
             <div className="w-full md:w-3/4">
-              <CreatepostForm />
+              <CreatepostForm type={type} />
             </div>
             {/* Note side - right */}
             <div className="w-1/4 hidden md:block">
