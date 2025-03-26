@@ -74,6 +74,7 @@ function App() {
     type: "post",
     post: "",
     comment: "",
+    isVisible: false,
   });
   const [reasonDropDownShow, setReasonDropDownShow] = useState(false);
   const [reasonSelected, setReasonSelected] = useState("inappropriate");
@@ -156,7 +157,7 @@ function App() {
     <>
       {/* Report form */}
       <AnimatePresence>
-        {reportFormShow.post && (
+        {reportFormShow.isVisible && (
           <AdminDashboardContext.Provider value={adminDashboardContextValue}>
             <ReportForm />
           </AdminDashboardContext.Provider>

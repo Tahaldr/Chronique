@@ -46,7 +46,12 @@ const ReportForm = () => {
         reportFormRef.current &&
         !reportFormRef.current.contains(event.target)
       ) {
-        setReportFormShow(false);
+        setReportFormShow({
+          type: "post",
+          post: "",
+          comment: "",
+          isVisible: false,
+        });
       }
     };
 
@@ -66,29 +71,15 @@ const ReportForm = () => {
 
     const res = await createReport(updatedReport);
 
-    // if (res.newReport) {
-    //   setReportFormShow({
-    //     type: "post",
-    //     post: "",
-    //     comment: "",
-    //   });
-    // }
+    if (res.newReport) {
+      setReportFormShow({
+        type: "post",
+        post: "",
+        comment: "",
+        isVisible: false,
+      });
+    }
   };
-
-  useEffect(() => {
-    console.log(report);
-    // console.log(reportFormShow);
-  }, [report]);
-
-  //   useEffect(() => {
-  //     createReport({
-  //       comment: "",
-  //       description: "adadad",
-  //       post: "676a8e5b970b6b88d66e77aa",
-  //       reason: "inappropriate",
-  //       type: "post",
-  //     });
-  //   }, []);
 
   return (
     <motion.div
@@ -106,7 +97,14 @@ const ReportForm = () => {
         <div className="absolute top-5 right-5 cursor-pointer hover:text-light">
           <RxCross2
             className="text-2xl"
-            onClick={() => setReportFormShow(false)}
+            onClick={() =>
+              setReportFormShow({
+                type: "post",
+                post: "",
+                comment: "",
+                isVisible: false,
+              })
+            }
           />
         </div>
 

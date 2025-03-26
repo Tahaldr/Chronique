@@ -11,7 +11,7 @@ export const useReportStore = create((set) => ({
       set({ loading: true });
       const res = await axios.post('/report/createreport', report);
       set({ loading: false });
-      return res.data.report;
+      return res.data;
     } catch (error) {
       set({ loading: false });
       showToast({ message: error.response?.data?.message || 'Report failed', type: 'error' });

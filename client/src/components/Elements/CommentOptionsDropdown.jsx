@@ -66,6 +66,7 @@ const CommentOptionsDropdown = ({
               type: "comment",
               post: comment.post,
               comment: comment._id,
+              isVisible: true,
             });
             setCommentOptionsShow(null);
           }}

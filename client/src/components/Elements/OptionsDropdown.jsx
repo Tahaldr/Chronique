@@ -81,6 +81,7 @@ const OptionsDropdown = ({
               type: "post",
               post: postId,
               comment: "",
+              isVisible: true,
             });
             setOptionsShow(null);
           }}
