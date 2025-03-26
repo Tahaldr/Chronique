@@ -3,6 +3,8 @@ import { useUserStore } from "../../stores/useUserStore";
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { useContext } from "react";
+import { AdminDashboardContext } from "../../App";
 
 const CommentOptionsDropdown = ({
   comment,
@@ -12,6 +14,8 @@ const CommentOptionsDropdown = ({
   setCommentDeleteConfirm,
 }) => {
   const { user } = useUserStore();
+  const { setReportFormShow } = useContext(AdminDashboardContext);
+
   const isAuthor =
     user._id === comment.author._id ||
     user.user?._id === comment.author._id ||
@@ -55,7 +59,17 @@ const CommentOptionsDropdown = ({
 
       {/* Show Report button if the user is not the post author */}
       {!isAuthor && (
-        <button className="flex place-items-center gap-2 bg-darker hover:bg-red-800 tracking-wide py-1 px-4">
+        <button
+          className="flex place-items-center gap-2 bg-darker hover:bg-red-800 tracking-wide py-1 px-4"
+          onClick={() => {
+            setReportFormShow({
+              type: "comment",
+              post: comment.post,
+              comment: comment._id,
+            });
+            setCommentOptionsShow(null);
+          }}
+        >
           <span>
             <MdOutlineReport className="text-lg" />
           </span>
