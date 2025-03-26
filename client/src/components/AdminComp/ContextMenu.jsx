@@ -11,9 +11,10 @@ import PropTypes from 'prop-types';
 import showToast from '../Toast';
 import { motion } from 'framer-motion';
 
-const ContextMenu = ({ user, handleToggleAdmin, handleDeleteUser }) => {
+const ContextMenu = ({ user, handleToggleAdmin }) => {
   const menuRef = useRef();
-  const { setShowContextMenu, contextMenuPoints } = useContext(AdminDashboardContext);
+  const { setShowContextMenu, contextMenuPoints, setUserDeleteConfirm } =
+    useContext(AdminDashboardContext);
 
   // Handle copy user function
   const handleCopyUser = (user) => {
@@ -73,7 +74,11 @@ const ContextMenu = ({ user, handleToggleAdmin, handleDeleteUser }) => {
       text: 'Ban',
       icon: <TrashIcon className='size-5' />,
       func: () => {
-        handleDeleteUser(user?._id), setShowContextMenu(false);
+        setUserDeleteConfirm({
+          userId: user?._id,
+          confirming: true,
+        }),
+          setShowContextMenu(false);
       },
     },
   ];
@@ -141,7 +146,6 @@ const ContextMenu = ({ user, handleToggleAdmin, handleDeleteUser }) => {
 ContextMenu.propTypes = {
   user: PropTypes.object,
   handleToggleAdmin: PropTypes.func.isRequired,
-  handleDeleteUser: PropTypes.func.isRequired,
 };
 
 export default ContextMenu;
