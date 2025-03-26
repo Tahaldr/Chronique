@@ -82,7 +82,7 @@ const Login = () => {
                 value={formData.email}
                 onChange={(e) => {
                   setFormData({ ...formData, email: e.target.value });
-                  console.log(formData);
+                  // console.log(formData);
                 }}
                 className='py-3 px-4 bg-transparent text-dark font-smallMedium font-medium text-base outline-none
                focus:outline-none focus:border-dark border border-darkish placeholder:text-light hover:border-dark autofill:shadow-[inset_0_0_0px_1000px_rgb(204,204,204)]'
@@ -97,7 +97,7 @@ const Login = () => {
                   value={formData.password}
                   onChange={(e) => {
                     setFormData({ ...formData, password: e.target.value });
-                    console.log(formData);
+                    // console.log(formData);
                   }}
                   className='bg-transparent text-dark font-smallMedium font-medium text-base outline-none 
                focus:outline-none focus:border-dark placeholder:text-light autofill:shadow-[inset_0_0_0px_1000px_rgb(204,204,204)]'
