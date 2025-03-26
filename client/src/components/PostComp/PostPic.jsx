@@ -16,7 +16,7 @@ const PostPic = ({ type, post, index, i, page }) => {
               : `aspect-[8/5] h-fit ${post.postPic === 'null' ? 'w-full' : 'w-2/3'}`
           }
           ${page === 'details' && 'order-3'}
-          overflow-hidden cursor-pointer border-[1px] border-opacity-30 border-dark`}>
+          overflow-hidden cursor-pointer border-[1px] border-opacity-30 border-dark -z-10`}>
           <motion.img
             src={post.postPic}
             alt={post.title + ' image'}
