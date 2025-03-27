@@ -230,7 +230,7 @@ const TheChronicle = ({ activeCategory, searchFinalTerm }) => {
           <ArrowScrollUp type='sticky' />
 
           {searchSubmitted && data && data.pages && data.pages[0] && data.pages[0].posts && (
-            <h1 className='text-base font-smallMedium text-darker w-full px-6 py-4'>
+            <h1 className='text-base font-smallMedium text-darker w-full px-5 py-4'>
               {data.pages[0].posts.length > 0
                 ? `Search Results for "${searchFinalTerm}"`
                 : `No results found for "${searchFinalTerm}"`}
