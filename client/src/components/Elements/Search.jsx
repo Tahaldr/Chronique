@@ -6,13 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { AdminDashboardContext, PostContext } from '../../App';
 
-const Search = ({
-  type,
-  searchTerm,
-  setSearchTerm,
-  // searchFinalTerm,
-  setSearchFinalTerm,
-}) => {
+const Search = ({ type, searchTerm, setSearchTerm, setSearchFinalTerm }) => {
   const inputRef = useRef(null); // Reference to the input element
   const { setSearchSubmitted } = useContext(PostContext);
   const { setUsersSearch_Submitted } = useContext(AdminDashboardContext);
@@ -109,9 +103,6 @@ Search.propTypes = {
   type: PropTypes.string.isRequired,
   searchTerm: PropTypes.string.isRequired,
   setSearchTerm: PropTypes.func.isRequired,
-  // setSearchSubmitted: PropTypes.func.isRequired,
-  // searchSubmitted: PropTypes.bool.isRequired,
-  // searchFinalTerm: PropTypes.string.isRequired,
   setSearchFinalTerm: PropTypes.func.isRequired,
 };
 

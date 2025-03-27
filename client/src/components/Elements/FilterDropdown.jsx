@@ -4,8 +4,12 @@ import { AdminDashboardContext } from '../../App';
 import PropTypes from 'prop-types';
 
 const FilterDropdown = ({ setFilterClicked }) => {
-  const { filterUsers, setFilterUsers, setUsersSearch_FinalTerm, setUsersSearch_Submitted } =
-    useContext(AdminDashboardContext);
+  const {
+    // filterUsers,
+    setFilterUsers,
+    setUsersSearch_FinalTerm,
+    setUsersSearch_Submitted,
+  } = useContext(AdminDashboardContext);
   const filterRef = useRef(null);
   const filters = [
     {
@@ -60,7 +64,6 @@ const FilterDropdown = ({ setFilterClicked }) => {
               setUsersSearch_Submitted(false);
               setFilterUsers(filter.value);
               setFilterClicked(false);
-              console.log(filterUsers);
             }}>
             {filter.title}
           </button>

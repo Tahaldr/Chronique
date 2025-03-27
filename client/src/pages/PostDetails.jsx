@@ -126,7 +126,7 @@ const PostDetails = () => {
       <div className="w-full">
         <div className="flex flex-col items-center justify-center">
           {/* Back button & profile dropdown */}
-          <div className="relative w-full bg-red-300">
+          <div className="relative w-full">
             {/* Back button */}
             <div className="fixed z-40">
               <BackBtn />

@@ -632,7 +632,7 @@ export const makeAdmin = async (req, res) => {
       return res.status(403).json({ message: 'You cannot change your own admin status' });
     }
     if (id === ownerId) {
-      return res.status(403).json({ message: 'You cannot change the server owner’s admin status' });
+      return res.status(403).json({ message: "You cannot change the server owner's admin status" });
     }
 
     // Find user and toggle admin status
@@ -644,7 +644,7 @@ export const makeAdmin = async (req, res) => {
     user.idAdmin = !user.idAdmin;
     await user.save();
 
-    res.status(200).json({ message: `User admin status changed: ${user.idAdmin}` });
+    res.status(200).json({ message: `User admin status changed: ${user.idAdmin}`, user });
   } catch (error) {
     console.log('Error in makeAdmin controller', error.message);
     res.status(500).json({ message: error.message, location: 'makeAdmin' });

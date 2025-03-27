@@ -53,15 +53,10 @@ const Home = () => {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             setSearchFinalTerm={setSearchFinalTerm}
-            // searchFinalTerm={searchFinalTerm}
           />
           <HomeBody
             active={active}
             activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            setSearchFinalTerm={setSearchFinalTerm}
             searchFinalTerm={searchFinalTerm}
           />
         </div>

@@ -105,7 +105,7 @@ const UsersList = () => {
       );
 
       showToast({
-        message: res.idAdmin ? 'User is now an admin.' : 'User is no longer an admin.',
+        message: res.user.idAdmin ? 'User is now an admin.' : 'User is no longer an admin.',
         type: 'success',
       });
     } catch (error) {
@@ -305,10 +305,7 @@ const UsersList = () => {
           {/* Context menu */}
           <AnimatePresence>
             {showContextMenu && contextMenuUser && (
-              <ContextMenu
-                user={contextMenuUser}
-                handleToggleAdmin={handleToggleAdmin}
-              />
+              <ContextMenu user={contextMenuUser} handleToggleAdmin={handleToggleAdmin} />
             )}
           </AnimatePresence>
         </div>
