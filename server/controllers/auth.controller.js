@@ -572,7 +572,7 @@ export const deleteUser = async (req, res) => {
     await Comment.deleteMany({ author: id });
 
     // Delete reports where the user is the reporter
-    await Report.deleteMany({ reporter: id });
+    // await Report.deleteMany({ reporter: id });
 
     // Delete the user
     await User.findByIdAndDelete(id);

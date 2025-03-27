@@ -1,10 +1,10 @@
-import Post from "../models/post.model.js";
-import User from "../models/user.model.js";
-import Comment from "../models/comment.model.js";
-import cloudinary from "../lib/cloudinary.js";
-import redis from "../lib/redis.js";
-import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
+import Post from '../models/post.model.js';
+import User from '../models/user.model.js';
+import Comment from '../models/comment.model.js';
+import cloudinary from '../lib/cloudinary.js';
+import redis from '../lib/redis.js';
+import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 
 // export const createPost = async (req, res) => {
 //   try {
@@ -78,16 +78,13 @@ export const createPost = async (req, res) => {
 
     if (refreshToken) {
       try {
-        const decoded = jwt.verify(
-          refreshToken,
-          process.env.REFRESH_TOKEN_SECRET
-        );
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         userId = decoded.userId;
       } catch (error) {
-        return res.status(401).json({ message: "Not authorized, Login first" });
+        return res.status(401).json({ message: 'Not authorized, Login first' });
       }
     } else {
-      return res.status(401).json({ message: "Refresh token not found" });
+      return res.status(401).json({ message: 'Refresh token not found' });
     }
 
     const author = userId;
@@ -96,46 +93,46 @@ export const createPost = async (req, res) => {
     const authorFound = await User.findById(author);
 
     if (!authorFound) {
-      return res.status(404).json({ message: "Author not found" });
+      return res.status(404).json({ message: 'Author not found' });
     }
 
     // Get post image size and validate
     if (postPic) {
-      const imageSize = Buffer.byteLength(postPic, "base64");
+      const imageSize = Buffer.byteLength(postPic, 'base64');
       const ImageSizeMb = imageSize / 1024 / 1024;
       // console.log(ImageSizeMb, "Mbs");
       if (ImageSizeMb > 10) {
-        return res.status(400).json({ message: "Max image size is 10mb" });
+        return res.status(400).json({ message: 'Max image size is 10mb' });
       }
     }
 
     // Required fields validation
     if (!title) {
-      return res.status(400).json({ message: "Title is required" });
+      return res.status(400).json({ message: 'Title is required' });
     }
 
     if (!description) {
-      return res.status(400).json({ message: "Description is required" });
+      return res.status(400).json({ message: 'Description is required' });
     }
 
     if (!category) {
-      return res.status(400).json({ message: "Category is required" });
+      return res.status(400).json({ message: 'Category is required' });
     }
 
     if (!content) {
-      return res.status(400).json({ message: "Content is required" });
+      return res.status(400).json({ message: 'Content is required' });
     }
 
     // Upload image to cloudinary
     let cloundinaryResponse = null;
     if (postPic) {
       cloundinaryResponse = await cloudinary.uploader.upload(postPic, {
-        folder: "Chronique/posts",
+        folder: 'Chronique/posts',
       });
     }
 
     const newPost = await Post.create({
-      postPic: cloundinaryResponse?.secure_url || "null",
+      postPic: cloundinaryResponse?.secure_url || 'null',
       title,
       author,
       description,
@@ -144,10 +141,10 @@ export const createPost = async (req, res) => {
       tags,
     });
 
-    res.status(200).json({ message: "Post created successfully", newPost });
+    res.status(200).json({ message: 'Post created successfully', newPost });
   } catch (error) {
-    console.log("Error in createpost controller", error.message);
-    res.status(500).json({ message: error.message, location: "createpost" });
+    console.log('Error in createpost controller', error.message);
+    res.status(500).json({ message: error.message, location: 'createpost' });
   }
 };
 
@@ -160,7 +157,7 @@ export const getAllPosts = async (req, res) => {
     // Aggregation pipeline for sorting and pagination
     const posts = await Post.aggregate([
       {
-        $addFields: { likeCount: { $size: "$likes" } }, // Add a field for the count of likes
+        $addFields: { likeCount: { $size: '$likes' } }, // Add a field for the count of likes
       },
       {
         $sort: { likeCount: -1, createdAt: -1 }, // Sort by likeCount (desc) and createdAt (desc) as a secondary sort
@@ -186,8 +183,8 @@ export const getAllPosts = async (req, res) => {
       totalPages, // Return total pages
     });
   } catch (error) {
-    console.error("Error in getAllPosts controller:", error.message);
-    res.status(500).json({ message: error.message, location: "getAllPosts" });
+    console.error('Error in getAllPosts controller:', error.message);
+    res.status(500).json({ message: error.message, location: 'getAllPosts' });
   }
 };
 
@@ -199,12 +196,12 @@ export const getTopWriters = async (req, res) => {
     const topWriters = await Post.aggregate([
       // Unwind likes array to count individual likes
       {
-        $unwind: "$likes",
+        $unwind: '$likes',
       },
       // Group by author to sum all their likes
       {
         $group: {
-          _id: "$author", // Group by author ID
+          _id: '$author', // Group by author ID
           totalLikes: { $sum: 1 }, // Count likes
         },
       },
@@ -219,19 +216,19 @@ export const getTopWriters = async (req, res) => {
       // Optionally lookup author details (if needed)
       {
         $lookup: {
-          from: "users", // Replace with your actual user collection name
-          localField: "_id",
-          foreignField: "_id",
-          as: "authorDetails",
+          from: 'users', // Replace with your actual user collection name
+          localField: '_id',
+          foreignField: '_id',
+          as: 'authorDetails',
         },
       },
       // Optionally clean up authorDetails (if needed)
       {
         $project: {
           _id: 0,
-          authorId: "$_id",
+          authorId: '$_id',
           totalLikes: 1,
-          authorDetails: { $arrayElemAt: ["$authorDetails", 0] },
+          authorDetails: { $arrayElemAt: ['$authorDetails', 0] },
         },
       },
     ]);
@@ -241,8 +238,8 @@ export const getTopWriters = async (req, res) => {
       topWriters,
     });
   } catch (error) {
-    console.error("Error in getTopWriters controller:", error.message);
-    res.status(500).json({ message: error.message, location: "getTopWriters" });
+    console.error('Error in getTopWriters controller:', error.message);
+    res.status(500).json({ message: error.message, location: 'getTopWriters' });
   }
 };
 
@@ -254,7 +251,7 @@ export const getRecentPosts = async (req, res) => {
     // Build the aggregation pipeline
     const pipeline = [
       {
-        $addFields: { likeCount: { $size: "$likes" } }, // Add a field with the count of likes
+        $addFields: { likeCount: { $size: '$likes' } }, // Add a field with the count of likes
       },
       {
         $sort: { createdAt: -1 }, // Sort by creation date in descending order
@@ -269,14 +266,10 @@ export const getRecentPosts = async (req, res) => {
     // Execute the aggregation pipeline
     const posts = await Post.aggregate(pipeline);
 
-    res
-      .status(200)
-      .json({ message: `${posts.length} post(s) fetched successfully`, posts });
+    res.status(200).json({ message: `${posts.length} post(s) fetched successfully`, posts });
   } catch (error) {
-    console.error("Error in getRecentPosts controller:", error.message);
-    res
-      .status(500)
-      .json({ message: error.message, location: "getRecentPosts" });
+    console.error('Error in getRecentPosts controller:', error.message);
+    res.status(500).json({ message: error.message, location: 'getRecentPosts' });
   }
 };
 
@@ -299,7 +292,7 @@ export const getAuthorPosts = async (req, res) => {
         $match: { author: authorId }, // Ensure proper matching
       },
       {
-        $addFields: { likeCount: { $size: "$likes" } }, // Add a field for the count of likes
+        $addFields: { likeCount: { $size: '$likes' } }, // Add a field for the count of likes
       },
       {
         $sort: { createdAt: -1 }, // Sort by `createdAt` in descending order
@@ -325,10 +318,8 @@ export const getAuthorPosts = async (req, res) => {
       totalPages,
     });
   } catch (error) {
-    console.error("Error in getAuthorPosts controller:", error.message);
-    res
-      .status(500)
-      .json({ message: error.message, location: "getAuthorPosts" });
+    console.error('Error in getAuthorPosts controller:', error.message);
+    res.status(500).json({ message: error.message, location: 'getAuthorPosts' });
   }
 };
 
@@ -346,7 +337,7 @@ export const getCategoryPosts = async (req, res) => {
       },
       {
         $addFields: {
-          likeCount: { $size: "$likes" }, // Add a field for the length of the `likes` array
+          likeCount: { $size: '$likes' }, // Add a field for the length of the `likes` array
         },
       },
       {
@@ -374,10 +365,8 @@ export const getCategoryPosts = async (req, res) => {
       totalPages, // Return total pages
     });
   } catch (error) {
-    console.error("Error in getCategoryPosts controller:", error.message);
-    res
-      .status(500)
-      .json({ message: error.message, location: "getCategoryPosts" });
+    console.error('Error in getCategoryPosts controller:', error.message);
+    res.status(500).json({ message: error.message, location: 'getCategoryPosts' });
   }
 };
 
@@ -390,23 +379,23 @@ const extractKeywords = (text) => {
       ?.filter(
         (word) =>
           ![
-            "the",
-            "and",
-            "for",
-            "with",
-            "this",
-            "that",
-            "from",
-            "into",
-            "onto",
-            "your",
-            "their",
-            "which",
-            "what",
-            "where",
-            "when",
-            "how",
-            "why",
+            'the',
+            'and',
+            'for',
+            'with',
+            'this',
+            'that',
+            'from',
+            'into',
+            'onto',
+            'your',
+            'their',
+            'which',
+            'what',
+            'where',
+            'when',
+            'how',
+            'why',
           ].includes(word) // Remove common words
       ) || []
   );
@@ -418,32 +407,30 @@ export const getRelatedAuthorPosts = async (req, res) => {
     const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 posts
 
     const post = await Post.findById(postId).select(
-      "author title description tags category votes postPic"
+      'author title description tags category votes postPic'
     );
-    if (!post) return res.status(404).json({ message: "Post not found" });
+    if (!post) return res.status(404).json({ message: 'Post not found' });
 
     const { author, title, description, tags, postPic } = post;
     const authorId = mongoose.Types.ObjectId.isValid(author)
       ? new mongoose.Types.ObjectId(author)
       : author;
-    const keywords = [
-      ...new Set([...extractKeywords(title), ...extractKeywords(description)]),
-    ];
+    const keywords = [...new Set([...extractKeywords(title), ...extractKeywords(description)])];
 
     let relatedPosts = await Post.find({
       _id: { $ne: postId },
       author: authorId,
       $or: [
         { tags: { $in: tags } },
-        { title: { $regex: keywords.join("|"), $options: "i" } },
-        { description: { $regex: keywords.join("|"), $options: "i" } },
+        { title: { $regex: keywords.join('|'), $options: 'i' } },
+        { description: { $regex: keywords.join('|'), $options: 'i' } },
       ],
     })
       .sort({ createdAt: -1 })
       .limit(limit);
 
     // Filter out posts where postPic is null
-    relatedPosts = relatedPosts.filter((post) => post.postPic !== "null");
+    relatedPosts = relatedPosts.filter((post) => post.postPic !== 'null');
 
     if (relatedPosts.length < limit) {
       const remaining = limit - relatedPosts.length;
@@ -475,10 +462,8 @@ export const getRelatedAuthorPosts = async (req, res) => {
       posts: relatedPosts,
     });
   } catch (error) {
-    console.error("Error in getRelatedAuthorPosts:", error.message);
-    res
-      .status(500)
-      .json({ message: error.message, location: "getRelatedAuthorPosts" });
+    console.error('Error in getRelatedAuthorPosts:', error.message);
+    res.status(500).json({ message: error.message, location: 'getRelatedAuthorPosts' });
   }
 };
 
@@ -486,16 +471,16 @@ export const getPost = async (req, res) => {
   try {
     const { postId } = req.params;
     const post = await Post.findById(postId);
-    res.status(200).json({ message: "Post fetched successfully", post });
+    res.status(200).json({ message: 'Post fetched successfully', post });
   } catch (error) {
-    console.log("Error in getpost controller", error.message);
-    res.status(500).json({ message: error.message, location: "getpost" });
+    console.log('Error in getpost controller', error.message);
+    res.status(500).json({ message: error.message, location: 'getpost' });
   }
 };
 
 export const searchPosts = async (req, res) => {
   try {
-    const term = req.query.term || ""; // Default to an empty term
+    const term = req.query.term || ''; // Default to an empty term
     const page = parseInt(req.query.page, 10) || 1; // Default to page 1
     const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 posts per page
     const skip = (page - 1) * limit;
@@ -504,9 +489,9 @@ export const searchPosts = async (req, res) => {
     const matchStage = term
       ? {
           $or: [
-            { title: { $regex: term, $options: "i" } },
-            { description: { $regex: term, $options: "i" } },
-            { tags: { $regex: term, $options: "i" } },
+            { title: { $regex: term, $options: 'i' } },
+            { description: { $regex: term, $options: 'i' } },
+            { tags: { $regex: term, $options: 'i' } },
           ],
         }
       : {};
@@ -514,7 +499,7 @@ export const searchPosts = async (req, res) => {
     // Aggregation pipeline
     const posts = await Post.aggregate([
       { $match: matchStage }, // Match posts by the search term
-      { $addFields: { likeCount: { $size: "$likes" } } }, // Add a field for the count of likes
+      { $addFields: { likeCount: { $size: '$likes' } } }, // Add a field for the count of likes
       { $sort: { likeCount: -1, createdAt: -1 } }, // Sort by likes (desc) and creation date (desc)
       { $skip: skip }, // Skip documents for pagination
       { $limit: limit }, // Limit the number of documents
@@ -533,8 +518,8 @@ export const searchPosts = async (req, res) => {
       totalPages, // Return total pages
     });
   } catch (error) {
-    console.error("Error in searchPosts controller:", error.message);
-    res.status(500).json({ message: error.message, location: "searchPosts" });
+    console.error('Error in searchPosts controller:', error.message);
+    res.status(500).json({ message: error.message, location: 'searchPosts' });
   }
 };
 
@@ -546,38 +531,43 @@ export const deletePost = async (req, res) => {
     const post = await Post.findByIdAndDelete(postId);
 
     if (!post) {
-      return res.status(404).json({ message: "Post not found" });
+      return res.status(404).json({ message: 'Post not found' });
     }
 
     // Delete all comments related to the post and get the count
     const deletedCount = await Comment.deleteMany({ post: postId });
 
     res.status(200).json({
-      message: "Post and related comments deleted successfully",
+      message: 'Post and related comments deleted successfully',
       post,
       deletedComments: deletedCount,
     });
   } catch (error) {
-    console.log("Error in deletePost controller", error.message);
-    res.status(500).json({ message: error.message, location: "deletePost" });
+    console.log('Error in deletePost controller', error.message);
+    res.status(500).json({ message: error.message, location: 'deletePost' });
   }
 };
 
 export const deleteAuthorPosts = async (req, res) => {
   try {
     const { author } = req.params;
+
+    // Find all posts by the author
     const posts = await Post.find({ author });
-    for (const post of posts) {
-      await Post.findByIdAndDelete(post._id);
-    }
-    res
-      .status(200)
-      .json({ message: posts.length + " Author posts deleted successfully" });
+    const postIds = posts.map((post) => post._id);
+
+    // Delete all found posts
+    await Post.deleteMany({ author });
+
+    // Delete all comments related to the author's posts
+    await Comment.deleteMany({ post: { $in: postIds } });
+
+    res.status(200).json({
+      message: `${posts.length} author posts and their comments deleted successfully`,
+    });
   } catch (error) {
-    console.log("Error in deleteauthorposts controller", error.message);
-    res
-      .status(500)
-      .json({ message: error.message, location: "deleteauthorposts" });
+    console.log('Error in deleteAuthorPosts controller', error.message);
+    res.status(500).json({ message: error.message, location: 'deleteAuthorPosts' });
   }
 };
 
@@ -589,14 +579,10 @@ export const deleteAllPosts = async (req, res) => {
     for (const post of posts) {
       await Post.findByIdAndDelete(post._id);
     }
-    res
-      .status(200)
-      .json({ message: posts.length + " post(s) deleted successfully" });
+    res.status(200).json({ message: posts.length + ' post(s) deleted successfully' });
   } catch (error) {
-    console.log("Error in deleteallposts controller", error.message);
-    res
-      .status(500)
-      .json({ message: error.message, location: "deleteallposts" });
+    console.log('Error in deleteallposts controller', error.message);
+    res.status(500).json({ message: error.message, location: 'deleteallposts' });
   }
 };
 
@@ -605,7 +591,6 @@ export const updatePost = async (req, res) => {
     const { postId } = req.params;
     const { postPic, title, description, content, category, tags } = req.body;
     console.log(req.body);
-    
 
     // Get user id from token
     const refreshToken = req.cookies.refreshToken;
@@ -613,54 +598,46 @@ export const updatePost = async (req, res) => {
 
     if (refreshToken) {
       try {
-        const decoded = jwt.verify(
-          refreshToken,
-          process.env.REFRESH_TOKEN_SECRET
-        );
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         userId = decoded.userId;
       } catch (error) {
-        return res.status(401).json({ message: "Not authorized, Login first" });
+        return res.status(401).json({ message: 'Not authorized, Login first' });
       }
     } else {
-      return res.status(401).json({ message: "Refresh token not found" });
+      return res.status(401).json({ message: 'Refresh token not found' });
     }
 
     // Check if post exists
     const postFound = await Post.findById(postId);
     if (!postFound) {
-      return res.status(404).json({ message: "Post not found" });
+      return res.status(404).json({ message: 'Post not found' });
     }
 
     // Check if the user is the author
     if (postFound.author.toString() !== userId) {
-      return res
-        .status(403)
-        .json({ message: "Not authorized to update this post" });
+      return res.status(403).json({ message: 'Not authorized to update this post' });
     }
 
     // Validate image size
     if (postPic) {
-      const imageSize = Buffer.byteLength(postPic, "base64");
+      const imageSize = Buffer.byteLength(postPic, 'base64');
       const imageSizeMb = imageSize / 1024 / 1024;
       if (imageSizeMb > 10) {
-        return res.status(400).json({ message: "Max image size is 10MB" });
+        return res.status(400).json({ message: 'Max image size is 10MB' });
       }
     }
 
     // Required fields validation
-    if (!title) return res.status(400).json({ message: "Title is required" });
-    if (!description)
-      return res.status(400).json({ message: "Description is required" });
-    if (!content)
-      return res.status(400).json({ message: "Content is required" });
-    if (!category)
-      return res.status(400).json({ message: "Category is required" });
+    if (!title) return res.status(400).json({ message: 'Title is required' });
+    if (!description) return res.status(400).json({ message: 'Description is required' });
+    if (!content) return res.status(400).json({ message: 'Content is required' });
+    if (!category) return res.status(400).json({ message: 'Category is required' });
 
     // Upload image to Cloudinary if provided
     let cloudinaryResponse = null;
     if (postPic) {
       cloudinaryResponse = await cloudinary.uploader.upload(postPic, {
-        folder: "Chronique/posts",
+        folder: 'Chronique/posts',
       });
     }
 
@@ -678,10 +655,10 @@ export const updatePost = async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json({ message: "Post updated successfully", updatedPost });
+    res.status(200).json({ message: 'Post updated successfully', updatedPost });
   } catch (error) {
-    console.log("Error in updatePost controller", error.message);
-    res.status(500).json({ message: error.message, location: "updatePost" });
+    console.log('Error in updatePost controller', error.message);
+    res.status(500).json({ message: error.message, location: 'updatePost' });
   }
 };
 
@@ -691,35 +668,30 @@ export const likePost = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
 
     if (refreshToken) {
-      const decoded = jwt.verify(
-        refreshToken,
-        process.env.REFRESH_TOKEN_SECRET
-      );
+      const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
       const storedToken = await redis.get(`refreshToken:${decoded.userId}`);
       if (storedToken !== refreshToken) {
-        return res.status(401).json({ message: "Invalid refresh token" });
+        return res.status(401).json({ message: 'Invalid refresh token' });
       }
 
       const post = await Post.findById(postId);
       if (!post) {
-        return res.status(404).json({ message: "Post not found" });
+        return res.status(404).json({ message: 'Post not found' });
       }
 
       // Check if the user has already liked the post
       if (post.likes.includes(decoded.userId)) {
-        return res
-          .status(400)
-          .json({ message: "You have already liked this post" });
+        return res.status(400).json({ message: 'You have already liked this post' });
       }
 
       post.likes.push(decoded.userId);
       await post.save();
 
-      res.status(200).json({ message: "Post liked successfully", post });
+      res.status(200).json({ message: 'Post liked successfully', post });
     }
   } catch (error) {
-    console.log("Error in likepost controller", error.message);
-    res.status(500).json({ message: error.message, location: "likepost" });
+    console.log('Error in likepost controller', error.message);
+    res.status(500).json({ message: error.message, location: 'likepost' });
   }
 };
 
@@ -729,37 +701,30 @@ export const unlikePost = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
 
     if (refreshToken) {
-      const decoded = jwt.verify(
-        refreshToken,
-        process.env.REFRESH_TOKEN_SECRET
-      );
+      const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
       const storedToken = await redis.get(`refreshToken:${decoded.userId}`);
       if (storedToken !== refreshToken) {
-        return res.status(401).json({ message: "Invalid refresh token" });
+        return res.status(401).json({ message: 'Invalid refresh token' });
       }
 
       const post = await Post.findById(postId);
       if (!post) {
-        return res.status(404).json({ message: "Post not found" });
+        return res.status(404).json({ message: 'Post not found' });
       }
 
       // Check if the user has already didnt like the post yet
       if (!post.likes.includes(decoded.userId)) {
-        return res
-          .status(400)
-          .json({ message: "You have not liked this post yet" });
+        return res.status(400).json({ message: 'You have not liked this post yet' });
       }
 
-      post.likes = post.likes.filter(
-        (like) => like.toString() !== decoded.userId.toString()
-      );
+      post.likes = post.likes.filter((like) => like.toString() !== decoded.userId.toString());
       await post.save();
 
-      res.status(200).json({ message: "Post unliked successfully", post });
+      res.status(200).json({ message: 'Post unliked successfully', post });
     }
   } catch (error) {
-    console.log("Error in unlikepost controller", error.message);
-    res.status(500).json({ message: error.message, location: "unlikepost" });
+    console.log('Error in unlikepost controller', error.message);
+    res.status(500).json({ message: error.message, location: 'unlikepost' });
   }
 };
 
@@ -769,55 +734,45 @@ export const siteStats = async (req, res) => {
 
     // Get total users
     const totalUsers = await User.countDocuments();
-    const users15DaysAgo = new Date(
-      currentDate.setDate(currentDate.getDate() - 15)
-    );
+    const users15DaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 15));
 
     // Get users created in the last 15 days
     const recentUsers = await User.countDocuments({
       createdAt: { $gte: users15DaysAgo },
     });
-    const userCreationPercentage = totalUsers
-      ? ((recentUsers / totalUsers) * 100).toFixed(2)
-      : 0;
+    const userCreationPercentage = totalUsers ? ((recentUsers / totalUsers) * 100).toFixed(2) : 0;
 
     // Get total posts
     const totalPosts = await Post.countDocuments();
-    const posts15DaysAgo = new Date(
-      new Date().setDate(new Date().getDate() - 15)
-    );
+    const posts15DaysAgo = new Date(new Date().setDate(new Date().getDate() - 15));
 
     // Get posts created in the last 15 days
     const recentPosts = await Post.countDocuments({
       createdAt: { $gte: posts15DaysAgo },
     });
-    const postCreationPercentage = totalPosts
-      ? ((recentPosts / totalPosts) * 100).toFixed(2)
-      : 0;
+    const postCreationPercentage = totalPosts ? ((recentPosts / totalPosts) * 100).toFixed(2) : 0;
 
     // Get total admins
     const totalAdmins = await User.countDocuments({ idAdmin: true });
 
     // Get active users (users with posts or comments in the last 30 days)
-    const thirtyDaysAgo = new Date(
-      currentDate.setDate(currentDate.getDate() - 30)
-    );
+    const thirtyDaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 30));
 
     const activeUsers = await User.aggregate([
       {
         $lookup: {
-          from: "posts",
-          localField: "_id",
-          foreignField: "author",
-          as: "posts",
+          from: 'posts',
+          localField: '_id',
+          foreignField: 'author',
+          as: 'posts',
         },
       },
       {
         $lookup: {
-          from: "comments",
-          localField: "_id",
-          foreignField: "author",
-          as: "comments",
+          from: 'comments',
+          localField: '_id',
+          foreignField: 'author',
+          as: 'comments',
         },
       },
       {
@@ -825,26 +780,23 @@ export const siteStats = async (req, res) => {
           _id: 1,
           posts: {
             $filter: {
-              input: "$posts",
-              as: "post",
-              cond: { $gte: ["$$post.createdAt", thirtyDaysAgo] },
+              input: '$posts',
+              as: 'post',
+              cond: { $gte: ['$$post.createdAt', thirtyDaysAgo] },
             },
           },
           comments: {
             $filter: {
-              input: "$comments",
-              as: "comment",
-              cond: { $gte: ["$$comment.createdAt", thirtyDaysAgo] },
+              input: '$comments',
+              as: 'comment',
+              cond: { $gte: ['$$comment.createdAt', thirtyDaysAgo] },
             },
           },
         },
       },
       {
         $match: {
-          $or: [
-            { "posts.0": { $exists: true } },
-            { "comments.0": { $exists: true } },
-          ],
+          $or: [{ 'posts.0': { $exists: true } }, { 'comments.0': { $exists: true } }],
         },
       },
     ]);
@@ -859,7 +811,7 @@ export const siteStats = async (req, res) => {
       totalUsers > 0 ? ((inactiveUserCount / totalUsers) * 100).toFixed(2) : 0;
 
     res.status(200).json({
-      message: "Site stats retrieved successfully",
+      message: 'Site stats retrieved successfully',
       stats: {
         totalUsers,
         usersCreatedIn15Days: recentUsers,
@@ -874,7 +826,7 @@ export const siteStats = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log("Error in siteStats controller", error.message);
-    res.status(500).json({ message: error.message, location: "siteStats" });
+    console.log('Error in siteStats controller', error.message);
+    res.status(500).json({ message: error.message, location: 'siteStats' });
   }
 };

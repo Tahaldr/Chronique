@@ -16,18 +16,11 @@ const PostPic = ({ type, post, index, i, page }) => {
               : `aspect-[8/5] h-fit ${post.postPic === 'null' ? 'w-full' : 'w-2/3'}`
           }
           ${page === 'details' && 'order-3'}
-          overflow-hidden cursor-pointer border-[1px] border-opacity-30 border-dark -z-10`}>
+          overflow-hidden cursor-pointer border-[1px] border-opacity-30 border-dark`}>
           <motion.img
             src={post.postPic}
             alt={post.title + ' image'}
-            className='w-full h-full object-cover'
-            whileHover={{
-              scale: 1.03,
-              transition: {
-                duration: 0.3,
-                ease: 'easeInOut',
-              },
-            }}
+            className='w-full h-full object-cover '
           />
         </div>
       )}
