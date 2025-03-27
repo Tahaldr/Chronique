@@ -46,11 +46,11 @@ const Search = ({ type, searchTerm, setSearchTerm, setSearchFinalTerm }) => {
   return (
     <div
       className={` flex justify-center items-center ${
-        type === 'admin' ? 'w-full h-9' : 'w-full md:w-1/3 order-1 md:order-2 h-1/2 md:h-14'
+        type === 'admin' ? 'w-full h-9' : 'px-4 w-full md:w-1/3 order-1 md:order-2 h-1/2 md:h-14'
       }`}>
       <div
         className={`flex items-center justify-between bg-lightish px-4 rounded-sm ${
-          type === 'admin' ? 'w-full h-full' : 'w-[90%] h-[67%]'
+          type === 'admin' ? 'w-full h-full' : 'w-full h-[67%]'
         }`}>
         <form className='flex items-center h-full w-full' onSubmit={handleSearch}>
           <button type='submit'>

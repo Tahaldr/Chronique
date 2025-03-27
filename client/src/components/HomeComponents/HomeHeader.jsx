@@ -11,7 +11,7 @@ const HomeHeader = ({ navY }) => {
     // THE BIGGEST PARENT DIV HAD h-auto I DID MAKE IT h-24 md:h-28
     // THE SIDE SECTION HAD py-6 DID MAKE IT h-full both
     <motion.div
-      className="w-full h-24 md:h-28 flex place-items-center "
+      className="w-full h-24 md:h-28 flex place-items-center"
       style={{ y: navY }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
