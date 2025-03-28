@@ -95,6 +95,7 @@ export const useUserStore = create((set, get) => ({
     try {
       const res = await axios.get("auth/profile");
       set({ user: res.data, checkingAuth: false });
+      // return res.data;
     } catch (error) {
       console.log("Error in checkAuth", error.message);
       set({ user: null, checkingAuth: false });
@@ -116,8 +117,14 @@ export const useUserStore = create((set, get) => ({
       console.log("Refresh token successful:", res.data);
       return res.data;
     } catch (error) {
-      showToast({ message: "Refresh token failed", type: "error" });
-      console.log("Error in refreshToken", error.message);
+      showToast({
+        message: error?.response?.data?.message || "Refresh token failed",
+        type: "error",
+      });
+      console.log(
+        "Error in refreshToken",
+        error?.response?.data || error.message
+      );
       set({ user: null, checkingAuth: false });
     }
   },
@@ -203,7 +210,7 @@ export const useUserStore = create((set, get) => ({
   },
 }));
 
-// // Axios interceptor for token refresh
+// Axios interceptor for token refresh
 let refreshPromise = null;
 
 axios.interceptors.response.use(
