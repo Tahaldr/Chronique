@@ -1,8 +1,8 @@
-import { create } from "zustand";
-import axios from "../lib/axios";
-import showToast from "../components/Toast";
-import { useCommentStore } from "./useCommentStore";
-import { getGlobalNavigate } from "../lib/navigation.js";
+import { create } from 'zustand';
+import axios from '../lib/axios';
+import showToast from '../components/Toast';
+import { useCommentStore } from './useCommentStore';
+import { getGlobalNavigate } from '../lib/navigation.js';
 
 export const usePostStore = create((set, get) => ({
   loading: false,
@@ -10,16 +10,16 @@ export const usePostStore = create((set, get) => ({
   createPost: async (post) => {
     try {
       set({ loading: true });
-      const res = await axios.post("/post/createpost", post);
+      const res = await axios.post('/post/createpost', post);
       set({ loading: false });
       const navigate = getGlobalNavigate();
-      if (navigate) navigate("/");
+      if (navigate) navigate('/');
       return res.data.post;
     } catch (error) {
       set({ loading: false });
       showToast({
-        message: error.response?.data?.message || "Failed to create post",
-        type: "error",
+        message: error.response?.data?.message || 'Failed to create post',
+        type: 'error',
       });
     }
   },
@@ -30,13 +30,13 @@ export const usePostStore = create((set, get) => ({
       const res = await axios.put(`/post/updatepost/${postId}`, newPost);
       set({ loading: false });
       const navigate = getGlobalNavigate();
-      if (navigate) navigate("/");
+      if (navigate) navigate('/');
       return res.data.updatedPost;
-    } catch {
+    } catch (error) {
       set({ loading: false });
       showToast({
-        message: error.response?.data?.message || "Failed to update post",
-        type: "error",
+        message: error.response?.data?.message || 'Failed to update post',
+        type: 'error',
       });
     }
   },
@@ -46,9 +46,7 @@ export const usePostStore = create((set, get) => ({
       const res = await axios.get(`/auth/getuser/${authorId}`);
       return res.data.user;
     } catch (error) {
-      throw new Error(
-        error.response?.data?.message || "Failed to fetch author's posts"
-      );
+      throw new Error(error.response?.data?.message || "Failed to fetch author's posts");
     }
   },
 
@@ -79,9 +77,7 @@ export const usePostStore = create((set, get) => ({
 
   getPopularPosts: async (page = 1, limit = 10) => {
     try {
-      const res = await axios.get(
-        `/post/getallposts?page=${page}&limit=${limit}`
-      );
+      const res = await axios.get(`/post/getallposts?page=${page}&limit=${limit}`);
       const posts = res.data.posts;
 
       // Fetch author data and comments length for each post
@@ -89,9 +85,7 @@ export const usePostStore = create((set, get) => ({
         posts.map(async (post) => {
           try {
             const author = await get().getAuthorPost(post.author);
-            const comments = await useCommentStore
-              .getState()
-              .getComments(post._id);
+            const comments = await useCommentStore.getState().getComments(post._id);
             return { ...post, author, comments: comments.comments.length };
           } catch (error) {
             console.log(error);
@@ -124,9 +118,7 @@ export const usePostStore = create((set, get) => ({
 
   getCategoryPosts: async (category, page = 1, limit = 10) => {
     try {
-      const res = await axios.get(
-        `/post/getcategoryposts/${category}?page=${page}&limit=${limit}`
-      );
+      const res = await axios.get(`/post/getcategoryposts/${category}?page=${page}&limit=${limit}`);
       const posts = res.data.posts;
 
       // Fetch author data and comments length for each post
@@ -134,9 +126,7 @@ export const usePostStore = create((set, get) => ({
         posts.map(async (post) => {
           try {
             const author = await get().getAuthorPost(post.author);
-            const comments = await useCommentStore
-              .getState()
-              .getComments(post._id);
+            const comments = await useCommentStore.getState().getComments(post._id);
             return { ...post, author, comments: comments.comments.length };
           } catch (error) {
             console.log(error);
@@ -166,9 +156,7 @@ export const usePostStore = create((set, get) => ({
         posts.map(async (post) => {
           try {
             const author = await get().getAuthorPost(post.author);
-            const comments = await useCommentStore
-              .getState()
-              .getComments(post._id);
+            const comments = await useCommentStore.getState().getComments(post._id);
             return { ...post, author, comments: comments.comments.length };
           } catch (error) {
             console.log(error);
@@ -190,9 +178,7 @@ export const usePostStore = create((set, get) => ({
 
   getAuthorPosts: async (authorId, page = 1, limit = 10) => {
     try {
-      const res = await axios.get(
-        `/post/getauthorposts/${authorId}?page=${page}&limit=${limit}`
-      );
+      const res = await axios.get(`/post/getauthorposts/${authorId}?page=${page}&limit=${limit}`);
       const posts = res.data.posts;
 
       // Fetch author data and comments length for each post
@@ -200,9 +186,7 @@ export const usePostStore = create((set, get) => ({
         posts.map(async (post) => {
           try {
             const author = await get().getAuthorPost(post.author);
-            const comments = await useCommentStore
-              .getState()
-              .getComments(post._id);
+            const comments = await useCommentStore.getState().getComments(post._id);
             return { ...post, author, comments: comments.comments.length };
           } catch (error) {
             console.log(error);
@@ -224,9 +208,7 @@ export const usePostStore = create((set, get) => ({
   getRelatedAuthorPosts: async (postId, limit = 7) => {
     try {
       set({ loading: true });
-      const res = await axios.get(
-        `/post/getrelatedauthorposts/${postId}?limit=${limit}`
-      );
+      const res = await axios.get(`/post/getrelatedauthorposts/${postId}?limit=${limit}`);
 
       const posts = res.data.posts;
 
@@ -235,9 +217,7 @@ export const usePostStore = create((set, get) => ({
         posts.map(async (post) => {
           try {
             const author = await get().getAuthorPost(post.author);
-            const comments = await useCommentStore
-              .getState()
-              .getComments(post._id);
+            const comments = await useCommentStore.getState().getComments(post._id);
             return { ...post, author, comments: comments.comments.length };
           } catch (error) {
             console.log(error);
@@ -260,9 +240,7 @@ export const usePostStore = create((set, get) => ({
   searchPosts: async (term, page = 1, limit = 10) => {
     if (!term) return;
     try {
-      const res = await axios.get(
-        `/post/searchposts?term=${term}&page=${page}&limit=${limit}`
-      );
+      const res = await axios.get(`/post/searchposts?term=${term}&page=${page}&limit=${limit}`);
       const posts = res.data.posts;
 
       // Fetch author data and comments length for each post
@@ -270,9 +248,7 @@ export const usePostStore = create((set, get) => ({
         posts.map(async (post) => {
           try {
             const author = await get().getAuthorPost(post.author);
-            const comments = await useCommentStore
-              .getState()
-              .getComments(post._id);
+            const comments = await useCommentStore.getState().getComments(post._id);
             return { ...post, author, comments: comments.comments.length };
           } catch (error) {
             console.log(error);
@@ -283,7 +259,7 @@ export const usePostStore = create((set, get) => ({
 
       return {
         ...res.data,
-        type: "search",
+        type: 'search',
         posts: postsWithAuthorsComments,
       };
     } catch (error) {
@@ -337,8 +313,8 @@ export const usePostStore = create((set, get) => ({
     } catch (error) {
       console.log(error);
       showToast({
-        message: error.response?.data?.message || "Failed to upvote the post",
-        type: "error",
+        message: error.response?.data?.message || 'Failed to upvote the post',
+        type: 'error',
       });
       throw error;
     }
@@ -352,8 +328,8 @@ export const usePostStore = create((set, get) => ({
       console.log(error);
       // if no refrech token so the message says to login
       showToast({
-        message: error.response?.data?.message || "Failed to downvote the post",
-        type: "error",
+        message: error.response?.data?.message || 'Failed to downvote the post',
+        type: 'error',
       });
       throw error;
     }
