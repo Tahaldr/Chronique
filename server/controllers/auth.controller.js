@@ -207,7 +207,7 @@ export const login = async (req, res) => {
 
     // Direct password comparison
     if (userFound.password !== password) {
-      return res.status(401).json({ message: 'Invalid password' });
+      return res.status(400).json({ message: 'Invalid password' });
     }
 
     // Generate tokens

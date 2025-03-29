@@ -4,7 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import connectDB from './lib/db.js';
 import bodyParser from 'body-parser';
-// import path from "path";
+import path from 'path';
 
 import authRoutes from './routes/auth.route.js';
 import postRoutes from './routes/post.route.js';
@@ -15,6 +15,9 @@ const PORT = process.env.PORT || 5000;
 dotenv.config();
 
 const app = express();
+
+// Serve static assets if in production
+const __dirname = path.resolve();
 
 // CORS configuration
 const corsOptions = {
@@ -39,6 +42,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api/report', reportRoutes);
+
+if (process.end.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/client/dist')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'dist', 'index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log('Server is running on http://localhost:' + PORT);
