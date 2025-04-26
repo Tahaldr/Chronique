@@ -71,7 +71,7 @@ const UsersList = () => {
 
   const handleToggleAdmin = async (userId) => {
     try {
-      const ownerId = '67e1e4243797128f37393189';
+      const ownerId = '680d445b9d6b1d566e84c148';
 
       if (userId === ownerId) {
         return showToast({
