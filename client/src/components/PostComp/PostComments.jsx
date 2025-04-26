@@ -1,34 +1,26 @@
-import PropTypes from "prop-types";
-import CommentForm from "./commentsComp/CommentForm";
-import Comment from "./commentsComp/Comment";
-import { useCommentStore } from "../../stores/useCommentStore";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import Loading from "../Loading";
-import showToast from "../Toast";
-import { useUserStore } from "../../stores/useUserStore";
-import { useContext, useEffect } from "react";
-import { useInView } from "react-intersection-observer";
-import ConfirmWindow from "../Elements/ConfirmWindow";
-import { CommentContext } from "../../App";
-import formatNumber from "../../lib/formatNumber";
+import PropTypes from 'prop-types';
+import CommentForm from './commentsComp/CommentForm';
+import Comment from './commentsComp/Comment';
+import { useCommentStore } from '../../stores/useCommentStore';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import Loading from '../Loading';
+import showToast from '../Toast';
+import { useUserStore } from '../../stores/useUserStore';
+import { useContext, useEffect } from 'react';
+import { useInView } from 'react-intersection-observer';
+import ConfirmWindow from '../Elements/ConfirmWindow';
+import { CommentContext } from '../../App';
+import formatNumber from '../../lib/formatNumber';
 
 const PostComments = ({ PostId, type }) => {
-  const {
-    getComments,
-    createComment,
-    likeComment,
-    unlikeComment,
-    deleteComment,
-  } = useCommentStore();
+  const { getComments, createComment, likeComment, unlikeComment, deleteComment } =
+    useCommentStore();
   const { ref, inView } = useInView();
   const queryClient = useQueryClient();
   const { user } = useUserStore();
 
-  const {
-    commentDeleteConfirm,
-    setCommentDeleteConfirm,
-    setCommentSidebarOpen,
-  } = useContext(CommentContext);
+  const { commentDeleteConfirm, setCommentDeleteConfirm, setCommentSidebarOpen } =
+    useContext(CommentContext);
 
   // const commentContext = useContext(CommentContext) || {}; // Prevent null error
   // const { commentDeleteConfirm = {}, setCommentDeleteConfirm = () => {} } =
@@ -36,8 +28,7 @@ const PostComments = ({ PostId, type }) => {
 
   // console.log(getComments(PostId, 10, 1));
 
-  const queryKey =
-    type === "mini" ? ["comments-mini", PostId] : ["comments", PostId];
+  const queryKey = type === 'mini' ? ['comments-mini', PostId] : ['comments', PostId];
 
   const {
     data,
@@ -51,7 +42,7 @@ const PostComments = ({ PostId, type }) => {
   } = useInfiniteQuery({
     queryKey,
     queryFn: ({ pageParam = 1 }) => {
-      return getComments(PostId, type === "mini" ? 3 : 10, pageParam);
+      return getComments(PostId, type === 'mini' ? 3 : 10, pageParam);
     },
     getNextPageParam: (lastPage, pages) => {
       if (pages.length < lastPage.totalPages) {
@@ -70,15 +61,14 @@ const PostComments = ({ PostId, type }) => {
       const newComment = data.comment;
 
       if (!newComment || !newComment._id) {
-        console.error("Invalid comment data:", newComment);
-        showToast({ message: "Failed to add comment.", type: "error" });
+        console.error('Invalid comment data:', newComment);
+        showToast({ message: 'Failed to add comment.', type: 'error' });
         return;
       }
 
-      console.log("New Comment:", newComment);
+      console.log('New Comment:', newComment);
 
-      const queryKey =
-        type === "mini" ? ["comments-mini", PostId] : ["comments", PostId];
+      const queryKey = type === 'mini' ? ['comments-mini', PostId] : ['comments', PostId];
 
       queryClient.setQueryData(queryKey, (oldData) => {
         if (!oldData) return oldData;
@@ -98,10 +88,10 @@ const PostComments = ({ PostId, type }) => {
         };
       });
 
-      showToast({ message: "Comment added successfully.", type: "success" });
+      showToast({ message: 'Comment added successfully.', type: 'success' });
     } catch (error) {
-      console.error("Failed to create comment:", error);
-      showToast({ message: "Failed to add comment.", type: "error" });
+      console.error('Failed to create comment:', error);
+      showToast({ message: 'Failed to add comment.', type: 'error' });
     }
   };
 
@@ -110,8 +100,7 @@ const PostComments = ({ PostId, type }) => {
     try {
       await likeComment(commentId); // Perform the API call to like the comment
 
-      const queryKey =
-        type === "mini" ? ["comments-mini", PostId] : ["comments", PostId];
+      const queryKey = type === 'mini' ? ['comments-mini', PostId] : ['comments', PostId];
 
       queryClient.setQueryData(queryKey, (oldData) => {
         if (!oldData) return oldData;
@@ -131,7 +120,7 @@ const PostComments = ({ PostId, type }) => {
       });
     } catch (error) {
       console.log(error);
-      showToast({ message: "Failed to upvote the comment.", type: "error" });
+      showToast({ message: 'Failed to upvote the comment.', type: 'error' });
     }
   };
 
@@ -140,8 +129,7 @@ const PostComments = ({ PostId, type }) => {
     try {
       await unlikeComment(commentId); // Perform the API call to remove the vote
 
-      const queryKey =
-        type === "mini" ? ["comments-mini", PostId] : ["comments", PostId];
+      const queryKey = type === 'mini' ? ['comments-mini', PostId] : ['comments', PostId];
 
       queryClient.setQueryData(queryKey, (oldData) => {
         if (!oldData) return oldData;
@@ -165,8 +153,8 @@ const PostComments = ({ PostId, type }) => {
     } catch (error) {
       console.log(error);
       showToast({
-        message: "Failed to remove vote from the comment.",
-        type: "error",
+        message: 'Failed to remove vote from the comment.',
+        type: 'error',
       });
     }
   };
@@ -176,8 +164,7 @@ const PostComments = ({ PostId, type }) => {
     try {
       await deleteComment(commentId); // API call to delete the comment
 
-      const queryKey =
-        type === "mini" ? ["comments-mini", PostId] : ["comments", PostId];
+      const queryKey = type === 'mini' ? ['comments-mini', PostId] : ['comments', PostId];
 
       queryClient.setQueryData(queryKey, (oldData) => {
         if (!oldData) return oldData;
@@ -186,15 +173,13 @@ const PostComments = ({ PostId, type }) => {
           ...oldData,
           pages: oldData.pages.map((page) => ({
             ...page,
-            comments: page.comments.filter(
-              (comment) => comment._id !== commentId
-            ),
+            comments: page.comments.filter((comment) => comment._id !== commentId),
           })),
         };
         return newData;
       });
     } catch (error) {
-      console.error("Failed to delete comment:", error);
+      console.error('Failed to delete comment:', error);
     }
   };
 
@@ -207,13 +192,13 @@ const PostComments = ({ PostId, type }) => {
 
   if (isLoading)
     return (
-      <div className="flex items-center justify-center h-24">
-        <Loading size="3xl" color="dark" />
+      <div className='flex items-center justify-center h-24'>
+        <Loading size='3xl' color='dark' />
       </div>
     );
 
   if (isError) {
-    showToast({ message: error.message, type: "error" });
+    showToast({ message: error.message, type: 'error' });
   }
 
   return (
@@ -222,30 +207,27 @@ const PostComments = ({ PostId, type }) => {
         <ConfirmWindow
           confirming={setCommentDeleteConfirm}
           handleFunc={() => handleDeleteComment(commentDeleteConfirm.commentId)}
-          type="comment"
+          type='comment'
         />
       )}
-      <div className="flex flex-col gap-8">
-        <h4 className="font-smallSemiBold text-darker">
+      <div className='flex flex-col gap-8'>
+        <h4 className='font-smallSemiBold text-darker'>
           Comments ({formatNumber(data?.pages[0]?.totalComments)})
         </h4>
         {/* comment form */}
         {user && (
           <div>
-            <CommentForm
-              PostId={PostId}
-              handleCreateComment={handleCreateComment}
-            />
+            <CommentForm PostId={PostId} handleCreateComment={handleCreateComment} />
           </div>
         )}
         {/* comments */}
-        <div>
+        <div className='w-full'>
           {data.pages && data?.pages[0]?.totalComments > 0 ? (
-            <div className="flex flex-col gap-7">
+            <div className='flex flex-col gap-7'>
               {data?.pages.map((group, i) => (
-                <div key={i} className="flex flex-col gap-7">
+                <div key={i} className='flex flex-col gap-7'>
                   {group.comments.map((comment) => (
-                    <div key={comment._id} className="">
+                    <div key={comment._id} className=''>
                       {/* Comment Component */}
                       <Comment
                         comment={comment}
@@ -258,29 +240,28 @@ const PostComments = ({ PostId, type }) => {
               ))}
             </div>
           ) : (
-            <div className="w-screen md:w-full h-full flex flex-col items-center justify-center p-28 font-mediumPrimary text-lg leading-6">
-              <p className="text-dark">No comments yet ...</p>
-              <p className="text-darkest flex items-center gap-1">
+            <div className='w-full md:w-full text-center h-full flex flex-col items-center justify-center p-28 font-mediumPrimary text-lg leading-6'>
+              <p className='text-dark'>No comments yet ...</p>
+              <p className='text-darkest flex items-center gap-1'>
                 be the first to share your thoughts
               </p>
             </div>
           )}
 
           {isFetching && isFetchingNextPage && (
-            <div className="flex items-center justify-center h-10">
-              <Loading size="3xl" color="dark" />
+            <div className='flex items-center justify-center h-10'>
+              <Loading size='3xl' color='dark' />
             </div>
           )}
 
-          {type !== "mini" && <div ref={ref} className="h-20"></div>}
+          {type !== 'mini' && <div ref={ref} className='h-20'></div>}
         </div>
         {/* SeeMore btn */}
-        {type === "mini" && (
-          <div className="flex items-center justify-center w-full">
+        {type === 'mini' && (
+          <div className='flex items-center justify-center w-full'>
             <button
-              className="text-sm font-smallMedium text-dark py-2 px-5 border border-light hover:text-darkest hover:border-dark rounded-full"
-              onClick={() => setCommentSidebarOpen(PostId)}
-            >
+              className='text-sm font-smallMedium text-dark py-2 px-5 border border-light hover:text-darkest hover:border-dark rounded-full'
+              onClick={() => setCommentSidebarOpen(PostId)}>
               See all comments
             </button>
           </div>

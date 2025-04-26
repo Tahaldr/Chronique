@@ -75,7 +75,7 @@ const CommentSidebar = ({ postId }) => {
             draggable="false"
           />
           <div
-            className="w-[450px] min-[570px]:w-[500px]  h-full px-5 py-5 absolute top-0 right-0 overflow-scroll flex flex-col gap-5"
+            className="w-[440px] min-[560px]:w-[500px] h-full px-5 py-5 absolute top-0 right-0 overflow-scroll flex flex-col gap-5"
             ref={CommentSidebarRef}
           >
             <div>
