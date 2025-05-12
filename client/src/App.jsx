@@ -30,7 +30,7 @@ export const AdminDashboardContext = createContext(null);
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
   const location = useLocation();
-
+  
   const navigate = useNavigate();
 
   useEffect(() => {

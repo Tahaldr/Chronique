@@ -14,7 +14,7 @@ const Loading = ({ size, color }) => {
         ease: "linear",
       }}
     >
-      <RiLoader5Fill className={`text-${size} text-${color}`} />
+      <RiLoader5Fill className={`text-${size}  text-${color}`} />
     </motion.div>
   );
 };
