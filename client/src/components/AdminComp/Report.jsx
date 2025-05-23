@@ -42,7 +42,7 @@ const Report = () => {
 
   return (
     <motion.div
-      className='w-screen h-screen fixed top-0 left-0 z-[60] bg-darkest bg-opacity-70 flex items-center justify-center'
+      className='w-screen h-screen fixed top-0 left-0 z-[70] bg-darkest bg-opacity-70 flex items-center justify-center'
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }} // not working
