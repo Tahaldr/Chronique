@@ -99,4 +99,4 @@ MIT license
 [LinkedIn.com]: https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white
 [LinkedIn-url]: https://www.linkedin.com/in/taha-nait-eddouch-504a96296/
 [Email.com]: https://img.shields.io/badge/Email-333333?style=for-the-badge&logo=gmail&logoColor=white
-[Email-url]: mailto:tahanaitdo@gmail.com
+[
