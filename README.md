@@ -65,6 +65,21 @@ CLIENT_URL= http://localhost:5173
 NODE_ENV= development
 ```
 
+## Docker Image
+
+Want to try Chronique without cloning or building?
+
+Run it instantly with Docker:
+
+```bash
+docker run -p 5000:5000 tahanaiteddouch/chronique
+```
+
+Then visit: http://localhost:5000
+
+[View on Docker Hub](https://hub.docker.com/r/tahanaiteddouch/chronique)
+
+
 ## Built With
 
 - [![React][React.js]][React-url]
@@ -99,4 +114,5 @@ MIT license
 [LinkedIn.com]: https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white
 [LinkedIn-url]: https://www.linkedin.com/in/taha-nait-eddouch-504a96296/
 [Email.com]: https://img.shields.io/badge/Email-333333?style=for-the-badge&logo=gmail&logoColor=white
-[
+[Email-url]: mailto:tahanaitdo@gmail.com
+
